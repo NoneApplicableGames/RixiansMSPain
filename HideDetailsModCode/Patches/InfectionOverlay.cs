@@ -2,7 +2,7 @@ using HarmonyLib;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
 
-namespace HideDetailsMod.HideDetailsModCode;
+namespace HideDetailsMod.HideDetailsModCode.Patches;
 
 [HarmonyPatch]
 class InfectionOverlay

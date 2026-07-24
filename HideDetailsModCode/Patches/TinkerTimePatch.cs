@@ -9,7 +9,7 @@ using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Localization;
 
-namespace HideDetailsMod.HideDetailsModCode;
+namespace HideDetailsMod.HideDetailsModCode.Patches;
 
 [HarmonyPatch(typeof(TinkerTime), nameof(TinkerTime.ChooseCardType))]
 public static class TinkerTimePatch

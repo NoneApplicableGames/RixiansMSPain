@@ -3,7 +3,7 @@
 // using MegaCrit.Sts2.Core.Models.Cards;
 // using MegaCrit.Sts2.Core.Nodes.Cards;
 
-// namespace HideDetailsMod.HideDetailsModCode;
+// namespace HideDetailsMod.HideDetailsModCode.Patches;
 
 // [HarmonyPatch]
 // class NCardHovered

@@ -11,7 +11,7 @@ using MegaCrit.Sts2.Core.Nodes.Screens.CardSelection;
 using MegaCrit.Sts2.Core.Rewards;
 using MegaCrit.Sts2.Core.TestSupport;
 
-namespace HideDetailsMod.HideDetailsModCode;
+namespace HideDetailsMod.HideDetailsModCode.Patches;
 
 [HarmonyPatch]
 public static class InspectCardPatch

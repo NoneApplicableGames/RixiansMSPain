@@ -9,7 +9,7 @@ using MegaCrit.Sts2.Core.Nodes.Cards;
 
 // ReSharper disable InconsistentNaming
 
-namespace HideDetailsMod.HideDetailsModCode;
+namespace HideDetailsMod.HideDetailsModCode.Patches;
 
 [HarmonyPatch(typeof(NCard))]
 public class MakeFullArt
