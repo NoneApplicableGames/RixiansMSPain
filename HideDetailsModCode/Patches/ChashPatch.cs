@@ -10,7 +10,7 @@ using MegaCrit.Sts2.Core.Nodes.Cards.Holders;
 using MegaCrit.Sts2.Core.Nodes.Rooms;
 using MegaCrit.Sts2.Core.Nodes.Vfx;
 
-namespace HideDetailsMod.HideDetailsModCode;
+namespace HideDetailsMod.HideDetailsModCode.Patches;
 
 [HarmonyPatch(typeof(Clash), "OnPlay")]
 
