@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dcmhreeip25te"
-path="res://.godot/imported/Bad Apple, Putrefy AnimatePose2-2.png-09bca734a3846012317c03d157a83cba.ctex"
+uid="uid://bcq4hnehvbr4a"
+path="res://.godot/imported/bad_apple_animation.spritesheet.png-b564e0e4f0d3ca68b65e0835d5e223ee.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://HideDetailsMod/images/PutrefyBadApple/PutrefyBadApple/Bad Apple, Putrefy AnimatePose2-2.png"
-dest_files=["res://.godot/imported/Bad Apple, Putrefy AnimatePose2-2.png-09bca734a3846012317c03d157a83cba.ctex"]
+source_file="res://HideDetailsMod/images/cards/bad_apple_animation.spritesheet.png"
+dest_files=["res://.godot/imported/bad_apple_animation.spritesheet.png-b564e0e4f0d3ca68b65e0835d5e223ee.ctex"]
 
 [params]
 

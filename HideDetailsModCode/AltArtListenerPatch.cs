@@ -36,6 +36,12 @@ public class AltArtListenerPatch
     [HarmonyPatch(typeof(AbstractModel), nameof(AbstractModel.AfterCardPlayed))]
     public static void AfterCardPlayed(AbstractModel __instance, PlayerChoiceContext choiceContext, CardPlay cardPlay)
     { Arts.Do(alt => alt.OnCardPlayed(__instance, choiceContext, cardPlay)); }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(AbstractModel), nameof(AbstractModel.AfterCardExhausted))]
+    public static void AfterCardExhausted(AbstractModel __instance, PlayerChoiceContext choiceContext, CardModel card, bool causedByEthereal)
+    { Arts.Do(alt => alt.OnCardExhausted(__instance, choiceContext, card, causedByEthereal)); }
+
     [HarmonyPostfix]
     [HarmonyPatch(typeof(AbstractModel), nameof(AbstractModel.AfterCardGeneratedForCombat))]
     public static void AfterCardGeneratedForCombat(AbstractModel __instance, CardModel card, Player? creator)

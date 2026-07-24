@@ -19,7 +19,6 @@ using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.Models.Relics;
 using MegaCrit.Sts2.Core.Nodes.Cards;
 using MegaCrit.Sts2.Core.Nodes.Cards.Holders;
-using MegaCrit.Sts2.Core.Nodes.Combat;
 using MegaCrit.Sts2.Core.Nodes.Vfx.Cards;
 using MegaCrit.Sts2.Core.Runs;
 
@@ -336,6 +335,7 @@ public partial class AlternateArts
             return hand.Cards.Any(IsOrMakesShivs);
         }),
     ];
+
     static public bool ParryWasInspected { get; set; } = false;
     private static ICardImgFactory ParryAlt => new CardImgFactory2<Parry>("regent/parry_alt", card =>
     {
