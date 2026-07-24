@@ -5,6 +5,8 @@ using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Nodes.Cards;
+using MegaCrit.Sts2.Core.Nodes.Cards.Holders;
+using MegaCrit.Sts2.Core.Nodes.CommonUi;
 
 namespace HideDetailsMod.HideDetailsModCode.Scenes;
 
@@ -27,6 +29,9 @@ partial class BadApple : Control
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		// TODO: make it animate once on preview
+		// MegaCrit.Sts2.Core.Nodes.Cards.Holders.;
+
 		animation = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		animation.AnimationFinished += OnAnimationFinished;
 
