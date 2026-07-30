@@ -1,19 +1,30 @@
 extends SceneTree
 
-# Default paths if no arguments are passed
-var image_input_dir: String = "res://artist_assets/"
-var tres_output_dir: String = "res://images/atlases/card_atlas.sprites/"
+var image_input_dir: String = ""
+var tres_output_dir: String = ""
 
 func _init() -> void:
-	# Parse custom user arguments passed after '--'
 	var user_args = OS.get_cmdline_user_args()
-	if user_args.size() >= 2:
-		image_input_dir = user_args[0]
-		tres_output_dir = user_args[1]
+	
+	# Dynamically retrieve this script's own path on disk
+	var script_path: String = get_script().resource_path
+	
+	# Require at least 2 positional arguments after '--'
+	if user_args.size() < 2:
+		printerr("❌ Error: Missing required path arguments!")
+		print("\n📖 Usage:")
+		print("  godot --headless -s %s -- <input_dir> <output_dir>" % script_path)
+		print("\n💡 Example:")
+		print("  godot --headless -s %s -- res://artist_assets/ res://images/atlases/card_atlas.sprites/\n" % script_path)
+		quit(1)
+		return
+		
+	image_input_dir = user_args[0]
+	tres_output_dir = user_args[1]
 	
 	print("🚀 Starting asset sync...")
-	print("  Input:  ", image_input_dir)
-	print("  Output: ", tres_output_dir)
+	print("  📂 Input Dir:  ", image_input_dir)
+	print("  📂 Output Dir: ", tres_output_dir)
 
 	if not DirAccess.dir_exists_absolute(image_input_dir):
 		DirAccess.make_dir_recursive_absolute(image_input_dir)
@@ -58,14 +69,12 @@ func _process_directory_recursive(current_dir_path: String, expected_tres_paths:
 			else:
 				var ext = item_name.get_extension().to_lower()
 				if ext in ["png", "jpg", "jpeg", "webp"]:
-					var relative_sub_path = current_dir_path.replace(IMAGE_INPUT_DIR, "")
-					var destination_folder = TRES_OUTPUT_DIR.path_join(relative_sub_path)
+					var relative_sub_path = current_dir_path.replace(image_input_dir, "")
+					var destination_folder = tres_output_dir.path_join(relative_sub_path)
 					var destination_tres_path = destination_folder.path_join(item_name.get_basename() + ".tres")
 					
-					# Mark this path as valid so cleanup pass won't delete it
 					expected_tres_paths[destination_tres_path] = true
 					
-					# Check if file needs regeneration (missing or source image is newer)
 					if _should_update_resource(item_full_path, destination_tres_path):
 						if not DirAccess.dir_exists_absolute(destination_folder):
 							DirAccess.make_dir_recursive_absolute(destination_folder)
@@ -120,7 +129,6 @@ func _prune_orphaned_tres_files(current_dir_path: String, expected_tres_paths: D
 			
 			if dir.current_is_dir():
 				removed_count += _prune_orphaned_tres_files(item_full_path, expected_tres_paths)
-				# Clean up empty subdirectories if orphaned
 				if _is_directory_empty(item_full_path):
 					DirAccess.remove_absolute(item_full_path)
 				else:
