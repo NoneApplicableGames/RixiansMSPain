@@ -1,33 +1,38 @@
 extends SceneTree
 
-const IMAGE_INPUT_DIR = "res://artist_assets/"
-const TRES_OUTPUT_DIR = "res://images/atlases/card_atlas.sprites/"
+# Default paths if no arguments are passed
+var image_input_dir: String = "res://artist_assets/"
+var tres_output_dir: String = "res://images/atlases/card_atlas.sprites/"
 
 func _init() -> void:
-	print("🚀 Starting incremental .tres asset conversion pipeline...")
+	# Parse custom user arguments passed after '--'
+	var user_args = OS.get_cmdline_user_args()
+	if user_args.size() >= 2:
+		image_input_dir = user_args[0]
+		tres_output_dir = user_args[1]
 	
-	if not DirAccess.dir_exists_absolute(IMAGE_INPUT_DIR):
-		DirAccess.make_dir_recursive_absolute(IMAGE_INPUT_DIR)
-		print("ℹ️ Input directory created. Put nested artist assets inside: ", IMAGE_INPUT_DIR)
+	print("🚀 Starting asset sync...")
+	print("  Input:  ", image_input_dir)
+	print("  Output: ", tres_output_dir)
+
+	if not DirAccess.dir_exists_absolute(image_input_dir):
+		DirAccess.make_dir_recursive_absolute(image_input_dir)
+		print("ℹ️ Input directory created: ", image_input_dir)
 		quit(0)
 		return
 
-	if not DirAccess.dir_exists_absolute(TRES_OUTPUT_DIR):
-		DirAccess.make_dir_recursive_absolute(TRES_OUTPUT_DIR)
+	if not DirAccess.dir_exists_absolute(tres_output_dir):
+		DirAccess.make_dir_recursive_absolute(tres_output_dir)
 
-	# Dictionary used as a set to track valid .tres files expected on disk
 	var expected_tres_paths: Dictionary = {}
-	
-	# 1. Sync & Update (Convert missing or modified images)
-	var processed_stats = _process_directory_recursive(IMAGE_INPUT_DIR, expected_tres_paths)
-	print("📊 Sync Summary: %d updated/created, %d up-to-date." % [processed_stats["updated"], processed_stats["skipped"]])
+	var processed_stats = _process_directory_recursive(image_input_dir, expected_tres_paths)
+	print("📊 Summary: %d updated, %d skipped." % [processed_stats["updated"], processed_stats["skipped"]])
 
-	# 2. Cleanup (Remove orphaned .tres files no longer backed by source images)
-	var removed_count = _prune_orphaned_tres_files(TRES_OUTPUT_DIR, expected_tres_paths)
+	var removed_count = _prune_orphaned_tres_files(tres_output_dir, expected_tres_paths)
 	if removed_count > 0:
-		print("🧹 Cleaned up %d orphaned .tres file(s)." % removed_count)
+		print("🧹 Cleaned up %d orphaned file(s)." % removed_count)
 
-	print("🎉 Synchronization completed successfully!")
+	print("🎉 Done!")
 	quit(0)
 
 

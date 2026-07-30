@@ -65,10 +65,14 @@
       "args": [
         "-NoProfile",
         "-Command",
-        "param($s); $exe = ([xml](Get-Content ./Directory.Build.props)).Project.PropertyGroup.GodotPath; & $exe --headless -s $s",
+        "param($s, $in, $out); $exe = ([xml](Get-Content ./Directory.Build.props)).Project.PropertyGroup.GodotPath; & $exe --headless -s $s -- $in $out",
+        // TODO: move to scripts
         "-s",
-        // TODO: move to scripts/
-        "res://import_images.gd"
+        "res://import_images.gd",
+        "-in",
+        "res://artist_assets/",
+        "-out",
+        "res://images/atlases/card_atlas.sprites/"
       ],
       "presentation": {
         "echo": true,
