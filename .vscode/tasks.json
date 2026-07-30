@@ -60,20 +60,21 @@
     },
     {
       "label": "Godot: Sync Card Atlas (.tres)",
-      "type": "shell",
-      "command": "powershell",
+      "type": "process",
+      "command": "powershell.exe",
       "args": [
         "-NoProfile",
-        "-Command",
-        "param($s, $in, $out); $exe = ([xml](Get-Content ./Directory.Build.props)).Project.PropertyGroup.GodotPath; & $exe --headless -s $s -- $in $out",
-        // TODO: move to scripts
-        "-s",
-        "res://import_images.gd",
-        "-in",
-        "res://artist_assets/",
-        "-out",
-        "res://images/atlases/card_atlas.sprites/"
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}/scripts/Import-GodotImages.ps1"
       ],
+      "options": {
+        "env": {
+          "INPUT_PATH": "res://artist_assets/",
+          "OUTPUT_PATH": "res://images/atlases/card_atlas.sprites/"
+        }
+      },
       "presentation": {
         "echo": true,
         "reveal": "always",
