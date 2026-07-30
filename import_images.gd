@@ -11,7 +11,7 @@ func _init() -> void:
 	
 	# Require at least 2 positional arguments after '--'
 	if user_args.size() < 2:
-		printerr("❌ Error: Missing required path arguments!")
+		print("❌ Error: Missing required path arguments!")
 		print("\n📖 Usage:")
 		print("  godot --headless -s %s -- <input_dir> <output_dir>" % script_path)
 		print("\n💡 Example:")
@@ -52,7 +52,7 @@ func _process_directory_recursive(current_dir_path: String, expected_tres_paths:
 	var stats = {"updated": 0, "skipped": 0}
 	var dir = DirAccess.open(current_dir_path)
 	if dir == null:
-		printerr("❌ Could not open folder: ", current_dir_path)
+		print("❌ Could not open folder: ", current_dir_path)
 		return stats
 		
 	dir.list_dir_begin()
@@ -86,9 +86,9 @@ func _process_directory_recursive(current_dir_path: String, expected_tres_paths:
 								print("✅ Updated resource: ", destination_tres_path)
 								stats["updated"] += 1
 							else:
-								printerr("❌ Serialization failed for ", item_name, " - Code: ", error)
+								print("❌ Serialization failed for ", item_name, " - Code: ", error)
 						else:
-							printerr("⚠️ File skipped: Cannot parse ", item_full_path, " into Texture2D.")
+							print("⚠️ File skipped: Cannot parse ", item_full_path, " into Texture2D.")
 					else:
 						stats["skipped"] += 1
 						
@@ -141,7 +141,7 @@ func _prune_orphaned_tres_files(current_dir_path: String, expected_tres_paths: D
 							print("🗑️ Removed orphaned resource: ", item_full_path)
 							removed_count += 1
 						else:
-							printerr("❌ Failed to remove orphaned file ", item_full_path, " - Code: ", err)
+							print("❌ Failed to remove orphaned file ", item_full_path, " - Code: ", err)
 					else:
 						remaining_items += 1
 				else:
