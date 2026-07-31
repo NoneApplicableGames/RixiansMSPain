@@ -1,4 +1,3 @@
-using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Models.Events;
@@ -11,7 +10,7 @@ using MegaCrit.Sts2.Core.Localization;
 
 namespace HideDetailsMod.HideDetailsModCode.Patches;
 
-[HarmonyPatch(typeof(TinkerTime), nameof(TinkerTime.ChooseCardType))]
+[HarmonyPatch]
 public static class TinkerTimePatch
 {
     static readonly string Curious = "event/mad_science_power_curious";
@@ -79,39 +78,20 @@ public static class TinkerTimePatch
             return true;
         }
     }
-    [HarmonyPatch]
+    [HarmonyPatch(typeof(TinkerTime), nameof(TinkerTime.ChooseCardType))]
     static class TinkerTimeCyclingHoverTipPatch
     {
         [HarmonyTranspiler]
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
-            var codes = new List<CodeInstruction>(instructions);
-
-            // 1. Locate the exact instance method info we want to intercept
-            MethodInfo originalTarget = AccessTools.Method(typeof(TinkerTime), nameof(TinkerTime.GetCardTypeHoverTip));
-
-            // 2. Locate our type-safe replacement method info
-            MethodInfo replacement = AccessTools.Method(typeof(TinkerTimePatch), nameof(TinkerTimeHoverTipProvider));
-            // var _ = new CodeMatcher();
-            bool found = false;
-            for (int i = 0; i < codes.Count; i++)
-            {
-                // Note: The IL text says 'call', but Harmony usually parses it matching the target's Metadata. 
-                // Checking both ensures reliability regardless of optimization level.
-                if ((codes[i].opcode == OpCodes.Call || codes[i].opcode == OpCodes.Callvirt) &&
-                    codes[i].operand is MethodInfo mi && mi == originalTarget)
-                {
-                    // Convert the opcode to a standard static call and swap the target
-                    codes[i].opcode = OpCodes.Call;
-                    codes[i].operand = replacement;
-                    found = true;
-                }
-            }
-
-            if (!found)
-            { MainFile.Logger.Warn("Warning: Transpiler could not find TinkerTime.GetCardTypeHoverTip calls!"); }
-
-            return codes.AsEnumerable();
+#nullable disable
+            return new CodeMatcher(instructions, generator)
+              .MatchStartForward(CodeMatch.Calls(() => default(TinkerTime).GetCardTypeHoverTip(default)))
+              .Repeat(matcher => matcher
+                  .SetInstructionAndAdvance(CodeInstruction.Call(() => TinkerTimeHoverTipProvider(default, default)))
+              )
+              .Instructions();
+#nullable restore
         }
 
         /// <summary>
@@ -143,7 +123,7 @@ public static class TinkerTimePatch
             var owner = tinkerTime.Owner;
             if (owner == null) return null;
 
-            MadScience NewCard(TinkerTime.RiderEffect VisualRiderEffect)
+            MadScience CreateCard(TinkerTime.RiderEffect VisualRiderEffect)
             {
                 MadScience madScience = owner.RunState.CreateCard<MadScience>(owner);
                 madScience.TinkerTimeType = cardType;
@@ -153,14 +133,10 @@ public static class TinkerTimePatch
             }
 
             return CardCyclePreview.FromCards([
-                NewCard(TinkerTime.RiderEffect.Expertise),
-            NewCard(TinkerTime.RiderEffect.Curious),
-            NewCard(TinkerTime.RiderEffect.Improvement)
-            ], new()
-            {
-                RemoveDuplicateTypes = false,
-                // TimePerCard = TimeSpan.FromSeconds(0.85),
-            });
+                CreateCard(TinkerTime.RiderEffect.Expertise),
+                CreateCard(TinkerTime.RiderEffect.Curious),
+                CreateCard(TinkerTime.RiderEffect.Improvement)
+            ], new() { RemoveDuplicateTypes = false });
         }
     }
 }

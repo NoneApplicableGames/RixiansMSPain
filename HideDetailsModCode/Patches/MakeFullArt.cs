@@ -15,8 +15,7 @@ namespace HideDetailsMod.HideDetailsModCode.Patches;
 public class MakeFullArt
 {
     [HarmonyPostfix]
-    // [HarmonyPatch(nameof(NCard.UpdatePortrait))]
-    [HarmonyPatch(nameof(NCard.Reload))]
+    [HarmonyPatch(nameof(NCard.UpdateVisuals))]
     static void HideText(
         NCard? __instance,
         MegaLabel? ____typeLabel,
@@ -40,10 +39,8 @@ public class MakeFullArt
 
     [HarmonyPostfix]
     // TODO: optimize
-    [HarmonyPatch(typeof(NCard), nameof(NCard.Reload))]
     // [HarmonyPatch(typeof(NCard), nameof(NCard.UpdateVisuals))]
     [HarmonyPatch(typeof(NCard), nameof(NCard.UpdatePortrait))]
-
     static void UseFullArt(
         NCard? __instance,
         TextureRect? ____frame,

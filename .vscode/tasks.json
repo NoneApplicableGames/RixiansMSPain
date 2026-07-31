@@ -29,7 +29,7 @@
       "type": "shell",
       "command": "dotnet publish -c ExportRelease -p:WorkshopChannel=${input:channel}",
       "problemMatcher": ["$msCompile"],
-      "dependsOn": ["Credits: Validate"]
+      "dependsOn": ["Credits: Validate", "Godot: Sync Card Atlas (.tres)"]
     },
     {
       "label": "Upload Mod",
@@ -57,6 +57,30 @@
       "type": "shell",
       "command": "powershell -ExecutionPolicy Bypass -File ${workspaceFolder}/scripts/CreditsTool.ps1 -Mode Fix -AssetsOnly",
       "presentation": { "reveal": "silent" }
+    },
+    {
+      "label": "Godot: Sync Card Atlas (.tres)",
+      "type": "process",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}/scripts/Import-GodotImages.ps1"
+      ],
+      "options": {
+        "env": {
+          "INPUT_PATH": "res://artist_assets/",
+          "OUTPUT_PATH": "res://images/atlases/card_atlas.sprites/"
+        }
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      }
     }
   ]
 }

@@ -1,14 +1,15 @@
 using BaseLib.Extensions;
-using BaseLib.Utils;
 using Godot;
 using HarmonyLib;
 using HideDetailsMod.HideDetailsModCode.Patches;
 using MegaCrit.Sts2.Core.Assets;
 using MegaCrit.Sts2.Core.Combat;
+using MegaCrit.Sts2.Core.Combat.History.Entries;
 using MegaCrit.Sts2.Core.Context;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Helpers;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.Characters;
@@ -25,6 +26,22 @@ using MegaCrit.Sts2.Core.Runs;
 
 namespace HideDetailsMod.HideDetailsModCode;
 
+static class Extensions
+{
+    [Obsolete("Switch off using this when possible")]
+    static public bool HasPowerComapt(this Player player, string powerName)
+    {
+        return player.Creature.Powers.Any(power => power.IsComapt(powerName));
+    }
+    [Obsolete("Switch off using this when possible")]
+    static public bool IsComapt(this object thing, string name) => Is(thing, name);
+
+    [Obsolete("Switch off using this when possible")]
+    static public bool Is(this object thing, string name)
+    {
+        return thing.GetType().Name == name;
+    }
+}
 [HarmonyPatch]
 public partial class AlternateArts
 {
@@ -189,19 +206,13 @@ public partial class AlternateArts
             var me = Util.GetOwner(card);
             if (me == null) return null;
             return Util.HasCard<NoxiousFumes>(me) || me.HasPower<NoxiousFumesPower>();
-        }){
-            WhenPowerApplied = (outbreak, _, power, _) => { if (power is NoxiousFumesPower) CardNeedsReload(outbreak); },
-            WhenCardGenerated = (outbreak, card) => { if (card is NoxiousFumes) CardNeedsReload(outbreak); }
-        },
+        }),
         new CardImgFactory2<NoxiousFumes>("silent/noxious_fumes_if_outbreak", card => {
             // MainFile.Logger.Debug($"[Alt Art] [NoxiousFumes] Checking for Outbreak");
             var me = Util.GetOwner(card);
             if (me == null) return null;
-            return Util.HasCard<Outbreak>(me) || me.HasPower<OutbreakPower>();
-        }) {
-            WhenPowerApplied = (noxiousFumes, _, power, _) => { if (power is OutbreakPower) CardNeedsReload(noxiousFumes); },
-            WhenCardGenerated = (noxiousFumes, card) => { if (card is Outbreak) CardNeedsReload(noxiousFumes); }
-        },
+            return Util.HasCard<Outbreak>(me) || me.HasPowerComapt("OutbreakPower");
+        }),
         new CardImgFactory2<Accelerant>("silent/poisonless_accelerant", card => {
             var me = Util.GetOwner(card);
             if (me == null) return null;
@@ -226,9 +237,7 @@ public partial class AlternateArts
             var HasNoDrawPower = me.HasPower<NoDrawPower>();
 
             return HasFiddle || HasNoDrawPower;
-        }) {
-            WhenPowerApplied = (calculatedGamble, _, power, _) => { if (power is NoDrawPower) CardNeedsReload(calculatedGamble); }
-        },
+        }),
         new CardImgFactory2<Monologue>("regent/monologue_if_lunar_blast", card => Util.HasCard<LunarBlast>(Util.GetOwner(card))),
         new CardImgFactory2<MindRot>(["token/mind_rot", "token/mind_rot_regent"], card => {
             return Util.GetOwner(card)?.Character switch
@@ -248,9 +257,9 @@ public partial class AlternateArts
             if (me == null) return null;
             var PlayedFallingStarThisCombat = CombatManager.Instance.History.CardPlaysFinished.Any(entry => entry.Actor == me.Creature && entry.CardPlay.Card is FallingStar);
             return PlayedFallingStarThisCombat;
-        }) {
-            WhenCardPlayed = (spoilsOfBattle, _, cardPlay) => {if (cardPlay.Card is FallingStar) CardNeedsReload(spoilsOfBattle);}
-        },
+        })
+
+        ,
         ParryAlt,
         TinkerTimePatch.AltArt,
         new CardImgFactory2<Dowsing>(new List<int>([1,2,3,4,5]).Select(num => $"quest/dowsing_{num}"), card => {
@@ -283,9 +292,7 @@ public partial class AlternateArts
             WhenPowerApplied = (sharedFate, _, power, _) => { if (power is FriendshipPower) CardNeedsReload(sharedFate); }
         },
         new CardImgFactory2<Bodyguard>("necrobinder/bodyguard_if_protector", card => Util.HasCard<Protector>(Util.GetOwner(card))),
-        new CardImgFactory2<DeathsDoor>("necrobinder/deaths_door_if_applied_doom", card => card.WasDoomAppliedThisTurn) {
-            WhenPowerApplied = (deathsDoor, _, power, _) => { if (power is DoomPower) CardNeedsReload(deathsDoor); },
-        },
+        new CardImgFactory2<DeathsDoor>("necrobinder/deaths_door_if_applied_doom", card => card.WasDoomAppliedThisTurn),
         new CardImgFactory2<Parse>("necrobinder/parse_if_poor_sleep", card => Util.HasCard<PoorSleep>(Util.GetOwner(card))),
         new CardImgFactory2<Charge>(["regent/charge_1_draw", "regent/charge_0_draw"], card => {
             if (!CombatManager.Instance.IsInProgress) return null;
@@ -299,13 +306,7 @@ public partial class AlternateArts
                 [not null] =>"regent/charge_1_draw",
                 _ => null,
             };
-        }) {
-            WhenCardDrawn = (charge, _, _, _) => {
-                var owner = Util.GetOwner(charge);
-                if (owner == null) return;
-                if (PileType.Draw.GetPile(owner).Cards.Count < 2) CardNeedsReload(charge);
-            }
-        },
+        }),
         ClashPatch.AltArt,
         SnapAlt.SnapOstyDiedArt,
         new CardImgFactory2<Concoct>("silent/concoct_if_x", card => {
@@ -318,9 +319,7 @@ public partial class AlternateArts
                 if (HasXCost) return true;
             }
             return null;
-        }) {
-            WhenCardDrawn = (concoct, _, drawnCard, _) => {if (drawnCard.EnergyCost.CostsX) CardNeedsReload(concoct);}
-        },
+        }),
         new CardImgFactory2<Demesne>("necrobinder/demesne_if_queen", card => {
             var runState = RunManager.Instance.State;
             if (runState == null) return null;
@@ -336,7 +335,6 @@ public partial class AlternateArts
             return hand.Cards.Any(IsOrMakesShivs);
         }),
     ];
-
     static public bool ParryWasInspected { get; set; } = false;
     private static ICardImgFactory ParryAlt => new CardImgFactory2<Parry>("regent/parry_alt", card =>
     {
@@ -360,64 +358,22 @@ public partial class AlternateArts
         BladeOfInk => true,
         LeadingStrike => true,
         BladeSymphony => true,
-        KnifeTrap => true,
+        // TODO: check with art author
+        KnifeTrap knifeTrap => ((CalculatedVar)knifeTrap.DynamicVars["CalculatedShivs"]).Calculate(null) > 0, // doesn't actually make shivs...
         _ => false
     };
 
     static class SnapAlt
     {
-        static readonly SpireField<Snap, bool> SnapOstyDied = new(() => false);
-        // todo: if Osty died this turn
-        // TODO: this kinda sucks.
-        static public readonly ICardImgFactory SnapOstyDiedArt = new CardImgFactory2<Snap>("necrobinder/snap_if_osty_died", card => SnapOstyDied[card])
+        static public readonly ICardImgFactory SnapOstyDiedArt = new CardImgFactory2<Snap>("necrobinder/snap_if_osty_died", card =>
         {
-            AfterDeath = (snap, _, creature, _) =>
+            return CombatManager.Instance.History.Entries.OfType<DamageReceivedEntry>().Where(entry => entry.HappenedThisTurn(card.CombatState)).Any(entry =>
             {
-                if (creature.Monster is Osty osty && creature.PetOwner == Util.GetOwner(snap))
-                { SnapOstyDied[snap] = true; CardNeedsReload(snap); }
-            },
-            WhenTurnEnd = (snap, _, side, _) =>
-            {
-                if (side != CombatSide.Player) return;
-                SnapOstyDied[snap] = false; CardNeedsReload(snap);
-            },
-            WhenTurnStart = (snap, side, _, _) =>
-            {
-                if (side == CombatSide.Player) return;
-                SnapOstyDied[snap] = false; CardNeedsReload(snap);
-            },
-        };
+                var creature = entry.Receiver;
+                return creature.Monster is Osty && creature.PetOwner == card.Owner;
+            });
+        });
     }
-
-    // public static readonly AddedNode<NCard, Control> Node = new(static (nCard) =>
-    // {
-    //     // Use a simple Control container to hold both blades
-    //     Control container = new() { Visible = false };
-
-    //     void updateDelegate()
-    //     {
-    //         if (!GodotObject.IsInstanceValid(nCard) || !GodotObject.IsInstanceValid(container)) return;
-    //         if (nCard.Model is MadScience card && card.Type == CardType.Power && card.TinkerTimeRider == TinkerTime.RiderEffect.None)
-    //         {
-    //             nCard.Reload(); // TODO: optimize. Should make the reload() patch work on UpdateVisuals instead
-    //         }
-    //         // to something
-    //     }
-
-    //     container.TreeEntered += () =>
-    //     {
-    //         if (!GodotObject.IsInstanceValid(container)) return;
-    //         container.GetTree().ProcessFrame += updateDelegate;
-    //     };
-
-    //     container.TreeExiting += () =>
-    //     {
-    //         if (!GodotObject.IsInstanceValid(container)) return;
-    //         if (container.GetTree() != null)
-    //             container.GetTree().ProcessFrame -= updateDelegate;
-    //     };
-    //     return container;
-    // });
     // static public int CurrentTemporalIndex(int count)
     // {
     //     double secondsPerCard = Math.Max(0.1, TimeSpan.FromSeconds(0.85).TotalSeconds);
@@ -427,8 +383,17 @@ public partial class AlternateArts
     public enum InspectionState { Opening, Closing, Updating }
     static public IEnumerable<ICardImgFactory> GetAltsFor(CardModel card)
     {
-        var found = Arts.Where(alt => alt.IsFor(card));
-        // MainFile.Logger.Debug($"Found {found.Count()} alts for {card.Id}");
-        return found;
+        return Arts.Where(alt =>
+        {
+            try
+            {
+                return alt.IsFor(card);
+            }
+            catch (Exception e)
+            {
+                MainFile.Logger.Error($"{alt.GetType()}.IsFor threw an error: {e}");
+                return false;
+            }
+        });
     }
 }

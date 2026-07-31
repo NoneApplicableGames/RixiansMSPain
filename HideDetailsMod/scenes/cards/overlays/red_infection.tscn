@@ -31,7 +31,7 @@
 [ext_resource type="Texture2D" uid="uid://dgtjyyk80yxgv" path="res://HideDetailsMod/images/overlays/red_infection/infection_27.png" id="28_bv1i2"]
 [ext_resource type="Texture2D" uid="uid://c06d485tbde8q" path="res://HideDetailsMod/images/overlays/red_infection/infection_28.png" id="29_058rc"]
 [ext_resource type="Texture2D" uid="uid://bw6b2bvcebw1g" path="res://HideDetailsMod/images/overlays/red_infection/infection_29.png" id="30_vkyfg"]
-[ext_resource type="Script" uid="uid://bvm1iuxqxiv8q" path="res://src/Core/Nodes/Animation/NPhobiaAnimationToggler.cs" id="32_ubwy2"]
+[ext_resource type="Script" uid="uid://dt785gwmogcm6" path="res://HideDetailsModCode/Scenes/NPhobiaToggler2.cs" id="32_ubwy2"]
 
 [sub_resource type="Animation" id="Animation_2lslh"]
 length = 0.001

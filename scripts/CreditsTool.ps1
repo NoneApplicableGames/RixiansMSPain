@@ -51,7 +51,6 @@ function Get-JsonSafe ([string]$path) {
 
 function Set-JsonSafe ([string]$path, [System.Collections.Specialized.OrderedDictionary]$data) {
     $jsonOutput = $data | ConvertTo-Json -Depth 10
-    # Fix: Extract only the 4 hex digits from the matched string
     $jsonOutput = [regex]::Replace($jsonOutput, '\\u([0-9a-fA-F]{4})', {
             param($match)
             [char][int]"0x$($match.Value.Substring(2))"
@@ -81,6 +80,18 @@ function Assert-Environment {
 # ==========================================
 function Sync-ImageAssets ([System.Collections.Specialized.OrderedDictionary]$artistsData) {
     $missingKeys = @()
+    $nullKeys = @()
+
+    # 1. Audit pre-existing keys in artists.json for null/empty values
+    foreach ($artistKey in $artistsData.Keys) {
+        if ($artistKey -cmatch $KeyIgnorePattern) { continue }
+        $val = $artistsData[$artistKey]
+        if ($null -eq $val -or [string]::IsNullOrWhiteSpace([string]$val)) {
+            $nullKeys += $artistKey
+        }
+    }
+
+    # 2. Scan physical image files in the assets directory
     $rootFullPath = (Get-Item $AssetFolder).FullName
     $files = Get-ChildItem -Path $AssetFolder -Recurse -File -Include $Extensions
 
@@ -99,24 +110,46 @@ function Sync-ImageAssets ([System.Collections.Specialized.OrderedDictionary]$ar
         if (-not $artistsData.Contains($key)) {
             $missingKeys += $key
             if ($Mode -eq "Fix") {
+                # Modifying the dictionary is strictly isolated to Fix mode
                 $artistsData[$key] = $null
                 $Global:ArtistFileModified = $true
             }
         }
     }
 
-    if ($missingKeys.Count -gt 0) {
-        if ($Mode -eq "Validate") {
-            Write-Host "[CREDITS FAIL] Found $($missingKeys.Count) missing asset keys in artists.json:" -ForegroundColor Red
-            foreach ($key in $missingKeys) { Write-Host "  -> Missing: $key" -ForegroundColor Yellow }
+    # 3. Output reports based on current Mode
+    if ($Mode -eq "Validate") {
+        if ($missingKeys.Count -gt 0) {
+            Write-Host "[CREDITS FAIL] Found $($missingKeys.Count) missing asset key(s) in artists.json:" -ForegroundColor Red
+            foreach ($key in $missingKeys) { Write-Host "  -> Missing key: $key" -ForegroundColor Yellow }
             $Global:HasValidationErrors = $true
         }
-        else {
-            Write-Host "Credits Fix: Added $($missingKeys.Count) missing asset keys to artists.json." -ForegroundColor Cyan
+
+        if ($nullKeys.Count -gt 0) {
+            Write-Host "[CREDITS FAIL] Found $($nullKeys.Count) null/unassigned value(s) in artists.json:" -ForegroundColor Red
+            foreach ($key in $nullKeys) { Write-Host "  -> Null value at key: $key" -ForegroundColor Red }
+            $Global:HasValidationErrors = $true
+        }
+
+        if ($missingKeys.Count -eq 0 -and $nullKeys.Count -eq 0) {
+            Write-Host "[CREDITS OK] Asset files match artists.json keys perfectly with no null values." -ForegroundColor Green
         }
     }
     else {
-        Write-Host "[CREDITS OK] Asset files match artists.json keys perfectly." -ForegroundColor Green
+        # Fix Mode
+        if ($missingKeys.Count -gt 0) {
+            Write-Host "Credits Fix: Added $($missingKeys.Count) missing asset key(s) to artists.json (set to null)." -ForegroundColor Cyan
+            foreach ($key in $missingKeys) { Write-Host "  -> Added key: $key" -ForegroundColor Cyan }
+        }
+
+        if ($nullKeys.Count -gt 0) {
+            Write-Host "Credits Fix Info: Found $($nullKeys.Count) pre-existing key(s) set to null in artists.json:" -ForegroundColor Cyan
+            foreach ($key in $nullKeys) { Write-Host "  -> Existing null key: $key" -ForegroundColor Cyan }
+        }
+
+        if ($missingKeys.Count -eq 0 -and $nullKeys.Count -eq 0) {
+            Write-Host "[CREDITS OK] Asset files match artists.json keys perfectly with no null values." -ForegroundColor Green
+        }
     }
 }
 
@@ -134,7 +167,7 @@ function Get-ArtistsLookup ([System.Collections.Specialized.OrderedDictionary]$a
         }
         if ($isBypassed -or ($artistValue -cmatch $ValueWrapPattern)) { continue }
 
-        if (-not [string]::IsNullOrEmpty($artistValue)) {
+        if (-not [string]::IsNullOrWhiteSpace([string]$artistValue)) {
             $lookup[$artistValue] = $true
         }
     }
@@ -151,6 +184,17 @@ function Test-AndFixUsernames ([System.Collections.Specialized.OrderedDictionary
     $usernamesKeys = @($usernamesData.Keys)
     foreach ($key in $usernamesKeys) {
         $value = $usernamesData[$key]
+
+        if ($null -eq $value -or [string]::IsNullOrWhiteSpace([string]$value)) {
+            if ($Mode -eq "Validate") {
+                Write-Host "[CREDITS FAIL] Null or empty value found in usernames.json for key '$key'." -ForegroundColor Red
+                $Global:HasValidationErrors = $true
+            }
+            else {
+                Write-Host "Credits Fix Info: Null or empty value currently in usernames.json for key '$key'." -ForegroundColor Cyan
+            }
+            continue
+        }
 
         if ($key -cmatch '[A-Z]') {
             Write-Warning "Credits: Username key '$key' in usernames.json contains uppercase letters."
@@ -210,14 +254,16 @@ function Save-ChangesIfNeeded ([System.Collections.Specialized.OrderedDictionary
 # ==========================================
 Assert-Environment
 
-# Step 1: Manage asset file footprints
+# Step 1: Manage asset file footprints & check for null values
 $artistsData = Get-JsonSafe -path $ArtistsPath
 Sync-ImageAssets -artistsData $artistsData
 
 if ($AssetsOnly) {
-    if ($Global:ArtistFileModified) { Set-JsonSafe -path $ArtistsPath -data $artistsData }
+    if ($Mode -eq "Fix" -and $Global:ArtistFileModified) {
+        Set-JsonSafe -path $ArtistsPath -data $artistsData
+    }
 
-    if ($Global:HasValidationErrors -and $Channel -eq "Production") {
+    if ($Mode -eq "Validate" -and $Global:HasValidationErrors -and $Channel -eq "Production") {
         exit 1
     }
     exit 0
