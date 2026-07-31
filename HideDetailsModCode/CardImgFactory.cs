@@ -66,9 +66,17 @@ public class CardImgFactory2<T>(IEnumerable<string> AllPaths, Func<T, string?> C
             MainFile.Logger.Error($"Attempted to Get an alt art img for {card.Id} without checking IsFor first. Expected {typeof(T)}");
             return null;
         }
-        var result = Condition(_card);
-        if (result == null) return null;
-        return new(result);
+        try
+        {
+            var result = Condition(_card);
+            if (result == null) return null;
+            return new(result);
+        }
+        catch (Exception e)
+        {
+            MainFile.Logger.Warn($"Error running condition for ${card.Id}: {e}");
+        }
+        return null;
     }
     public Action<T, CardModel>? WhenCardGenerated { get; set; }
     public Action<T, PlayerChoiceContext, CardPlay>? WhenCardPlayed { get; set; }

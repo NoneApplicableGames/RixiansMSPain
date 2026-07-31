@@ -24,12 +24,15 @@ static public class DefileExhaustPatch
     // { }
 
     // don't leave until we allow it.
-    [HarmonyPrefix, HarmonyPatch(nameof(NExhaustPileButton.AnimOut))]
-    static bool AnimOut(NExhaustPileButton __instance)
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(NCombatCardPile))]
+    [HarmonyPatch(nameof(NExhaustPileButton.AnimOut))]
+    static bool AnimOut(NCombatCardPile __instance)
     {
-        if (CombatManager.Instance.IsEnding) return true;
-        if (DefileExhaustIcon.Node.Get(__instance).Visible) return false;
-        return true;
+        if (__instance is not NExhaustPileButton button) return true;
+        if (CombatManager.Instance.IsOverOrEnding) return true;
+        if (!DefileExhaustIcon.Node.Get(button).Visible) return true;
+        return false;
     }
 }
 

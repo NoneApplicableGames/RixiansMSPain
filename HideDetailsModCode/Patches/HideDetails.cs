@@ -13,17 +13,20 @@ internal class HideDetails
 {
     [HarmonyPostfix]
     [HarmonyPatch(typeof(NCard), nameof(NCard.UpdateEnergyCostVisuals))]
-    private static void MakeEnergyInvisible(ref NCard __instance, ref TextureRect ____energyIcon)
+    internal static void MakeEnergyInvisible(ref NCard __instance, ref TextureRect ____energyIcon)
     {
-        if (!MyModConfig.HideEnergy) return;
-        if (MyModConfig.ExcludeFranticEscape && __instance.Model is FranticEscape) return;
+        if (!MyModConfig.HideEnergy || (MyModConfig.ExcludeFranticEscape && __instance.Model is FranticEscape))
+        {
+            ____energyIcon.Visible = true;
+            return;
+        }
         ____energyIcon.Visible = false;
     }
 
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(NCard), nameof(NCard.UpdateStarCostVisuals))]
-    private static void MakeStarsInvisible(ref TextureRect ____starIcon)
+    internal static void MakeStarsInvisible(ref TextureRect ____starIcon)
     {
         if (!MyModConfig.HideStars) return;
         ____starIcon.Visible = false;
@@ -32,7 +35,7 @@ internal class HideDetails
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(CardModel), "ExtraHoverTips", MethodType.Getter)]
-    private static void RemoveExtraHoverTooltips(ref IEnumerable<IHoverTip> __result)
+    internal static void RemoveExtraHoverTooltips(ref IEnumerable<IHoverTip> __result)
     {
         if (MyModConfig.HideTooltips) __result = [];
     }
@@ -42,7 +45,7 @@ internal class HideDetails
     [HarmonyPostfix]
     [HarmonyPatch(typeof(CardModel), "HoverTips", MethodType.Getter)]
     // [HarmonyPatch(typeof(CardModel), "ExtraHoverTips", MethodType.Getter)]
-    private static void RemoveHoverTooltips(CardModel? __instance, ref IEnumerable<IHoverTip> __result)
+    internal static void RemoveHoverTooltips(CardModel? __instance, ref IEnumerable<IHoverTip> __result)
     {
         if (__instance == null) return;
         try
@@ -77,7 +80,7 @@ internal class HideDetails
     // }
     [HarmonyPrefix]
     [HarmonyPatch(typeof(NCard), "ActivateRewardScreenGlow")]
-    private static bool RemoveRewardCardRarityGlow()
+    internal static bool RemoveRewardCardRarityGlow()
     {
         if (MyModConfig.HideCardRewardRarityGlow) return false;
         return true;
@@ -85,8 +88,8 @@ internal class HideDetails
 
     // TODO: make it a class and include hiding the description background
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(NCard), nameof(NCard.Reload))]
-    private static void HideDescription(MegaLabel? ____descriptionLabel)
+    [HarmonyPatch(typeof(NCard), nameof(NCard.UpdateVisuals))]
+    internal static void HideDescription(MegaLabel? ____descriptionLabel)
     {
         if (____descriptionLabel == null) return;
         ____descriptionLabel.Visible = !MyModConfig.HideDescription;
@@ -96,14 +99,14 @@ internal class HideDetails
     public class CardTitleIntercept
     {
         [HarmonyPostfix]
-        private static void Intercept(ref CardModel? __instance, ref String __result)
+        internal static void Intercept(ref CardModel? __instance, ref String __result)
         {
             if (__instance == null) return;
             if (!MyModConfig.HideTitle) return;
-            __result = _FormattedText(__instance);
+            __result = FormattedText(__instance);
         }
 
-        private static string _FormattedText(CardModel card)
+        private static string FormattedText(CardModel card)
         {
             if (!card.IsUpgraded) return "";
             if (card.MaxUpgradeLevel <= 1) return "+";
