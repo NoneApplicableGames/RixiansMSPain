@@ -9,13 +9,12 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
-using MegaCrit.Sts2.Core.Nodes.Cards.Holders;
 using MegaCrit.Sts2.Core.Nodes.Rooms;
 using MegaCrit.Sts2.Core.Nodes.Vfx;
 
 namespace HideDetailsMod.HideDetailsModCode.Patches;
 
-[HarmonyPatch(typeof(Clash), "OnPlay", MethodType.Async)]
+[HarmonyPatch]
 
 static class ClashPatch
 {
@@ -28,35 +27,93 @@ static class ClashPatch
 
     static internal MethodInfo IsPlayableMethod => AccessTools.PropertyGetter(typeof(Clash), "IsPlayable");
 
-    public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+    // [HarmonyTranspiler, HarmonyPatch(typeof(Clash), "OnPlay", MethodType.Async)]
+    // public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+    // {
+    //     instructions = AsyncMethodCall.Create(
+    //         generator, instructions, original,
+    //         callMethod: AccessTools.Method(typeof(ClashPatch), nameof(DoGrandFinaleVfx)),
+    //         beforeState: original // run first
+    //     );
+    //     instructions = AsyncMethodCall.Create(
+    //       generator, instructions, original,
+    //       callMethod: AccessTools.Method(typeof(ClashPatch), nameof(FinishPlay)),
+    //       afterState: original // run first
+    //   );
+    //     return instructions;
+    //     // var execute = AccessTools.Method(typeof(AttackCommand), nameof(AttackCommand.Execute));
+    //     // // return instructions;
+    //     // return new CodeMatcher(instructions, generator)
+    //     //     .MatchStartForward(CodeMatch.Calls(execute))
+    //     //     .ThrowIfInvalid("Could not locate the final .Execute call inside the fluent builder.")
+    //     //     .InsertAndAdvance(CodeInstruction.Call(typeof(ClashPatch), nameof(Build)))
+    //     //     .Instructions();
+    // }
+
+    // private static Task FinishPlay()
+    // {
+    //     DoingEffect = false;
+    //     return Task.CompletedTask;
+    // }
+
+    // static internal bool DoingEffect { get; set; } = false;
+
+    // internal static async Task DoGrandFinaleVfx(Clash __instance)
+    // {
+    //     DoingEffect = true;
+    //     NGrandFinaleVfx? nGrandFinaleVfx = NGrandFinaleVfx.Create(__instance.Owner.Creature);
+    //     if (nGrandFinaleVfx != null)
+    //     {
+    //         NCombatRoom.Instance?.CombatVfxContainer.AddChildSafely(nGrandFinaleVfx);
+    //         await Cmd.Wait(NGrandFinaleVfx.totalAnticipationDuration);
+    //     }
+    // }
+
+    // [HarmonyPatch(typeof(AttackCommand), nameof(AttackCommand.WithHitFx))]
+    // static class AttackCommandPatch
+    // {
+    //     [HarmonyPostfix]
+    //     public static bool Prefix(AttackCommand __instance, ref AttackCommand __result)
+    //     {
+    //         if (!DoingEffect) return true;
+    //         __result = __instance.WithHitFx(tmpSfx: "blunt_attack.mp3").WithHitVfxNode(NGrandFinaleImpactVfx.Create);
+    //         DoingEffect = false;
+    //         return false;
+    //     }
+    // }
+
+    // static async Task OnPlay(this Clash card, PlayerChoiceContext choiceContext, CardPlay cardPlay)
+    // {
+    //     ArgumentNullException.ThrowIfNull(cardPlay.Target, "cardPlay.Target");
+    //     await DamageCmd.Attack(card.DynamicVars.Damage.BaseValue).FromCard(card, cardPlay).Targeting(cardPlay.Target)
+    //         .WithHitFx("vfx/vfx_attack_slash")
+    //         .Execute(choiceContext);
+    // }
+
+    // TODO: try to get the above fully working.
+    [HarmonyPatch(typeof(Clash), "OnPlay", MethodType.Async)]
+    static internal bool Prefix(Clash __instance, PlayerChoiceContext choiceContext, CardPlay cardPlay, ref Task __result)
     {
-        instructions = AsyncMethodCall.Create(
-            generator, instructions, original,
-            callMethod: AccessTools.Method(typeof(ClashPatch), nameof(DoGrandFinaleVfx)),
-            beforeState: original // run first
-        );
-        var execute = AccessTools.Method(typeof(AttackCommand), nameof(AttackCommand.Execute));
-        // return instructions;
-        return new CodeMatcher(instructions, generator)
-            .MatchStartForward(CodeMatch.Calls(execute))
-            .ThrowIfInvalid("Could not locate the final .Execute call inside the fluent builder.")
-            .InsertAndAdvance(CodeInstruction.Call(typeof(ClashPatch), nameof(Build)))
-            .Instructions();
+        if (MyModConfig.ClashAsGrandFinale)
+        {
+            __result = OnPlay2(__instance, choiceContext, cardPlay);
+            return false;
+        }
+        return true;
     }
-
-
-    static AttackCommand Build(Clash _, AttackCommand command) => command
-                .WithHitVfxNode(NGrandFinaleImpactVfx.Create)
-                // .WithHitFx(vfx: "vfx/vfx_attack_slash", tmpSfx: "blunt_attack.mp3")
-                // .WithHitFx(tmpSfx: "blunt_attack.mp3")
-                ;
-    internal static async Task DoGrandFinaleVfx(Clash __instance)
+    static async Task OnPlay2(this Clash card, PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        NGrandFinaleVfx? nGrandFinaleVfx = NGrandFinaleVfx.Create(__instance.Owner.Creature);
+        NGrandFinaleVfx? nGrandFinaleVfx = NGrandFinaleVfx.Create(card.Owner.Creature);
         if (nGrandFinaleVfx != null)
         {
             NCombatRoom.Instance?.CombatVfxContainer.AddChildSafely(nGrandFinaleVfx);
             await Cmd.Wait(NGrandFinaleVfx.totalAnticipationDuration);
         }
+
+        ArgumentNullException.ThrowIfNull(cardPlay.Target, "cardPlay.Target");
+
+        await DamageCmd.Attack(card.DynamicVars.Damage.BaseValue).FromCard(card, cardPlay).Targeting(cardPlay.Target)
+            .WithHitFx("vfx/vfx_attack_slash", tmpSfx: "blunt_attack.mp3").WithHitVfxNode(NGrandFinaleImpactVfx.Create)
+            .Execute(choiceContext);
     }
 }

@@ -20,15 +20,7 @@ public record CardImg(string Path)
 
     // public string PortraitPngPath { get; } = ImageHelperExtensions.GetModImagePath($"{path}.png");
     public CardImg Upgraded() => Path.EndsWith("_plus") ? this : new(Path + "_plus");
-    internal bool Exists()
-    {
-        var exists = ResourceLoader.Exists(PortraitPath);
-        if (Path.Contains("soul"))
-        {
-            MainFile.Logger.Debug($"Soul at {Path} exists: {exists}");
-        }
-        return exists;
-    }
+    internal bool Exists() => ResourceLoader.Exists(PortraitPath);
 }
 abstract public class ICardImgFactory(IEnumerable<string> AllPaths)
 {
