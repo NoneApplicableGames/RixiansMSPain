@@ -82,8 +82,7 @@ public readonly struct NetModSettings
     // 1. ADD NEW TOGGLES HERE
     public bool Canary => EnabledFlags.Contains("C");
     public bool BetaShiv => Canary && EnabledFlags.Contains("Shiv");
-    // TODO: not yet added
-    // public bool BetaSoul => EnabledFlags.Contains("Soul");
+    public bool BetaSoul => EnabledFlags.Contains("Soul");
 
     // Constructor that builds automatically from the local config settings
     public NetModSettings()
