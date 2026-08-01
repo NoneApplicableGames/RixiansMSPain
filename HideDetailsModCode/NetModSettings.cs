@@ -31,7 +31,7 @@ public static class StringExtensions
 
 internal class MSPainNetConfigCmd : AbstractConsoleCmd
 {
-    public override string CmdName => "MSPainNetConfigs";
+    public override string CmdName => "mspainnetconfigs";
 
     public override string Args => "";
 
@@ -47,7 +47,7 @@ internal class MSPainNetConfigCmd : AbstractConsoleCmd
         if (players == null)
         {
             if (LocalContext.NetId is { } id) return new(true, Write(id, GetPlayerName(id), new()));
-            else return new(true, "You:\n" + new NetModSettings().ToString().ToIndentedString(4));
+            else return new(true, You());
         }
         List<string> contents = [];
         foreach (var (NetId, Username) in players)
@@ -56,8 +56,15 @@ internal class MSPainNetConfigCmd : AbstractConsoleCmd
         }
         return new(true, string.Join('\n', contents));
     }
+
+    private static string You()
+    {
+        return "You:\n" + new NetModSettings().ToString().ToIndentedString(4);
+    }
+
     static string Write(ulong NetId, string Username, NetModSettings? config = null)
     {
+        if (NetId == 1) return You();
         var builder = new StringBuilder();
         builder.AppendLine($"{NetId} ({Username})");
         config ??= NetModSettings.GetPlayerConfig(NetId);
@@ -74,7 +81,7 @@ public readonly struct NetModSettings
 {
     // 1. ADD NEW TOGGLES HERE
     public bool Canary => EnabledFlags.Contains("C");
-    public bool BetaShiv => EnabledFlags.Contains("Shiv");
+    public bool BetaShiv => Canary && EnabledFlags.Contains("Shiv");
     // TODO: not yet added
     // public bool BetaSoul => EnabledFlags.Contains("Soul");
 
@@ -142,6 +149,7 @@ public readonly struct NetModSettings
     }
     public static NetModSettings? GetPlayerConfig(ulong? NetId)
     {
+        if (NetId == 1) return new();
         if (NetId is not { } id) return null;
         var modStr = GetPlayerModString(id); // TODO: weird cast. check it.
         if (string.IsNullOrEmpty(modStr)) return null;
