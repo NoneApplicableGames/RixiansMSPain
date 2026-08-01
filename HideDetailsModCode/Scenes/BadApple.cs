@@ -9,7 +9,8 @@ namespace HideDetailsMod.HideDetailsModCode.Scenes;
 
 partial class BadApple : Control
 {
-	static public AddedNode<NCard, BadApple> Node = new("res://HideDetailsMod/scenes/cards/bad_apple.tscn", (card, animation) => animation.SetCard(card));
+	static public AddedNode<NCard, BadApple> Node = new("res://HideDetailsMod/scenes/cards/bad_apple.tscn", 
+		(card, animation) => animation.SetCard(card));
 	// res://HideDetailsMod/scenes/cards/bundle_of_joy.tscn
 #nullable disable
 	NCard card;
