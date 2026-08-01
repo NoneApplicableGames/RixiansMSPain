@@ -31,7 +31,7 @@ public static class StringExtensions
 
 internal class MSPainNetConfigCmd : AbstractConsoleCmd
 {
-    public override string CmdName => "mspainnetconfigs";
+    public override string CmdName => "MSPainNetConfigs";
 
     public override string Args => "";
 
@@ -39,7 +39,7 @@ internal class MSPainNetConfigCmd : AbstractConsoleCmd
 
     public override bool IsNetworked => false;
 
-    public override bool DebugOnly => !MainFile.IsCanary;
+    public override bool DebugOnly => false;//!MainFile.IsCanary;
 
     public override CmdResult Process(Player? issuingPlayer, string[] args)
     {
@@ -75,7 +75,8 @@ public readonly struct NetModSettings
     // 1. ADD NEW TOGGLES HERE
     public bool Canary => EnabledFlags.Contains("C");
     public bool BetaShiv => EnabledFlags.Contains("Shiv");
-    public bool BetaSoul => EnabledFlags.Contains("Soul");
+    // TODO: not yet added
+    // public bool BetaSoul => EnabledFlags.Contains("Soul");
 
     // Constructor that builds automatically from the local config settings
     public NetModSettings()
@@ -130,17 +131,19 @@ public readonly struct NetModSettings
             : "";
     }
 
-    public static string? GetPlayerModString(ulong NetId)
+    public static string? GetPlayerModString(ulong? NetId)
     {
-        if (!NetModSettingsPatch.GameInfos.TryGetValue(NetId, out var msg)) return default;
+        if (NetId is not { } id) return null;
+        if (!NetModSettingsPatch.GameInfos.TryGetValue(id, out var msg)) return null;
 
         var modStr = msg.versionInfo.otherMods?.FirstOrDefault(m => m.StartsWith(MainFile.ModId + "-"));
         if (string.IsNullOrEmpty(modStr)) return null;
         return modStr;
     }
-    public static NetModSettings? GetPlayerConfig(ulong NetId)
+    public static NetModSettings? GetPlayerConfig(ulong? NetId)
     {
-        var modStr = GetPlayerModString(NetId);
+        if (NetId is not { } id) return null;
+        var modStr = GetPlayerModString(id); // TODO: weird cast. check it.
         if (string.IsNullOrEmpty(modStr)) return null;
 
         // Automatically slices everything after the mod name into string tokens

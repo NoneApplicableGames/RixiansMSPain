@@ -206,14 +206,18 @@ public partial class AlternateArts
             MainFile.Logger.Warn($"InitCheck failed with: {error}");
         }
     }
-
+    public static bool ShivCanaryActive(Player? player)
+    {
+        var settings = NetModSettings.GetPlayerConfig(player?.NetId);
+        return settings?.BetaShiv == true;
+    }
     public static ICardImgFactory[] Arts => [
         new CardImgFactory2<Shiv>(["token/shiv_2", "token/shiv_fanned", "token/shiv_fanned_inky"], card => {
             if (card.HasFanOfKnives) {
                 if (card.Enchantment is Inky) return "token/shiv_fanned_inky";
                 return "token/shiv_fanned";
             }
-            if (MyModConfig.UseBetaShivArt) return "token/shiv_2";
+            if (ShivCanaryActive(card.Owner)) return "token/shiv_2";
             return null;
         }),
         new CardImgFactory2<Predator>("silent/predator_gold_axe", card => Util.HasCard<GoldAxe>(Util.GetOwner(card))),

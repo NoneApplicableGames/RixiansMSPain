@@ -14,8 +14,10 @@ internal class MyModConfig : SimpleModConfig
 #if CANARY
     [ConfigSection("Canary only!")]
     // See NetUtils
+    public static bool EmulateCanaryMode {get; set;} = true;
     public static bool UseBetaShivArt { get; set; } = false;
-    public static bool UseBetaSoulArt { get; set; } = false;
+    // TODO: not yet added
+    [ConfigHideInUI] public static bool UseBetaSoulArt { get; set; } = false;
 #else
     [ConfigIgnore] public static bool UseBetaShivArt => false;
     [ConfigIgnore] public static bool UseBetaSoulArt => false;

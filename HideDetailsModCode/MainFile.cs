@@ -39,7 +39,7 @@ public partial class MainFile : Node
     }
 
 #if CANARY
-    public static bool IsCanary => true;
+    public static bool IsCanary => MainFile.EmulateCanaryMode ? true : false;
 #else
     public static bool IsCanary => false;
 #endif
