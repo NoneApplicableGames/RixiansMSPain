@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dfr41olvdwgq5"
-path="res://.godot/imported/soul_plus.png-f55b1387c51f8c80e58e3770b621f1c8.ctex"
+uid="uid://b32bggmjjhe48"
+path="res://.godot/imported/soul_wip.png-f32a41c2555e63de2faef086c5087238.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://artist_assets/token/beta/soul_plus.png"
-dest_files=["res://.godot/imported/soul_plus.png-f55b1387c51f8c80e58e3770b621f1c8.ctex"]
+source_file="res://artist_assets/token/soul_wip.png"
+dest_files=["res://.godot/imported/soul_wip.png-f32a41c2555e63de2faef086c5087238.ctex"]
 
 [params]
 

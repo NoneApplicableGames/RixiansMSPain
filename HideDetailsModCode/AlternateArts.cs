@@ -207,17 +207,18 @@ public partial class AlternateArts
         }
     }
 
-    public static NetModSettings ConfigOf(Player? player) => NetModSettings.GetPlayerConfig(player?.NetId) ?? new();
+    public static NetModSettings ConfigFrom(Player? player) => NetModSettings.GetPlayerConfig(player?.NetId) ?? new();
+    public static NetModSettings ConfigFrom(CardModel? card) => ConfigFrom(Util.GetOwner(card));
 
     public static ICardImgFactory[] Arts => [
-        new CardImgFactory2<Soul>([], card => ConfigOf(card.Owner).BetaSoul ? "token/beta/soul" : null),
+        new CardImgFactory2<Soul>(["token/soul_wip"], card => ConfigFrom(card).BetaSoul ? "token/beta/soul" : "token/soul_wip"),
 
         new CardImgFactory2<Shiv>(["token/shiv_2", "token/shiv_fanned", "token/shiv_fanned_inky"], card => {
             if (card.HasFanOfKnives) {
                 if (card.Enchantment is Inky) return "token/shiv_fanned_inky";
                 return "token/shiv_fanned";
             }
-            if (ConfigOf(Util.GetOwner(card)).BetaShiv) return "token/shiv_2";
+            if (ConfigFrom(card).BetaShiv) return "token/shiv_2";
             return null;
         }),
         new CardImgFactory2<Predator>("silent/predator_gold_axe", card => Util.HasCard<GoldAxe>(Util.GetOwner(card))),
