@@ -1,7 +1,7 @@
 ﻿{
   "title": "Rixian's MSPain (Canary)",
   "description": "This is the tester's version of the mod. Go see the public one!",
-  "changeNote": "Added Cacophony\nFixed beta v0.110 compatibility\nMade some things hopefully more reliable and less likely to break",
+  "changeNote": "Added Cacophony\nIlluminated Luminesce\nFixed beta v0.110 compatibility\nMade some things hopefully more reliable and less likely to break",
   "visibility": "unlisted",
   "tags": [],
   "dependencies": [3737335127]

@@ -1,4 +1,5 @@
 using BaseLib.Extensions;
+using BaseLib.Utils;
 using Godot;
 using HarmonyLib;
 using HideDetailsMod.HideDetailsModCode.Patches;
@@ -101,11 +102,11 @@ public partial class AlternateArts
             return player;
         }
     }
-
+    internal class ColorBox(Color color) { public Color color = color; }
+    static internal NotNullSpireField<NCard, ColorBox> NCardSparklesColor = new(card => new(card._sparkles.Modulate));
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(NCard), nameof(NCard._Ready))]
-    [HarmonyPatch(typeof(NCard), nameof(NCard.Reload))]
-    public static void MakeGlowGlowier(NCard __instance, ref GpuParticles2D ____sparkles, ref NCardRareGlow? ____rareGlow, ref NCardUncommonGlow? ____uncommonGlow)
+    [HarmonyPatch(typeof(NCard), nameof(NCard.UpdateVisuals))]
+    public static void ApplyGlow(NCard __instance, ref GpuParticles2D ____sparkles, ref NCardRareGlow? ____rareGlow, ref NCardUncommonGlow? ____uncommonGlow)
     {
         if (!GodotObject.IsInstanceValid(__instance)) return;
         if (!GodotObject.IsInstanceValid(__instance.Body)) return;
@@ -123,19 +124,31 @@ public partial class AlternateArts
             ____uncommonGlow?.QueueFree();
             ____uncommonGlow = null;
         }
-
-        var card = __instance;
-
-        if (card.Model is not Glow)
+        void ResetSparkles(ref GpuParticles2D ____sparkles)
         {
             ____sparkles.Visible = false;
+            ____sparkles.Modulate = NCardSparklesColor[__instance].color;
+        }
+        var card = __instance;
+
+        Color LuminesceColor = new Color(0.314f, 0.784f, 0.471f);
+        bool IsLuminesce = card.Model is Luminesce { IsUpgraded: true };
+        bool IsGlow = card.Model is Glow;
+
+        if (!IsGlow && !IsLuminesce)
+        {
             RemoveRarityGlow(ref ____rareGlow, ref ____uncommonGlow, card);
             card.CardHighlight.Modulate = NCardHighlight.playableColor;
             return;
         }
 
-        // Glow doesn't need to sparkle tbh.
-        ____sparkles.Visible = false;
+        if (!IsLuminesce) ResetSparkles(ref ____sparkles);
+
+        if (IsLuminesce)
+        {
+            ____sparkles.Visible = true;
+            ____sparkles.Modulate = LuminesceColor;
+        }
 
         if (____rareGlow == null)
         {
@@ -144,6 +157,7 @@ public partial class AlternateArts
             {
                 card.Body.AddChildSafely(glow);
                 card.Body.MoveChildSafely(glow, 1);
+                if (IsLuminesce) glow.Modulate = LuminesceColor;
             }
         }
 
@@ -154,10 +168,12 @@ public partial class AlternateArts
             {
                 card.Body.AddChildSafely(glow);
                 card.Body.MoveChildSafely(glow, 1);
+                if (IsLuminesce) glow.Modulate = LuminesceColor;
+
             }
         }
 
-        card.CardHighlight.Modulate = NCardHighlight.gold;
+        card.CardHighlight.Modulate = IsLuminesce ? LuminesceColor : NCardHighlight.gold;
     }
 
     [HarmonyPatch]
