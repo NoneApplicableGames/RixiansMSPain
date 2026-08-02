@@ -1,8 +1,8 @@
 [gd_scene load_steps=7 format=3 uid="uid://b1ca1888jhi8f"]
 
-[ext_resource type="Script" uid="uid://omoft1tb67hq" path="res://HideDetailsModCode/Scenes/Rattle.cs" id="1_aqoff"]
-[ext_resource type="Texture2D" uid="uid://cbcf33cx4wi73" path="res://images/atlases/card_atlas.sprites/necrobinder/rattle.tres" id="1_oldkm"]
-[ext_resource type="AudioStream" uid="uid://uvtd3voouxvw" path="res://HideDetailsMod/scenes/cards/BusterJam Meme.mp3" id="3_reo1r"]
+[ext_resource type="Script" uid="uid://omoft1tb67hq" path="res://HideDetailsModCode/Scenes/RattleAnimation.cs" id="1_wwi4e"]
+[ext_resource type="Texture2D" uid="uid://cbcf33cx4wi73" path="res://images/atlases/card_atlas.sprites/necrobinder/rattle.tres" id="2_8q43s"]
+[ext_resource type="AudioStream" uid="uid://uvtd3voouxvw" path="res://HideDetailsMod/scenes/cards/BusterJam Meme.mp3" id="3_itv1x"]
 
 [sub_resource type="Animation" id="Animation_aqoff"]
 length = 0.001
@@ -89,16 +89,17 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_aqoff")
+script = ExtResource("1_wwi4e")
 
 [node name="TestSprite" type="Sprite2D" parent="."]
-texture = ExtResource("1_oldkm")
+texture = ExtResource("2_8q43s")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
 libraries = {
 &"": SubResource("AnimationLibrary_aqoff")
 }
 speed_scale = 1.5
 
 [node name="BusterJamMeme" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("3_reo1r")
+stream = ExtResource("3_itv1x")
