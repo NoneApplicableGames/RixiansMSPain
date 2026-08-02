@@ -369,6 +369,10 @@ public static class AlternateArts
                 _ => "status/wither3"
             };
         }),
+        new CardImgFactory2<LanternKey>("quest/lantern_key_if_bread", card => {
+            if (card.IsCanonical) return null;
+            return Util.GetOwner(card)?.Relics.OfType<Bread>().Any() == true;
+        }),
         // new CardImgFactory2<CardModel>([], card => ),
     ];
     static public bool ParryWasInspected { get; set; } = false;
