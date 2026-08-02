@@ -13,11 +13,8 @@ public record CardImg(string Path)
 {
     public CardImg(CardModel card) : this($"{card.Pool.Title.ToLowerInvariant()}/{card.Id.Entry.ToLowerInvariant()}") { }
     public static CardImg Upgraded(CardModel card) => new CardImg(card).Upgraded();
-    public string PortraitPath => $"res://images/atlases/card_atlas.sprites/{Path}.tres";
-    internal string IPortraitJpgPath => $"res://artist_assets/{Path}.jpg";
-    internal string IPortraitPngPath => $"res://artist_assets/{Path}.png";
-    public string PortraitPngPath => ResourceLoader.Exists(IPortraitJpgPath) ? IPortraitJpgPath : IPortraitPngPath;
-
+    public string PortraitPath => $"res://HideDetailsMod/images/atlases/card_atlas.sprites/{Path}.tres";
+    public string PortraitPngPath => $"res://HideDetailsMod/artist_assets/{Path}.png";
     // public string PortraitPngPath { get; } = ImageHelperExtensions.GetModImagePath($"{path}.png");
     public CardImg Upgraded() => Path.EndsWith("_plus") ? this : new(Path + "_plus");
     internal bool Exists() => ResourceLoader.Exists(PortraitPath);

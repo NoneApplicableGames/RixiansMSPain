@@ -51,6 +51,7 @@ public partial class DefileExhaustIcon : Control
 
     public override void _Process(double delta)
     {
+        if (!MyModConfig.UseCustomArt && Visible) Visible = false;
         if (Button == null) return;
         // every frame
         var player = Button._localPlayer;

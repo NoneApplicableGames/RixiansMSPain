@@ -48,6 +48,7 @@
 
 //     public override void _Process(double delta)
 //     {
+// if (!MyModConfig.UseCustomArt && Visible) Visible = false;
 //         if (model != card?.Model) UpdateModel(card?.Model);
 
 //         if (!Visible) return;

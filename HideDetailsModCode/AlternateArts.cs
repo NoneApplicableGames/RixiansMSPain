@@ -44,9 +44,9 @@ static class Extensions
     }
 }
 [HarmonyPatch]
-public partial class AlternateArts
+public static class AlternateArts
 {
-
+    [Obsolete("Most things shouldn't actually need this")]
     public static void CardNeedsReload(CardModel card) => AltArtListenerPatch.NCardNeedsUpdateEvent[card]?.Invoke();
 
     public class Util
@@ -129,6 +129,13 @@ public partial class AlternateArts
             ____sparkles.Visible = false;
             ____sparkles.Modulate = NCardSparklesColor[__instance].color;
         }
+        if (!MyModConfig.UseCustomArt)
+        {
+            // TODO: track if anything changed, and reset it if custom art was changed
+            if (____sparkles.Modulate != NCardSparklesColor[__instance].color)
+                ResetSparkles(ref ____sparkles); return;
+        }
+
         var card = __instance;
 
         Color LuminesceColor = new Color(0.314f, 0.784f, 0.471f);
@@ -169,7 +176,6 @@ public partial class AlternateArts
                 card.Body.AddChildSafely(glow);
                 card.Body.MoveChildSafely(glow, 1);
                 if (IsLuminesce) glow.Modulate = LuminesceColor;
-
             }
         }
 
@@ -355,6 +361,15 @@ public partial class AlternateArts
             if (hand == null) return null;
             return hand.Cards.Any(IsOrMakesShivs);
         }),
+        new CardImgFactory2<Wither>(["status/wither","status/wither1","status/wither2","status/wither3"], card => {
+            if (card.IsCanonical) return "status/wither";
+            return card.FakeUpgradeLevel switch {
+                <= 0 => "status/wither1",
+                1 => "status/wither2",
+                _ => "status/wither3"
+            };
+        }),
+        // new CardImgFactory2<CardModel>([], card => ),
     ];
     static public bool ParryWasInspected { get; set; } = false;
     private static ICardImgFactory ParryAlt => new CardImgFactory2<Parry>("regent/parry_alt", card =>

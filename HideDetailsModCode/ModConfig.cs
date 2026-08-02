@@ -4,12 +4,27 @@ namespace HideDetailsMod.HideDetailsModCode;
 
 internal class MyModConfig : SimpleModConfig
 {
+    static public MyModConfig Init()
+    {
+        if (Instance == null)
+        {
+            var config = new MyModConfig();
+            ModConfigRegistry.Register(MainFile.ModId, config);
+            return config;
+        }
+        MainFile.Logger.Warn("Config was already initialized!");
+        return Instance;
+    }
+
+#nullable disable
+    static public MyModConfig Instance => ModConfigRegistry.Get<MyModConfig>();
+#nullable restore
+
     [ConfigSection("Credits")] public static bool ShowCreditsTooltip { get; set; } = true;
 
     [ConfigSection("Art")]
-    //
-    [ConfigHideInUI]
-    public static bool UseCustomArt { get; set; } = true;
+    // TODO: Not done yet. doesn't reset full-art 
+    [ConfigHideInUI] public static bool UseCustomArt { get; set; } = true;
 
 #if CANARY
     [ConfigSection("Canary only!")]

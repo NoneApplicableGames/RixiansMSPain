@@ -71,8 +71,8 @@
       ],
       "options": {
         "env": {
-          "INPUT_PATH": "res://artist_assets/",
-          "OUTPUT_PATH": "res://images/atlases/card_atlas.sprites/"
+          "INPUT_PATH": "res://HideDetailsMod/artist_assets/",
+          "OUTPUT_PATH": "res://HideDetailsMod/images/atlases/card_atlas.sprites/"
         }
       },
       "presentation": {

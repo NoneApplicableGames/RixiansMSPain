@@ -25,7 +25,7 @@ public partial class MainFile : Node
     {
         var assembly = Assembly.GetExecutingAssembly();
 
-        ModConfigRegistry.Register(ModId, new MyModConfig());
+        MyModConfig.Init();
         CustomLocTableManager.Register("usernames");
         CustomLocTableManager.Register("artists");
         CustomLocTableManager.Register("event_chatter");
