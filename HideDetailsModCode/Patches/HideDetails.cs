@@ -16,10 +16,7 @@ internal class HideDetails
     internal static void MakeEnergyInvisible(ref NCard __instance, ref TextureRect ____energyIcon)
     {
         if (!MyModConfig.HideEnergy || (MyModConfig.ExcludeFranticEscape && __instance.Model is FranticEscape))
-        {
-            ____energyIcon.Visible = true;
-            return;
-        }
+        { return; }
         ____energyIcon.Visible = false;
     }
 

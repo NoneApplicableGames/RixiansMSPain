@@ -1,6 +1,4 @@
-using HarmonyLib;
 using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.Models.Cards;
 
 using static HideDetailsMod.HideDetailsModCode.AlternateArts;
 namespace HideDetailsMod.HideDetailsModCode.Patches;
