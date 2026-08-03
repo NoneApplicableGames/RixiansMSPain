@@ -266,7 +266,7 @@ public static class AlternateArts
             return HasFiddle || HasNoDrawPower;
         }),
         new CardImgFactory2<Monologue>("regent/monologue_if_lunar_blast", card => Util.HasCard<LunarBlast>(Util.GetOwner(card))),
-        new CardImgFactory2<MindRot>(["token/mind_rot", "token/mind_rot_regent"], card => {
+        new CardImgFactory2<MindRot>(["token/mind_rot", "token/mind_rot_regent", "token/mind_rot_necrobinder"], card => {
             return Util.GetOwner(card)?.Character switch
             {
                 Ironclad => "token/mind_rot", // TODO: ironclad mind rot
