@@ -20,6 +20,8 @@ internal class MyModConfig : SimpleModConfig
     static public MyModConfig Instance => ModConfigRegistry.Get<MyModConfig>();
 #nullable restore
 
+    public static bool ShouldPatchCardExporter { get; set; }
+
     [ConfigSection("Credits")] public static bool ShowCreditsTooltip { get; set; } = true;
 
     [ConfigSection("Art")]
@@ -60,5 +62,4 @@ internal class MyModConfig : SimpleModConfig
 
     [ConfigSection("Exclusions (Cheating)")]
     public static bool ExcludeFranticEscape { get; set; } = false;
-
 }

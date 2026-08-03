@@ -1,14 +1,12 @@
 using MegaCrit.Sts2.Core.Models;
 
 using static HideDetailsMod.HideDetailsModCode.AlternateArts;
-namespace HideDetailsMod.HideDetailsModCode.Patches;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
+using BaseLib.Utils;
+using Godot;
 using HarmonyLib;
 
+namespace HideDetailsMod.HideDetailsModCode.Patches;
 // TODO: put in proper location
 public static class HarmonyPatchHelpers
 {
@@ -94,7 +92,7 @@ public static class ArtPatch
                 if (BaseImg.Exists()) result.Add(BaseImg.PortraitPath);
                 var UpgradedImg = BaseImg.Upgraded();
                 if (UpgradedImg.Exists()) result.Add(UpgradedImg.PortraitPath);
-                __result = result;
+                __result = result.Distinct();
             }
             catch (Exception e)
             {
@@ -118,6 +116,9 @@ public static class ArtPatch
         if (Img.Exists()) return Img;
         return null;
     }
+    static private SpireField<CardModel, (CardImg? Base, CardImg? Upgraded)> OverrideImg = new SpireField<CardModel, (CardImg? Base, CardImg? Upgraded)>(() => (null, null)).CopyOnClone();
+    static public void SetOverrideImage(this CardModel card, (CardImg? Base, CardImg? Upgraded) Override) => OverrideImg.Set(card, Override);
+    static public (CardImg? Base, CardImg? Upgraded) GetOverrideImage(this CardModel card) => OverrideImg.Get(card);
     [HarmonyPatch]
     public static class PortraitPath
     {
@@ -130,12 +131,21 @@ public static class ArtPatch
             MainFile.Logger.Info($"Found ");
             return impls;
         }
+
+
         [HarmonyPostfix]
         internal static void PostFix(CardModel __instance, ref string __result)
         {
             if (!MyModConfig.UseCustomArt) return;
             try
             {
+                var (OverrideBase, OverrideUpgrade) = __instance.GetOverrideImage();
+                var Override = __instance.IsUpgraded ? OverrideUpgrade : OverrideBase;
+                if (Override != null && Override.Exists())
+                {
+                    __result = Override.PortraitPath;
+                    return;
+                }
                 var Img = ImgFor(__instance);
                 if (Img != null && Img.Exists()) __result = Img.PortraitPath;
             }
@@ -163,6 +173,13 @@ public static class ArtPatch
             if (__instance == null) return;
             try
             {
+                var (OverrideBase, OverrideUpgrade) = __instance.GetOverrideImage();
+                var Override = __instance.IsUpgraded ? OverrideUpgrade : OverrideBase;
+                if (Override != null && Override.Exists())
+                {
+                    __result = Override.PortraitPngPath;
+                    return;
+                }
                 var Img = ImgFor(__instance);
                 if (Img != null && Img.Exists()) __result = Img.PortraitPngPath;
             }
