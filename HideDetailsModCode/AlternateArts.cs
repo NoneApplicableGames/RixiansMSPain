@@ -240,7 +240,7 @@ public static class AlternateArts
             if (me == null) return null;
             return Util.HasCard<Outbreak>(me) || me.HasPowerComapt("OutbreakPower");
         }),
-        new CardImgFactory2<Accelerant>("silent/poisonless_accelerant", card => {
+        new CardImgFactory2<Accelerant>("silent/accelerant_poisonless", card => {
             var me = Util.GetOwner(card);
             if (me == null) return null;
 
