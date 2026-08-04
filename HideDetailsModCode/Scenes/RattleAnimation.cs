@@ -41,8 +41,11 @@ partial class RattleAnimation : Control
         card._ancientPortrait.AddSiblingSafely(this);
         //Manually replace cost, effect text ect. if not hidden
         
-        if (ModConfig.HideTitle(Get()) == true) card.AddChildSafely(card._titleLabel);
-        if (Mod)
+        card.AddChildSafely(card._titleLabel);
+        card.AddChildSafely(card._descriptionLabel);
+        card.AddChildSafely(card._banner);
+        card.AddChildSafely(card._energyIcon);
+        
         
 
         UpdateModel(model);
