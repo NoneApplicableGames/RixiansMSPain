@@ -17,8 +17,8 @@ partial class RattleAnimation : Control
 
     //reference to the animation player node
 #nullable disable
-    public AnimationPlayer animation_player;
-    public NCard card;
+    AnimationPlayer animation_player;
+    NCard card;
 
 #nullable restore
     private CardModel? model;
@@ -36,7 +36,7 @@ partial class RattleAnimation : Control
     {
         animation_player = GetNode<AnimationPlayer>("AnimationPlayer");
         
-        //card.RemoveChildSafely(this);
+        card.Body.RemoveChildSafely(this);
         card.Body.AddChildSafely(animation_player);
         card._ancientPortrait.AddSiblingSafely(this);
 
