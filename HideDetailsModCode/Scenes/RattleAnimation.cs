@@ -1,18 +1,7 @@
 using BaseLib.Utils;
 using Godot;
-using MegaCrit.Sts2.Core.Combat;
-using MegaCrit.Sts2.Core.Combat.History.Entries;
-using MegaCrit.Sts2.Core.Commands;
-using MegaCrit.Sts2.Core.Commands.Builders;
 using MegaCrit.Sts2.Core.Entities.Cards;
-using MegaCrit.Sts2.Core.Entities.Creatures;
-using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Models.Monsters;
-using MegaCrit.Sts2.Core.Combat.History.Entries;
-using MegaCrit.Sts2.Core.Entities.Creatures;
-using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
@@ -28,8 +17,8 @@ partial class RattleAnimation : Control
 
     //reference to the animation player node
 #nullable disable
-    private AnimationPlayer animation_player;
-    private NCard card;
+    public AnimationPlayer animation_player;
+    public NCard card;
 
 #nullable restore
     private CardModel? model;
@@ -44,11 +33,16 @@ partial class RattleAnimation : Control
     public override void _Ready()
     {
         animation_player = GetNode<AnimationPlayer>("AnimationPlayer");
-
+        
+        
+        
         card.RemoveChildSafely(this);
+        card.Body.AddChildSafely(animation_player);
         card._ancientPortrait.AddSiblingSafely(this);
 
         UpdateModel(model);
+        
+        MainFile.Logger.Warn("rattle readied");
     }
 
     void UpdateModel(CardModel? cardModel)
@@ -69,13 +63,12 @@ partial class RattleAnimation : Control
     //Allows the rattle animation to loop as many times as osty will hit the taget for.
     public void LoopAnimation()
     {
-        
         //TODO: Make Animation loop for each time card hits this turn
-        var no_of_hits = ((CalculatedVar)(model.DynamicVars["CalculatedHits"])).Calculate();
-        //for (int i = 0; i <= no_of_hits; i++)
-        //{
-        animation_player.Play("rattle_rattling");
-        //}
+        var no_of_hits = ((CalculatedVar)(model.DynamicVars["CalculatedHits"])).Calculate(null);
+        for (int i = 0; i <= no_of_hits; i++)
+        {
+            animation_player.Play("rattle_rattling");
+        }
     }
 
     public void StopAnimation()
