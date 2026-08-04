@@ -11,10 +11,24 @@ internal class MyModConfig : SimpleModConfig
     [ConfigHideInUI]
     public static bool UseCustomArt { get; set; } = true;
 
+#if CANARY
+    [ConfigSection("Canary only!")]
+    // See NetUtils
+    public static bool EmulateCanaryMode { get; set; } = true;
+
+    public static bool UseBetaShivArt { get; set; } = false;
+    
+    public static bool UseBetaSoulArt { get; set; } = false;
+#else
+    [ConfigIgnore] public static bool EmulateCanaryMode => false;
+    [ConfigIgnore] public static bool UseBetaShivArt => false;
+    [ConfigIgnore] public static bool UseBetaSoulArt => false;
+#endif
+
     // Renamed to InfiniteBladesLength2 to reset configs
     [ConfigSlider(0, 5000, 10)] public static float InfiniteBladesLength2 { get; set; } = 3000;
 
-    public static bool UseBetaShivArt { get; set; } = false;
+    [ConfigHideInUI] // TODO: Not yet useful
     public static bool EnableNeurosurgeYippe { get; set; } = true;
     public static bool ClashAsGrandFinale { get; set; } = true;
 
