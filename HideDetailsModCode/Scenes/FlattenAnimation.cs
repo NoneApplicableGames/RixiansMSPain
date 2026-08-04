@@ -17,6 +17,7 @@ partial class FlattenAnimation : Control
 	//reference to the animation player node
 #nullable disable
 	AnimationPlayer animation_player;
+	AudioStreamPlayer splat_sfx; 
 	NCard card;
 
 #nullable restore
@@ -34,6 +35,7 @@ partial class FlattenAnimation : Control
 	public override void _Ready()
 	{
 		animation_player = GetNode<AnimationPlayer>("AnimationPlayer");
+		splat_sfx = GetNode<AudioStreamPlayer>("DeltaruneSplat");
 		
 		card.Body.RemoveChildSafely(this);
 		card.Body.AddChildSafely(animation_player);
@@ -48,7 +50,7 @@ partial class FlattenAnimation : Control
 	{
 		model = cardModel;
 		if (animation_player is null) return;
-		if (model is Rattle)
+		if (model is Flatten)
 		{
 			Visible = true;
 		}
@@ -72,6 +74,10 @@ partial class FlattenAnimation : Control
 
 		if (!Visible) return;
 
-		if (model?.Pile.Type == PileType.Play)  animation_player.Play("flatten");
+		if (model?.Pile.Type == PileType.Play)
+		{
+			animation_player.Play("flatten");
+			splat_sfx.Play();
+		}
 	}
 }
