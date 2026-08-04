@@ -11,7 +11,7 @@ namespace HideDetailsMod.HideDetailsModCode.Scenes;
 
 partial class RattleAnimation : Control
 {
-    static public AddedNode<NCard, RattleAnimation> Node = new("res://HideDetailsMod/scenes/cards/rattle.tscn",
+    static public AddedNode<NCard, RattleAnimation> Node = new("HideDetailsMod/scenes/cards/Rattle.tscn",
         (card, animation) => animation.SetCard(card));
 
 
@@ -28,21 +28,21 @@ partial class RattleAnimation : Control
     {
         this.card = card;
         model = card.Model;
+
+        MainFile.Logger.Info("Card Set!");
     }
 
     public override void _Ready()
     {
         animation_player = GetNode<AnimationPlayer>("AnimationPlayer");
         
-        
-        
-        card.RemoveChildSafely(this);
+        //card.RemoveChildSafely(this);
         card.Body.AddChildSafely(animation_player);
         card._ancientPortrait.AddSiblingSafely(this);
 
         UpdateModel(model);
         
-        MainFile.Logger.Warn("rattle readied");
+        MainFile.Logger.Info("RattleAnimation readied!");
     }
 
     void UpdateModel(CardModel? cardModel)
@@ -61,10 +61,12 @@ partial class RattleAnimation : Control
     }
 
     //Allows the rattle animation to loop as many times as osty will hit the taget for.
-    public void LoopAnimation()
+    public void PlayAndLoopAnimation()
     {
+        MainFile.Logger.Info("Playing rattle animation...");
         //TODO: Make Animation loop for each time card hits this turn
         var no_of_hits = ((CalculatedVar)(model.DynamicVars["CalculatedHits"])).Calculate(null);
+       
         for (int i = 0; i <= no_of_hits; i++)
         {
             animation_player.Play("rattle_rattling");
@@ -82,13 +84,6 @@ partial class RattleAnimation : Control
 
         if (!Visible) return;
 
-        switch (model?.Pile?.Type)
-        {
-            case PileType.Play:
-                LoopAnimation();
-                break;
-            default:
-                break;
-        }
+        if (model?.Pile.Type == PileType.Play) PlayAndLoopAnimation();
     }
 }
