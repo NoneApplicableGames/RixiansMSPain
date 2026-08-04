@@ -1,3 +1,4 @@
+using BaseLib.Config;
 using BaseLib.Utils;
 using Godot;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -13,7 +14,6 @@ partial class RattleAnimation : Control
 {
     static public AddedNode<NCard, RattleAnimation> Node = new("HideDetailsMod/scenes/cards/Rattle.tscn",
         (card, animation) => animation.SetCard(card));
-
 
     //reference to the animation player node
 #nullable disable
@@ -39,6 +39,11 @@ partial class RattleAnimation : Control
         card.Body.RemoveChildSafely(this);
         card.Body.AddChildSafely(animation_player);
         card._ancientPortrait.AddSiblingSafely(this);
+        //Manually replace cost, effect text ect. if not hidden
+        
+        if (ModConfig.HideTitle(Get()) == true) card.AddChildSafely(card._titleLabel);
+        if (Mod)
+        
 
         UpdateModel(model);
         
