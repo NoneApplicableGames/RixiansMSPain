@@ -17,11 +17,14 @@ partial class RattleAnimation : Control
 
     //reference to the animation player node
 #nullable disable
-    AnimationPlayer animation_player;
     NCard card;
+    AnimationPlayer animation_player;
 
 #nullable restore
     private CardModel? model;
+
+
+    private Tween rattle_tween_animation = new Tween();
 
     // Fetches the card model (ideally for rattle?)
     void SetCard(NCard card)
@@ -34,10 +37,19 @@ partial class RattleAnimation : Control
 
     public override void _Ready()
     {
-        animation_player = GetNode<AnimationPlayer>("AnimationPlayer");
+        //Apply all tween properties
+
+        rattle_tween_animation.TweenProperty(card.Body, "position:x", -600.0f,0.2f);
+        rattle_tween_animation.TweenProperty(card.Body, "rotation_degrees", -45.0f,0.2f);
+        rattle_tween_animation.Chain().TweenProperty(card.Body, "position:x", 600.0f,0.2f);
+        rattle_tween_animation.TweenProperty(card.Body, "rotation_degrees", 45.0f,0.2f);
+        rattle_tween_animation.Chain().TweenProperty(card.Body, "position:x", 600.0f,0.2f);
+        rattle_tween_animation.TweenProperty(card.Body, "rotation_degrees", 45.0f, 0.2f);
+        rattle_tween_animation.Chain().TweenProperty(card.Body, "position:x", 0.0f,0.2f);
+        rattle_tween_animation.TweenProperty(card.Body, "rotation_degrees", 0.0f, 0.2f);
         
         card.Body.RemoveChildSafely(this);
-        card.Body.AddChildSafely(animation_player);
+        card.Body.AddChildSafely(Node);
         card._ancientPortrait.AddSiblingSafely(this);
         //Manually replace cost, effect text ect. if not hidden
         
@@ -56,7 +68,7 @@ partial class RattleAnimation : Control
     void UpdateModel(CardModel? cardModel)
     {
         model = cardModel;
-        if (animation_player is null) return;
+        if (rattle_tween_animation is null) return;
         if (model is Rattle)
         {
             Visible = true;
@@ -72,18 +84,17 @@ partial class RattleAnimation : Control
     public void PlayAndLoopAnimation()
     {
         MainFile.Logger.Info("Playing rattle animation...");
-        //TODO: Make Animation loop for each time card hits this turn
         var no_of_hits = ((CalculatedVar)(model.DynamicVars["CalculatedHits"])).Calculate(null);
-       
+        
         for (int i = 0; i <= no_of_hits; i++)
         {
-            animation_player.Play("rattle_rattling");
+            rattle_tween_animation.Play();
         }
     }
 
     public void StopAnimation()
     {
-        if (animation_player.IsPlaying()) animation_player.Stop();
+        if (rattle_tween_animation.IsRunning()) rattle_tween_animation.Stop();
     }
 
     public override void _Process(double delta)

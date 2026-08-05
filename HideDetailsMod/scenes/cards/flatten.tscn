@@ -1,58 +1,36 @@
-[gd_scene load_steps=7 format=3 uid="uid://c61ivifljlyy4"]
+[gd_scene load_steps=6 format=3 uid="uid://c61ivifljlyy4"]
 
-[ext_resource type="Texture2D" uid="uid://d3ig5c0cqji6h" path="res://artist_assets/necrobinder/flatten.png" id="1_nq8vv"]
-[ext_resource type="Script" path="res://HideDetailsModCode/Scenes/FlattenAnimation.cs" id="1_o1qs4"]
+[ext_resource type="Script" uid="uid://c1m0b4rske1id" path="res://HideDetailsModCode/Scenes/FlattenAnimation.cs" id="1_o1qs4"]
 [ext_resource type="AudioStream" uid="uid://3up2tj350tja" path="res://HideDetailsMod/scenes/cards/deltarune_splat.mp3" id="2_36vo0"]
 
 [sub_resource type="Animation" id="Animation_36vo0"]
 length = 0.001
-tracks/0/type = "bezier"
+tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Flatten:scale:x")
+tracks/0/path = NodePath(".:scale")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(1, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/1/type = "bezier"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Flatten:scale:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(1, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
 }
 
 [sub_resource type="Animation" id="Animation_nq8vv"]
 resource_name = "flatten"
-length = 1.5
-tracks/0/type = "bezier"
+tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Flatten:scale:x")
-tracks/0/interp = 1
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"handle_modes": PackedInt32Array(0, 2),
-"points": PackedFloat32Array(1, -0.25, 0, 0.25, 0, 1, -0.038333334, 0, 0, 0),
-"times": PackedFloat32Array(0, 0.23)
-}
-tracks/1/type = "bezier"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Flatten:scale:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"handle_modes": PackedInt32Array(0, 0, 0, 0),
-"points": PackedFloat32Array(1, -0.25, 0, 0.25, 0, 0.8, -0.038333334, 0.009194056, 0, 0, 0.8, -0.038333334, 0.009194056, 0, 0, 0, -0.111111104, 0.14166667, 0, 0),
-"times": PackedFloat32Array(0, 0.33333334, 0.53333336, 1.1333333)
+"times": PackedFloat32Array(0, 0.1, 0.33333334, 0.73333335),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(1, 0.8), Vector2(1, 0.8), Vector2(1, 0)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_36vo0"]
@@ -69,10 +47,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_o1qs4")
-
-[node name="Flatten" type="Sprite2D" parent="."]
-position = Vector2(0, 23.5)
-texture = ExtResource("1_nq8vv")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {

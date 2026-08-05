@@ -12,8 +12,7 @@ partial class FlattenAnimation : Control
 {
 	static public AddedNode<NCard, FlattenAnimation> Node = new("HideDetailsMod/scenes/cards/flatten.tscn",
 		(card, animation) => animation.SetCard(card));
-
-
+	
 	//reference to the animation player node
 #nullable disable
 	AnimationPlayer animation_player;
@@ -34,7 +33,7 @@ partial class FlattenAnimation : Control
 
 	public override void _Ready()
 	{
-		animation_player = GetNode<AnimationPlayer>("AnimationPlayer");
+		//animation_player = GetNode<AnimationPlayer>("AnimationPlayer");
 		splat_sfx = GetNode<AudioStreamPlayer>("DeltaruneSplat");
 		
 		card.Body.RemoveChildSafely(this);
@@ -42,6 +41,7 @@ partial class FlattenAnimation : Control
 		card._ancientPortrait.AddSiblingSafely(this);
 
 		UpdateModel(model);
+		
 		
 		MainFile.Logger.Info("Flatten readied!");
 	}
@@ -57,27 +57,27 @@ partial class FlattenAnimation : Control
 		else
 		{
 			Visible = false;
-			StopAnimation();
 		}
 	}
 
-  
-
-	public void StopAnimation()
+	public void PlayAnimation()
 	{
-		if (animation_player.IsPlaying()) animation_player.Stop();
+		splat_sfx.Play();
+		Tween flatten_tween = CreateTween();
+		flatten_tween.TweenProperty(card.Body,"scale:y", 0.0f, 0.4f);
+		flatten_tween.Play();
 	}
 
 	public override void _Process(double delta)
 	{
+		if (card.Model is not Flatten) return;
 		if (model != card?.Model) UpdateModel(card?.Model);
 
 		if (!Visible) return;
 
 		if (model?.Pile.Type == PileType.Play)
 		{
-			animation_player.Play("flatten");
-			splat_sfx.Play();
+			if (!card.PlayPileTween.IsRunning()) PlayAnimation();
 		}
 	}
 }

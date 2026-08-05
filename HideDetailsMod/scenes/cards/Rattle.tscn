@@ -1,42 +1,30 @@
-[gd_scene load_steps=7 format=3 uid="uid://b1ca1888jhi8f"]
+[gd_scene load_steps=7 format=3 uid="uid://cbi23owhsu4nx"]
 
 [ext_resource type="Script" uid="uid://omoft1tb67hq" path="res://HideDetailsModCode/Scenes/RattleAnimation.cs" id="1_wwi4e"]
-[ext_resource type="Texture2D" uid="uid://cbcf33cx4wi73" path="res://images/atlases/card_atlas.sprites/necrobinder/rattle.tres" id="2_8q43s"]
 [ext_resource type="AudioStream" uid="uid://uvtd3voouxvw" path="res://HideDetailsMod/scenes/cards/BusterJam Meme.mp3" id="3_itv1x"]
+[ext_resource type="Texture2D" uid="uid://pyiy2yxee471" path="res://artist_assets/necrobinder/rattle.png" id="3_wwi4e"]
 
 [sub_resource type="Animation" id="Animation_aqoff"]
-length = 0.001
 tracks/0/type = "bezier"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("CardArt:position:x")
+tracks/0/path = NodePath("Sprite2D:position:x")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
+"points": PackedFloat32Array(0, -0.0005, 0, 0.0005, 0),
 "times": PackedFloat32Array(0)
 }
 tracks/1/type = "bezier"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("CardArt:position:y")
+tracks/1/path = NodePath("Sprite2D:position:y")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/2/type = "bezier"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("CardArt:rotation")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
+"points": PackedFloat32Array(0, -0.0005, 0, 0.0005, 0),
 "times": PackedFloat32Array(0)
 }
 
@@ -45,35 +33,35 @@ resource_name = "rattle_rattling"
 tracks/0/type = "bezier"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("CardArt:position:x")
+tracks/0/path = NodePath(".:position:x")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"handle_modes": PackedInt32Array(0, 0, 2, 0, 0, 0, 0),
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0, 0, 0),
 "points": PackedFloat32Array(0, -0.25, 0, 0.25, 0, 536, -0.045, -58.666664, 0, 0, -536, -0.03333333, 148, 0, 0, 536, -0.045, -58.666664, 0, 0, -536, -0.061111104, -89.333336, 0, 0, 536, -0.021666672, -140, 0, 0, 0, -0.02222222, 89.333336, 0, 0),
-"times": PackedFloat32Array(0, 0.26666668, 0.47, 0.6333333, 0.8, 0.9, 1)
+"times": PackedFloat32Array(0, 0.23333335, 0.43666667, 0.59999996, 0.7666667, 0.8666666, 0.96666664)
 }
 tracks/1/type = "bezier"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("CardArt:position:y")
+tracks/1/path = NodePath(".:position:y")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"handle_modes": PackedInt32Array(0, 2, 2, 2),
-"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0, 0, -0.045, 0, 0, 0, 0, -0.03333333, 0, 0, 0, 0, -0.021666672, 0, 0, 0),
-"times": PackedFloat32Array(0, 0.27, 0.47, 0.6)
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 tracks/2/type = "bezier"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("CardArt:rotation")
+tracks/2/path = NodePath(".:rotation")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"handle_modes": PackedInt32Array(0, 2, 2, 2, 2, 2, 2),
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0, 0, 0),
 "points": PackedFloat32Array(0, -0.25, 0, 0.25, 0, 0.37524578, -0.045, -0.06254096, 0, 0, -0.37524578, -0.034999996, 0.12508193, 0, 0, 0.37524578, -0.025000002, -0.12508193, 0, 0, -0.37524578, -0.026666671, 0.12508193, 0, 0, 0.37524578, -0.018333327, -0.12508193, 0, 0, 0, -0.016666671, 0.06254096, 0, 0),
-"times": PackedFloat32Array(0, 0.27, 0.48, 0.63, 0.79, 0.9, 1)
+"times": PackedFloat32Array(0, 0.2, 0.40999997, 0.56, 0.71999997, 0.83, 0.93)
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_aqoff"]
@@ -87,12 +75,10 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = 0.0009765625
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_wwi4e")
-
-[node name="CardArt" type="Sprite2D" parent="."]
-texture = ExtResource("2_8q43s")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 unique_name_in_owner = true
@@ -103,3 +89,7 @@ speed_scale = 1.5
 
 [node name="BusterJamMeme" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("3_itv1x")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+rotation = -0.5574909
+texture = ExtResource("3_wwi4e")
