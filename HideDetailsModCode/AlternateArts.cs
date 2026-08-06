@@ -240,7 +240,7 @@ public static class AlternateArts
             if (me == null) return null;
             return Util.HasCard<Outbreak>(me) || me.HasPowerComapt("OutbreakPower");
         }),
-        new CardImgFactory2<Accelerant>("silent/poisonless_accelerant", card => {
+        new CardImgFactory2<Accelerant>("silent/accelerant_poisonless", card => {
             var me = Util.GetOwner(card);
             if (me == null) return null;
 
@@ -266,7 +266,7 @@ public static class AlternateArts
             return HasFiddle || HasNoDrawPower;
         }),
         new CardImgFactory2<Monologue>("regent/monologue_if_lunar_blast", card => Util.HasCard<LunarBlast>(Util.GetOwner(card))),
-        new CardImgFactory2<MindRot>(["token/mind_rot", "token/mind_rot_regent"], card => {
+        new CardImgFactory2<MindRot>(["token/mind_rot", "token/mind_rot_regent", "token/mind_rot_necrobinder"], card => {
             return Util.GetOwner(card)?.Character switch
             {
                 Ironclad => "token/mind_rot", // TODO: ironclad mind rot

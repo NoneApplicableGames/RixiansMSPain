@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ub283f2lec1g"
-path="res://.godot/imported/poisonless_accelerant.png-1367f7e9bae35a64f2b09df0c947460e.ctex"
+uid="uid://dlmm2b2rqj5rx"
+path="res://.godot/imported/accelerant_poisonless.png-22d637788ed0bac43be0279fcbe964e4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://HideDetailsMod/artist_assets/silent/poisonless_accelerant.png"
-dest_files=["res://.godot/imported/poisonless_accelerant.png-1367f7e9bae35a64f2b09df0c947460e.ctex"]
+source_file="res://HideDetailsMod/artist_assets/silent/accelerant_poisonless.png"
+dest_files=["res://.godot/imported/accelerant_poisonless.png-22d637788ed0bac43be0279fcbe964e4.ctex"]
 
 [params]
 

@@ -1,4 +1,3 @@
-using BaseLib.Config;
 using BaseLib.Utils;
 using Logger = MegaCrit.Sts2.Core.Logging.Logger;
 using LogType = MegaCrit.Sts2.Core.Logging.LogType;
@@ -39,7 +38,7 @@ public partial class MainFile : Node
     }
 
 #if CANARY
-    public static bool IsCanary => MyModConfig.EmulateCanaryMode ? true : false;
+    public static bool IsCanary => MyModConfig.EmulateCanaryMode;
 #else
     public static bool IsCanary => false;
 #endif

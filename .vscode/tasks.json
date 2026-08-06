@@ -13,7 +13,7 @@
     {
       "label": "Build Mod (Debug)",
       "type": "shell",
-      "command": "dotnet build -c Debug -p:WorkshopChannel=${input:channel}",
+      "command": "dotnet build -c Debug -p:WorkshopChannel=Canary",
       "group": { "kind": "build", "isDefault": true },
       "problemMatcher": ["$msCompile"]
     },
