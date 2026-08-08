@@ -3,8 +3,9 @@ using MegaCrit.Sts2.Core.Models;
 using static HideDetailsMod.HideDetailsModCode.AlternateArts;
 using System.Reflection;
 using BaseLib.Utils;
-using Godot;
 using HarmonyLib;
+using HideDetailsMod.HideDetailsModCode.AlternateArts2;
+using MegaCrit.Sts2.Core.Modding;
 
 namespace HideDetailsMod.HideDetailsModCode.Patches;
 // TODO: put in proper location
@@ -29,8 +30,9 @@ public static class HarmonyPatchHelpers
         Type[] paramTypes = baseMethod.GetParameters().Select(p => p.ParameterType).ToArray();
         Type[]? genericArgs = baseMethod.IsGenericMethod ? baseMethod.GetGenericArguments() : null;
 
-        assemblies ??= AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic);
-
+        // assemblies ??= AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic);
+        // No need for searching unneeded places
+        assemblies ??= ModManager.Mods.SelectMany(mod => mod.assemblies).Prepend(typeof(ModManager).Assembly);
         foreach (var assembly in assemblies)
         {
             Type[] types;
@@ -82,7 +84,12 @@ public static class ArtPatch
             if (!MyModConfig.UseCustomArt) return;
             try
             {
-                List<string> result = [.. __result];
+                if (MyModConfig.UseNewArtPatch)
+                {
+                    IAlternateCardArt.Patch.AllPortraitPaths(__instance, ref __result);
+                    return;
+                }
+                var result = __result.ToList();
 
                 var found = GetAltsFor(__instance);
 
@@ -139,6 +146,12 @@ public static class ArtPatch
             if (!MyModConfig.UseCustomArt) return;
             try
             {
+                if (MyModConfig.UseNewArtPatch)
+                {
+                    IAlternateCardArt.Patch.PortraitPath(__instance, ref __result);
+                    return;
+                }
+
                 var (OverrideBase, OverrideUpgrade) = __instance.GetOverrideImage();
                 var Override = __instance.IsUpgraded ? OverrideUpgrade : OverrideBase;
                 if (Override != null && Override.Exists())
@@ -173,6 +186,12 @@ public static class ArtPatch
             if (__instance == null) return;
             try
             {
+                if (MyModConfig.UseNewArtPatch)
+                {
+                    IAlternateCardArt.Patch.PortraitPngPath(__instance, ref __result);
+                    return;
+                }
+
                 var (OverrideBase, OverrideUpgrade) = __instance.GetOverrideImage();
                 var Override = __instance.IsUpgraded ? OverrideUpgrade : OverrideBase;
                 if (Override != null && Override.Exists())

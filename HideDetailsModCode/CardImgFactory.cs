@@ -53,7 +53,6 @@ public record CardImg(string Path)
         return null;
     }
 
-
     public CardImg(CardModel card) : this($"{card.Pool.Title.ToLowerInvariant()}/{card.Id.Entry.ToLowerInvariant()}") { }
     public static CardImg Upgraded(CardModel card) => new CardImg(card).Upgraded();
     public string PortraitPath => $"res://HideDetailsMod/images/atlases/card_atlas.sprites/{Path}.tres";
@@ -62,7 +61,11 @@ public record CardImg(string Path)
     internal bool Exists() => ResourceLoader.Exists(PortraitPath);
     public bool IsUpgraded => Path.EndsWith("_plus");
     public CardImg Upgraded() => IsUpgraded ? this : new(Path + "_plus");
-    internal CardImg Downgraded() => IsUpgraded ? new(Path[..Path.LastIndexOf("_plus")]) : this;
+    public CardImg Downgraded() => IsUpgraded ? new(Path[..Path.LastIndexOf("_plus")]) : this;
+    public bool IsBeta => Path.Contains("/beta/");
+    public CardImg Beta() => IsBeta ? this : new(Path.Replace("/", "/beta/"));
+
+    public CardImg NonBeta() => !IsBeta ? this : new(Path.Replace("/beta/", "/"));
 }
 abstract public class ICardImgFactory(IEnumerable<string> AllPaths)
 {

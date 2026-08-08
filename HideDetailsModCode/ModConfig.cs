@@ -28,6 +28,8 @@ internal class MyModConfig : SimpleModConfig
     // TODO: Not done yet. doesn't reset full-art 
     [ConfigHideInUI] public static bool UseCustomArt { get; set; } = true;
 
+    public static bool UseNewArtPatch { get; set; } = false;
+
 #if CANARY
     [ConfigSection("Canary only!")]
     // See NetUtils

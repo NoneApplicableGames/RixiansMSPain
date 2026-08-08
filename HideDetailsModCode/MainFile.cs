@@ -7,6 +7,7 @@ using HarmonyLib;
 using BaseLib.Extensions;
 using System.Reflection;
 using BaseLib.Audio;
+using HideDetailsMod.HideDetailsModCode.AlternateArts2;
 
 namespace HideDetailsMod.HideDetailsModCode;
 

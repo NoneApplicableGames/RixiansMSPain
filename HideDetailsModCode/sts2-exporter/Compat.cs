@@ -5,143 +5,49 @@ using BaseLib.Utils;
 using HarmonyLib;
 using HideDetailsMod.HideDetailsModCode;
 using HideDetailsMod.HideDetailsModCode.Patches;
-using MegaCrit.Sts2.Core.DevConsole;
-using MegaCrit.Sts2.Core.DevConsole.ConsoleCommands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
-using MegaCrit.Sts2.Core.Entities.Players;
-using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.Models.Cards;
-using MegaCrit.Sts2.Core.Models.Enchantments;
-using MegaCrit.Sts2.Core.Nodes;
-using MegaCrit.Sts2.Core.Nodes.Screens;
 using static MegaCrit.Sts2.Core.Models.CardModel;
-
-class ShowAllArtsOfCard : AbstractConsoleCmd
-{
-    public override string CmdName => "mspaincard";
-    public override string Args => "<card-id:string>";
-    public override string Description => "Shows all art variants of a card. Screaming snake case ('BODY_SLAM', not 'Body Slam').";
-    public override bool IsNetworked => false;
-    public override CmdResult Process(Player? issuingPlayer, string[] args)
-    {
-        if (args.Length == 0)
-        {
-            return new CmdResult(success: false, "No card name specified.");
-        }
-        string cardName = args[0].ToUpperInvariant();
-        CardModel? cardModel = ModelDb.AllCards.FirstOrDefault(c => c.Id.Entry == cardName);
-        if (cardModel == null)
-        {
-            return new CmdResult(success: false, "Card '" + cardName + "' not found");
-        }
-
-        var variants = Compat.GenerateAllVersions(cardModel).ToList();
-        if (variants.Count == 0)
-        {
-            return new(false, "Card '" + cardName + "' has no MSPain variants");
-        }
-
-        ActiveScreen?.Close();
-        var inspectScreen = ActiveScreen ??= NInspectCardScreen.Create();
-
-        NGame.Instance?.AddChildSafely(inspectScreen);
-        if (inspectScreen == null)
-            return new CmdResult(success: false, $"No inspection screen could be created");
-
-        inspectScreen?.Open(variants, 0);
-
-        return new CmdResult(success: true, $"Previewed all '{cardModel.Id.Entry}' arts");
-    }
-    static NInspectCardScreen? ActiveScreen;
-    public override CompletionResult GetArgumentCompletions(Player? player, string[] args)
-    {
-        if (args.Length <= 1)
-        {
-            var candidates = Compat.GetAllCardsWithMSPainImages().Select(card => card.Id.Entry);
-            return CompleteArgument(candidates, [], args.FirstOrDefault() ?? "");
-        }
-
-        return new CompletionResult
-        {
-            Type = CompletionType.Argument,
-            ArgumentContext = CmdName
-        };
-    }
-}
-[HarmonyPatch(typeof(NInspectCardScreen), nameof(NInspectCardScreen.SetCard))]
-static class InspectScreenPatch
-
-{
-    [HarmonyPatch(nameof(NInspectCardScreen.Open))]
-    [HarmonyPatch(nameof(NInspectCardScreen.SetCard))]
-    static void Prefix(NInspectCardScreen __instance)
-    {
-        __instance._upgradeTickbox.Enable();
-    }
-
-    [HarmonyPatch(nameof(NInspectCardScreen.Open))]
-    [HarmonyPatch(nameof(NInspectCardScreen.SetCard))]
-    static void Postfix(NInspectCardScreen __instance)
-    {
-        var model = __instance._card.Model;
-        if (model == null) return;
-        if (Compat.Types.Get(model) is { } type)
-        {
-            switch (type)
-            {
-                case Compat.CustomImgType.OnlyBase:
-                    __instance._upgradeTickbox.Disable();
-                    __instance._upgradeTickbox.IsTicked = false;
-                    break;
-                case Compat.CustomImgType.OnlyUpgrade:
-                    __instance._upgradeTickbox.Disable();
-                    __instance._upgradeTickbox.IsTicked = true;
-                    break;
-                case Compat.CustomImgType.Both:
-                    break;
-            }
-        }
-    }
-}
-
-//public virtual string ID => model.Id.Entry;
-[HarmonyPatch("STS2Export.Exporter.CardExport", "ID", MethodType.Getter)]
-static class ExporterIdsPatch
-{
-    static internal void Postfix(ref string __result, CardModel ___model)
-    {
-        var Img = CardImg.Of(___model.PortraitPath);
-        if (Img == null)
-        {
-            return;
-        }
-        var Canonical = new CardImg(___model);
-        if (Img == Canonical)
-        {
-            return;
-        }
-        if (Img == Canonical.Upgraded())
-        {
-            __result += "_plus";
-            return;
-        }
-        var extra = Img.Path.GetTextAfter(Canonical.Path);
-        if (extra.StartsWith('_')) extra = extra[1..];
-        if (string.IsNullOrEmpty(extra))
-        {
-            return;
-        }
-        __result = __result + "-" + extra;
-    }
-}
-
 [HarmonyPatch]
 static class Compat
 {
+    [HarmonyPatch]
+    static class ExporterIdsPatch
+    {
+        static readonly MethodInfo targetMethod = AccessTools.PropertyGetter("STS2Export.Exporter.CardExport:ID");
+        static public bool Prepare() => targetMethod != null;
+        static internal MethodBase TargetMethod() => targetMethod;
+
+        static internal void Postfix(ref string __result, CardModel ___model)
+        {
+            var Img = CardImg.Of(___model.PortraitPath);
+            if (Img == null)
+            {
+                return;
+            }
+            var Canonical = new CardImg(___model);
+            if (Img == Canonical)
+            {
+                return;
+            }
+            if (Img == Canonical.Upgraded())
+            {
+                __result += "_plus";
+                return;
+            }
+            var extra = Img.Path.GetTextAfter(Canonical.Path);
+            if (extra.StartsWith('_')) extra = extra[1..];
+            if (string.IsNullOrEmpty(extra))
+            {
+                return;
+            }
+            __result = __result + "-" + extra;
+        }
+    }
+
     static readonly MethodInfo targetMethod = AccessTools.Method("STS2Export.Exporter.CardExport:FindAll");
-    static internal bool Prepare() => targetMethod != null;
+    static public bool Prepare() => AccessTools.TypeByName("STS2Export.Exporter.CardExport") != null;
     static internal MethodBase TargetMethod() => targetMethod;
     static internal void Postfix(ref IList __result)
     {
@@ -247,6 +153,8 @@ static class Compat
     [HarmonyPatch]
     public static class AnotherOne
     {
+        static internal bool Prepare() => AccessTools.TypeByName("STS2Export.Exporter.CardExport") != null;
+
         [HarmonyPostfix]
         [HarmonyPatch("STS2Export.Exporter.ItemList", "FindAll")]
         static internal void StopWastingMyTime(object __instance)
@@ -322,6 +230,8 @@ static class Compat
     [HarmonyPatch]
     public static class CardExportUpgradedVersionPatch
     {
+        static public bool Prepare() => AccessTools.TypeByName("STS2Export.Exporter.CardExport") != null;
+
         public static CardModel ReplaceCanonical(CardModel card)
         {
             // Your custom logic goes here
@@ -331,10 +241,10 @@ static class Compat
         }
 
         [HarmonyTargetMethod]
-        public static MethodBase TargetMethod()
+        public static MethodBase? TargetMethod()
         {
             Type cardExportType = AccessTools.TypeByName("STS2Export.Exporter.CardExport");
-            if (cardExportType == null) throw new Exception("CardExport type not found.");
+            if (cardExportType == null) return null;
 
             // First, check for a property getter
             MethodInfo getter = AccessTools.PropertyGetter(cardExportType, "UpgradedVersion");
@@ -386,7 +296,7 @@ static class Compat
 [HarmonyPatch]
 public static class CardExportConstructorTranspiler
 {
-    public static bool Prepare() => Compat.Prepare();
+    static public bool Prepare() => AccessTools.TypeByName("STS2Export.Exporter.CardExport") != null;
     // 1. Target the constructor cleanly using 'null' to wildcard the unknown CardModel type
     public static MethodBase TargetMethod()
     {

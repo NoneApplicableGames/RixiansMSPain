@@ -30,7 +30,7 @@ namespace HideDetailsMod.HideDetailsModCode;
 static class Extensions
 {
     [Obsolete("Switch off using this when possible")]
-    static public bool HasPowerComapt(this Player player, string powerName)
+    static public bool HasPowerCompat(this Player player, string powerName)
     {
         return player.Creature.Powers.Any(power => power.IsComapt(powerName));
     }
@@ -238,7 +238,7 @@ public static class AlternateArts
             // MainFile.Logger.Debug($"[Alt Art] [NoxiousFumes] Checking for Outbreak");
             var me = Util.GetOwner(card);
             if (me == null) return null;
-            return Util.HasCard<Outbreak>(me) || me.HasPowerComapt("OutbreakPower");
+            return Util.HasCard<Outbreak>(me) || me.HasPowerCompat("OutbreakPower");
         }),
         new CardImgFactory2<Accelerant>("silent/accelerant_poisonless", card => {
             var me = Util.GetOwner(card);
@@ -309,12 +309,7 @@ public static class AlternateArts
             if (owner == null)return null;
             if (owner.HasPower<NoBlockPower>()) return true;
             return null;
-        }) {
-            WhenPowerApplied = (theGambit, _, power, amount) => {
-                if (power is NoBlockPower) CardNeedsReload(theGambit);
-                if (power is DexterityPower && amount < 0) CardNeedsReload(theGambit);
-            }
-        },
+        }),
         new CardImgFactory2<SharedFate>("necrobinder/shared_fate_if_friendship", card => Util.HasCard<Friendship>(Util.GetOwner(card))) {
             WhenPowerApplied = (sharedFate, _, power, _) => { if (power is FriendshipPower) CardNeedsReload(sharedFate); }
         },
