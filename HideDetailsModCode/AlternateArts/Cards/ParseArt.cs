@@ -1,9 +1,8 @@
 using MegaCrit.Sts2.Core.Models.Cards;
-using static HideDetailsMod.HideDetailsModCode.AlternateArts;
 
-namespace HideDetailsMod.HideDetailsModCode.AlternateArts2;
+namespace HideDetailsMod.HideDetailsModCode.AlternateArts.Cards;
 
-class ParseArt : AlternateCardArt<Parse>
+public class ParseArt : AlternateCardArt<Parse>
 {
     static CardImg PoorSleep { get; } = new("necrobinder/parse_if_poor_sleep");
 

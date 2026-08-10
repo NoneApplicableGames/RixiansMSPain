@@ -1,8 +1,7 @@
 using MegaCrit.Sts2.Core.Models.Cards;
+namespace HideDetailsMod.HideDetailsModCode.AlternateArts.Cards;
 
-namespace HideDetailsMod.HideDetailsModCode.AlternateArts2;
-
-class DeathsDoorArt : AlternateCardArt<DeathsDoor>
+public class DeathsDoorArt : AlternateCardArt<DeathsDoor>
 {
     static CardImg AppliedDoom { get; } = new("necrobinder/deaths_door_if_applied_doom");
 

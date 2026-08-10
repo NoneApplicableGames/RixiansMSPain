@@ -1,11 +1,10 @@
 using BaseLib.Extensions;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.Powers;
-using static HideDetailsMod.HideDetailsModCode.AlternateArts;
 
-namespace HideDetailsMod.HideDetailsModCode.AlternateArts2;
+namespace HideDetailsMod.HideDetailsModCode.AlternateArts.Cards;
 
-class SharedFateArt : AlternateCardArt<SharedFate>
+public class SharedFateArt : AlternateCardArt<SharedFate>
 {
     static CardImg Friendship { get; } = new("necrobinder/shared_fate_if_friendship");
 

@@ -1,10 +1,9 @@
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.Encounters;
 using MegaCrit.Sts2.Core.Runs;
+namespace HideDetailsMod.HideDetailsModCode.AlternateArts.Cards;
 
-namespace HideDetailsMod.HideDetailsModCode.AlternateArts2;
-
-class DemesneArt : AlternateCardArt<Demesne>
+public class DemesneArt : AlternateCardArt<Demesne>
 {
     static CardImg Queen { get; } = new("necrobinder/demesne_if_queen");
 

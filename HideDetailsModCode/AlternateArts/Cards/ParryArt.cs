@@ -1,9 +1,10 @@
+using HideDetailsMod.HideDetailsModCode.Patches;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Runs;
 
-namespace HideDetailsMod.HideDetailsModCode.AlternateArts2;
+namespace HideDetailsMod.HideDetailsModCode.AlternateArts.Cards;
 
-class ParryArt : AlternateCardArt<Parry>
+public class ParryArt : AlternateCardArt<Parry>
 {
     static ParryArt()
     {
@@ -17,11 +18,15 @@ class ParryArt : AlternateCardArt<Parry>
     static bool WasSeen = false;
     public override CardImg? Get(Parry card)
     {
+        MainFile.Logger.Warn($"Parry data: {{WasSeen: {WasSeen}, Inspecting: {IsBeingInspected}, InShop: {IsInShop}, InReward: {IsInCardRewardScreen}}}");
+        if (!(IsInCardRewardScreen || IsInShop)) return null;
+
         if (IsBeingInspected)
         {
             WasSeen = true;
             return null;
         }
-        return (IsInCardLibrary || IsInShop) && !WasSeen ? Alt : null;
+
+        return !WasSeen ? Alt : null;
     }
 }

@@ -1,8 +1,7 @@
 using MegaCrit.Sts2.Core.Models.Cards;
+namespace HideDetailsMod.HideDetailsModCode.AlternateArts.Cards;
 
-namespace HideDetailsMod.HideDetailsModCode.AlternateArts2;
-
-class MelancholyArt : AlternateCardArt<Melancholy>
+public class MelancholyArt : AlternateCardArt<Melancholy>
 {
     static CardImg Cost0 { get; } = new("necrobinder/melancholy_cost_0");
     static CardImg Cost1 { get; } = new("necrobinder/melancholy_cost_1");

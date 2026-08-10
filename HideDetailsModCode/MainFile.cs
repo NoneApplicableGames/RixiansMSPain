@@ -7,7 +7,6 @@ using HarmonyLib;
 using BaseLib.Extensions;
 using System.Reflection;
 using BaseLib.Audio;
-using HideDetailsMod.HideDetailsModCode.AlternateArts2;
 
 namespace HideDetailsMod.HideDetailsModCode;
 
@@ -16,11 +15,8 @@ namespace HideDetailsMod.HideDetailsModCode;
 public partial class MainFile : Node
 {
     public const string ModId = "HideDetailsMod"; //At the moment, this is used only for the Logger and harmony names.
-
     public static Logger Logger { get; } = new(ModId, LogType.Generic);
-
     public static AutoModAudio Audio { get; } = new("res://HideDetailsMod/audio");
-
     public static void Initialize()
     {
         var assembly = Assembly.GetExecutingAssembly();
@@ -35,7 +31,6 @@ public partial class MainFile : Node
         Harmony harmony = new(ModId);
 
         harmony.TryPatchAll(assembly);
-        AlternateArts.InitCheck();
     }
 
 #if CANARY

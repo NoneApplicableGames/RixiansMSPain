@@ -1,10 +1,9 @@
 using MegaCrit.Sts2.Core.Models;
 
-using static HideDetailsMod.HideDetailsModCode.AlternateArts;
 using System.Reflection;
 using BaseLib.Utils;
 using HarmonyLib;
-using HideDetailsMod.HideDetailsModCode.AlternateArts2;
+using HideDetailsMod.HideDetailsModCode.AlternateArts;
 using MegaCrit.Sts2.Core.Modding;
 
 namespace HideDetailsMod.HideDetailsModCode.Patches;
@@ -63,6 +62,7 @@ public static class HarmonyPatchHelpers
         }
     }
 }
+//TODO: optimize image overrides
 [HarmonyPatch]
 public static class ArtPatch
 {
@@ -74,9 +74,7 @@ public static class ArtPatch
         {
             // Simply pass the target base method directly
             MethodInfo baseMethod = AccessTools.PropertyGetter(typeof(CardModel), nameof(CardModel.AllPortraitPaths));
-            var impls = HarmonyPatchHelpers.GetMethodImplementations(baseMethod);
-            MainFile.Logger.Info($"Found ");
-            return impls;
+            return HarmonyPatchHelpers.GetMethodImplementations(baseMethod);
         }
         [HarmonyPostfix]
         internal static void PostFix(CardModel __instance, ref IEnumerable<string> __result)
@@ -84,22 +82,7 @@ public static class ArtPatch
             if (!MyModConfig.UseCustomArt) return;
             try
             {
-                if (MyModConfig.UseNewArtPatch)
-                {
-                    IAlternateCardArt.Patch.AllPortraitPaths(__instance, ref __result);
-                    return;
-                }
-                var result = __result.ToList();
-
-                var found = GetAltsFor(__instance);
-
-                result.AddRange(found.SelectMany(alt => alt.All).Select(Img => Img.PortraitPath));
-
-                var BaseImg = new CardImg(__instance);
-                if (BaseImg.Exists()) result.Add(BaseImg.PortraitPath);
-                var UpgradedImg = BaseImg.Upgraded();
-                if (UpgradedImg.Exists()) result.Add(UpgradedImg.PortraitPath);
-                __result = result.Distinct();
+                IAlternateCardArt.Patch.AllPortraitPaths(__instance, ref __result);
             }
             catch (Exception e)
             {
@@ -108,21 +91,7 @@ public static class ArtPatch
         }
     }
 
-    static CardImg? ImgFor(CardModel card)
-    {
-        var factories = GetAltsFor(card);
-        foreach (var factory in factories)
-        {
-            var img = factory.Get(card);
-            if (img == null) continue;
-            if (card.IsUpgraded && img.Upgraded().Exists()) return img.Upgraded();
-            if (img.Exists()) return img;
-        }
-        var Img = new CardImg(card);
-        if (card.IsUpgraded && Img.Upgraded().Exists()) return Img.Upgraded();
-        if (Img.Exists()) return Img;
-        return null;
-    }
+
     static private SpireField<CardModel, (CardImg? Base, CardImg? Upgraded)> OverrideImg = new SpireField<CardModel, (CardImg? Base, CardImg? Upgraded)>(() => (null, null)).CopyOnClone();
     static public void SetOverrideImage(this CardModel card, (CardImg? Base, CardImg? Upgraded) Override) => OverrideImg.Set(card, Override);
     static public (CardImg? Base, CardImg? Upgraded) GetOverrideImage(this CardModel card) => OverrideImg.Get(card);
@@ -146,11 +115,6 @@ public static class ArtPatch
             if (!MyModConfig.UseCustomArt) return;
             try
             {
-                if (MyModConfig.UseNewArtPatch)
-                {
-                    IAlternateCardArt.Patch.PortraitPath(__instance, ref __result);
-                    return;
-                }
 
                 var (OverrideBase, OverrideUpgrade) = __instance.GetOverrideImage();
                 var Override = __instance.IsUpgraded ? OverrideUpgrade : OverrideBase;
@@ -159,8 +123,8 @@ public static class ArtPatch
                     __result = Override.PortraitPath;
                     return;
                 }
-                var Img = ImgFor(__instance);
-                if (Img != null && Img.Exists()) __result = Img.PortraitPath;
+
+                IAlternateCardArt.Patch.PortraitPath(__instance, ref __result);
             }
             catch (Exception e)
             { MainFile.Logger.Error($"Error in PortraitPath: {e}"); }
@@ -186,12 +150,6 @@ public static class ArtPatch
             if (__instance == null) return;
             try
             {
-                if (MyModConfig.UseNewArtPatch)
-                {
-                    IAlternateCardArt.Patch.PortraitPngPath(__instance, ref __result);
-                    return;
-                }
-
                 var (OverrideBase, OverrideUpgrade) = __instance.GetOverrideImage();
                 var Override = __instance.IsUpgraded ? OverrideUpgrade : OverrideBase;
                 if (Override != null && Override.Exists())
@@ -199,8 +157,8 @@ public static class ArtPatch
                     __result = Override.PortraitPngPath;
                     return;
                 }
-                var Img = ImgFor(__instance);
-                if (Img != null && Img.Exists()) __result = Img.PortraitPngPath;
+
+                IAlternateCardArt.Patch.PortraitPngPath(__instance, ref __result);
             }
             catch (Exception e)
             { MainFile.Logger.Error($"Error in PortraitPngPath: {e}"); }

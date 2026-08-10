@@ -1,11 +1,8 @@
-using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Models.Cards;
-using static HideDetailsMod.HideDetailsModCode.AlternateArts;
+namespace HideDetailsMod.HideDetailsModCode.AlternateArts.Cards;
 
-namespace HideDetailsMod.HideDetailsModCode.AlternateArts2;
-
-class ChargeArt : AlternateCardArt<Charge>
+public class ChargeArt : AlternateCardArt<Charge>
 {
     static CardImg ZeroDraw { get; } = new("regent/charge_0_draw");
     static CardImg OneDraw { get; } = new("regent/charge_1_draw");

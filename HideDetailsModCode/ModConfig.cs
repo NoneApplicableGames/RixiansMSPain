@@ -27,8 +27,7 @@ internal class MyModConfig : SimpleModConfig
     [ConfigSection("Art")]
     // TODO: Not done yet. doesn't reset full-art 
     [ConfigHideInUI] public static bool UseCustomArt { get; set; } = true;
-
-    public static bool UseNewArtPatch { get; set; } = false;
+    public static bool UseCustomCharSelect { get; set; } = true;
 
 #if CANARY
     [ConfigSection("Canary only!")]
@@ -64,4 +63,5 @@ internal class MyModConfig : SimpleModConfig
 
     [ConfigSection("Exclusions (Cheating)")]
     public static bool ExcludeFranticEscape { get; set; } = false;
+
 }

@@ -3,9 +3,9 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.Events;
 
-namespace HideDetailsMod.HideDetailsModCode.AlternateArts2;
+namespace HideDetailsMod.HideDetailsModCode.AlternateArts.Cards;
 
-class MadScienceArt : AlternateCardArt<MadScience>
+public class MadScienceArt : AlternateCardArt<MadScience>
 {
     static CardImg Curious { get; } = new("event/mad_science_power_curious");
     static CardImg Expertise { get; } = new("event/mad_science_power_expertise");

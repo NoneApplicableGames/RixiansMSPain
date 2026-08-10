@@ -1,10 +1,8 @@
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.Characters;
-using static HideDetailsMod.HideDetailsModCode.AlternateArts.Util;
+namespace HideDetailsMod.HideDetailsModCode.AlternateArts.Cards;
 
-namespace HideDetailsMod.HideDetailsModCode.AlternateArts2;
-
-class MindRotArt : AlternateCardArt<MindRot>
+public class MindRotArt : AlternateCardArt<MindRot>
 {
     static private readonly CardImg RotIronclad = new("token/mind_rot");
     static private readonly CardImg RotSilent = new("token/mind_rot");
@@ -13,7 +11,7 @@ class MindRotArt : AlternateCardArt<MindRot>
     static private readonly CardImg RotDefect = new("token/mind_rot");
     public override CardImg? Get(MindRot card)
     {
-        return GetOwner(card)?.Character switch
+        return card.Owner?.Character switch
         {
             Ironclad => RotIronclad, // TODO: ironclad mind rot
             Silent => RotSilent, // TODO: silent mind rot

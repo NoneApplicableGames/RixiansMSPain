@@ -1,11 +1,10 @@
 using BaseLib.Extensions;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.Powers;
-using static HideDetailsMod.HideDetailsModCode.AlternateArts;
 
-namespace HideDetailsMod.HideDetailsModCode.AlternateArts2;
+namespace HideDetailsMod.HideDetailsModCode.AlternateArts.Cards;
 
-class TheGambitArt : AlternateCardArt<TheGambit>
+public class TheGambitArt : AlternateCardArt<TheGambit>
 {
     static CardImg NoBlock { get; } = new("colorless/the_gambit_no_block");
 

@@ -1,11 +1,9 @@
 using BaseLib.Extensions;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.Powers;
-using static HideDetailsMod.HideDetailsModCode.AlternateArts;
+namespace HideDetailsMod.HideDetailsModCode.AlternateArts.Cards;
 
-namespace HideDetailsMod.HideDetailsModCode.AlternateArts2;
-
-class OutbreakArt : AlternateCardArt<Outbreak>
+public class OutbreakArt : AlternateCardArt<Outbreak>
 {
     static CardImg IfNoxious { get; } = new("silent/outbreak_if_noxious_fumes");
 
@@ -20,11 +18,3 @@ class OutbreakArt : AlternateCardArt<Outbreak>
         return null;
     }
 }
-
-// new CardImgFactory2<SpoilsOfBattle>("regent/spoils_of_battle_if_falling_star_played", card => {
-//         if (card.IsCanonical) return null;
-//         var me = Util.GetOwner(card);
-//         if (me == null) return null;
-//         var PlayedFallingStarThisCombat = CombatManager.Instance.History.CardPlaysFinished.Any(entry => entry.Actor == me.Creature && entry.CardPlay.Card is FallingStar);
-//         return PlayedFallingStarThisCombat;
-//     })

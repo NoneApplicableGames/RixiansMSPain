@@ -1,10 +1,9 @@
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Models.Cards;
-using static HideDetailsMod.HideDetailsModCode.AlternateArts;
 
-namespace HideDetailsMod.HideDetailsModCode.AlternateArts2;
+namespace HideDetailsMod.HideDetailsModCode.AlternateArts.Cards;
 
-class SpoilsOfBattleArt : AlternateCardArt<SpoilsOfBattle>
+public class SpoilsOfBattleArt : AlternateCardArt<SpoilsOfBattle>
 {
     static CardImg FallingStarPlayed { get; } = new("regent/spoils_of_battle_if_falling_star_played");
 

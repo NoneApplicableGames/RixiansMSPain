@@ -1,6 +1,6 @@
+using System.Reflection;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Entities.Players;
-using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Nodes.Cards;
 using MegaCrit.Sts2.Core.Nodes.GodotExtensions;
@@ -8,17 +8,37 @@ using MegaCrit.Sts2.Core.Nodes.Screens;
 using MegaCrit.Sts2.Core.Nodes.Screens.CardLibrary;
 using MegaCrit.Sts2.Core.Nodes.Screens.CardSelection;
 using MegaCrit.Sts2.Core.Nodes.Screens.Shops;
-using static HideDetailsMod.HideDetailsModCode.AlternateArts;
-
-namespace HideDetailsMod.HideDetailsModCode.AlternateArts2;
+namespace HideDetailsMod.HideDetailsModCode.AlternateArts;
 
 // namespace HideDetailsMod.HideDetailsModCode.AlternateArts;
 
 public abstract class IAlternateCardArt(double priority) : IComparable<IAlternateCardArt>
 {
-    static IEnumerable<Type> GenericSubtypes => ReflectionHelper.GetSubtypesInMods(typeof(AlternateCardArt<>)).Where(t => !t.IsAbstract && !t.IsInterface);
+    // public static List<Type> GetAllSubtypes(Type type)
+    // {
+    //     var types = AccessTools.GetTypesFromAssembly(Assembly.GetExecutingAssembly());
+    //     List<Type> concreteTypes = types.Where(t => !t.IsAbstract && !t.IsInterface).ToList();
+    //     List<Type> inNamespace = types.Where(t => (t.Namespace ?? "").StartsWith("HideDetailsMod.HideDetailsModCode.AlternateArts.Cards")).ToList();
+    //     List<Type> subclasses = inNamespace.Where(t =>
+    //     {
+
+    //         return t.IsSubclassOf(type);
+    //     }).ToList();
+    //     return concreteTypes;
+    // }
+    public static List<Type> GetDirectGenericSubtypes(Type openGenericBase)
+    {
+        return AccessTools.GetTypesFromAssembly(Assembly.GetExecutingAssembly())
+            .Where(t => t.IsClass && !t.IsAbstract &&
+                        t.BaseType is { IsGenericType: true } &&
+                        t.BaseType.GetGenericTypeDefinition() == openGenericBase)
+            .ToList();
+    }
+
+    // static IEnumerable<Type> GenericSubtypes => ReflectionHelper.GetSubtypesInMods(typeof(AlternateCardArt<>)).Where(t => !t.IsAbstract && !t.IsInterface);
     // static IEnumerable<Type> GenericSubtypes => ReflectionHelper.GetSubtypesFromAssembly(typeof(AlternateCardArt<>).Assembly, typeof(AlternateCardArt<>)).Where(t => !t.IsAbstract && !t.IsInterface);
-    static IEnumerable<IAlternateCardArt> GenericArts => GenericSubtypes.Select(type =>
+    static List<Type> GenericSubtypes { get; } = GetDirectGenericSubtypes(typeof(AlternateCardArt<>));
+    static List<IAlternateCardArt> GenericArts { get; } = GenericSubtypes.Select(type =>
     {
         try
         {
@@ -29,10 +49,10 @@ public abstract class IAlternateCardArt(double priority) : IComparable<IAlternat
             MainFile.Logger.Warn("Failed to create instance of IAlternateCardArt: " + e);
             return null;
         }
-    }).OfType<IAlternateCardArt>();
-    static IEnumerable<IAlternateCardArt>? _arts;
-    static IEnumerable<IAlternateCardArt> Arts => _arts ??= [
-        new OverrideArt(),
+    }).OfType<IAlternateCardArt>().ToList();
+
+    static List<IAlternateCardArt> Arts { get; } = [
+        // new OverrideArt(),
         ..GenericArts,
         new BaseArt(),
     ];
@@ -62,10 +82,13 @@ public abstract class IAlternateCardArt(double priority) : IComparable<IAlternat
     public class Patch
     {
         internal static void AllPortraitPaths(CardModel card, ref IEnumerable<string> result)
-        { result = GetAllArtsFor(card).Select(img => img.PortraitPath); }
+        {
+            result = GetAllArtsFor(card).Select(img => img.PortraitPath);
+        }
         internal static void PortraitPath(CardModel card, ref string result)
         {
-            if (GetArtsFor(card).FirstOrDefault() is { } img)
+            var arts = GetArtsFor(card);
+            if (arts.FirstOrDefault() is { } img)
             {
                 result = img.PortraitPath;
                 if (card.IsUpgraded && img.Upgraded() is var u && u.Exists()) result = u.PortraitPath;
@@ -73,7 +96,8 @@ public abstract class IAlternateCardArt(double priority) : IComparable<IAlternat
         }
         internal static void PortraitPngPath(CardModel card, ref string result)
         {
-            if (GetArtsFor(card).FirstOrDefault() is { } img)
+            var arts = GetArtsFor(card);
+            if (arts.FirstOrDefault() is { } img)
             {
                 result = img.PortraitPngPath;
                 if (card.IsUpgraded && img.Upgraded() is var u && u.Exists()) result = u.PortraitPngPath;

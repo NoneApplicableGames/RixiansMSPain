@@ -1,13 +1,13 @@
 using MegaCrit.Sts2.Core.Models.Cards;
 
-namespace HideDetailsMod.HideDetailsModCode.AlternateArts2;
+namespace HideDetailsMod.HideDetailsModCode.AlternateArts.Cards;
 
-class SoulArt : AlternateCardArt<Soul>
+public class SoulArt : AlternateCardArt<Soul>
 {
     static CardImg Freddy { get; } = new("token/beta/soul");
-    static CardImg Wip { get; } = new("token/soul_wip");
+    // static CardImg Wip { get; } = new("token/soul_wip");
     public override CardImg? Get(Soul card)
     {
-        return ConfigFrom(card).BetaSoul ? Freddy : Wip;
+        return ConfigFrom(card).BetaSoul ? Freddy : null;
     }
 }

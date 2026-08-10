@@ -3,9 +3,9 @@ using MegaCrit.Sts2.Core.Combat.History.Entries;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.Monsters;
 
-namespace HideDetailsMod.HideDetailsModCode.AlternateArts2;
+namespace HideDetailsMod.HideDetailsModCode.AlternateArts.Cards;
 
-class SnapArt : AlternateCardArt<Snap>
+public class SnapArt : AlternateCardArt<Snap>
 {
     static CardImg OstyDied { get; } = new("necrobinder/snap_if_osty_died");
 

@@ -48,19 +48,10 @@
 
 //     public override void _Process(double delta)
 //     {
-// if (!MyModConfig.UseCustomArt && Visible) Visible = false;
+//         if (!MyModConfig.UseCustomArt && Visible) Visible = false;
 //         if (model != card?.Model) UpdateModel(card?.Model);
 
 //         if (!Visible) return;
-
-//         switch (model?.Pile?.Type)
-//         {
-//             // case PileType.Exhaust: PlayBackAndForth(); break;
-//             case PileType.Play: PlayBackAndForth(); break;
-//             default:
-//                 Reset();
-//                 break;
-//         }
 //     }
 
 //     private void Reset()

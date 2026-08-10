@@ -1,9 +1,7 @@
 using MegaCrit.Sts2.Core.Models.Cards;
-using static HideDetailsMod.HideDetailsModCode.AlternateArts;
+namespace HideDetailsMod.HideDetailsModCode.AlternateArts.Cards;
 
-namespace HideDetailsMod.HideDetailsModCode.AlternateArts2;
-
-class BodyguardArt : AlternateCardArt<Bodyguard>
+public class BodyguardArt : AlternateCardArt<Bodyguard>
 {
     static CardImg Protector { get; } = new("necrobinder/bodyguard_if_protector");
 

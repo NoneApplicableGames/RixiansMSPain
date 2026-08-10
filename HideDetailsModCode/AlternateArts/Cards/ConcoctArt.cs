@@ -1,13 +1,10 @@
 using MegaCrit.Sts2.Core.Entities.Cards;
-using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.Relics;
 using MegaCrit.Sts2.Core.Runs;
-using static HideDetailsMod.HideDetailsModCode.AlternateArts;
+namespace HideDetailsMod.HideDetailsModCode.AlternateArts.Cards;
 
-namespace HideDetailsMod.HideDetailsModCode.AlternateArts2;
-
-class ConcoctArt : AlternateCardArt<Concoct>
+public class ConcoctArt : AlternateCardArt<Concoct>
 {
     private static CardImg IfX { get; } = new("silent/concoct_if_x");
 

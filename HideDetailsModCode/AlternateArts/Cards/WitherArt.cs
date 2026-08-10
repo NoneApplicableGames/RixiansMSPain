@@ -1,8 +1,8 @@
 using MegaCrit.Sts2.Core.Models.Cards;
 
-namespace HideDetailsMod.HideDetailsModCode.AlternateArts2;
+namespace HideDetailsMod.HideDetailsModCode.AlternateArts.Cards;
 
-class WitherArt : AlternateCardArt<Wither>
+public class WitherArt : AlternateCardArt<Wither>
 {
     static CardImg Wither1 { get; } = new("status/wither1");
     static CardImg Wither2 { get; } = new("status/wither2");

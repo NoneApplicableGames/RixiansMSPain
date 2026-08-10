@@ -1,8 +1,7 @@
 using MegaCrit.Sts2.Core.Models.Cards;
+namespace HideDetailsMod.HideDetailsModCode.AlternateArts.Cards;
 
-namespace HideDetailsMod.HideDetailsModCode.AlternateArts2;
-
-class DowsingArt : AlternateCardArt<Dowsing>
+public class DowsingArt : AlternateCardArt<Dowsing>
 {
     static CardImg Remains1 { get; } = new("quest/dowsing_1");
     static CardImg Remains2 { get; } = new("quest/dowsing_2");

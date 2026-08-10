@@ -3,11 +3,10 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.Potions;
-using static HideDetailsMod.HideDetailsModCode.AlternateArts;
 
-namespace HideDetailsMod.HideDetailsModCode.AlternateArts2;
+namespace HideDetailsMod.HideDetailsModCode.AlternateArts.Cards;
 
-class PiercingWailArt : AlternateCardArt<PiercingWail>
+public class PiercingWailArt : AlternateCardArt<PiercingWail>
 {
     static CardImg Shivs { get; } = new("silent/piercing_wail_if_shivs");
 

@@ -1,6 +1,6 @@
 using MegaCrit.Sts2.Core.Models;
 
-namespace HideDetailsMod.HideDetailsModCode.AlternateArts2;
+namespace HideDetailsMod.HideDetailsModCode.AlternateArts;
 
 public class BaseArt() : IAlternateCardArt(0)
 {

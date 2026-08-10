@@ -1,7 +1,7 @@
 using System.Reflection;
 using MegaCrit.Sts2.Core.Models;
 
-namespace HideDetailsMod.HideDetailsModCode.AlternateArts2;
+namespace HideDetailsMod.HideDetailsModCode.AlternateArts;
 
 public abstract class AlternateCardArt<T> : IAlternateCardArt where T : CardModel
 {
@@ -28,7 +28,7 @@ public abstract class AlternateCardArt<T> : IAlternateCardArt where T : CardMode
     protected virtual bool ShowIfCanonical => false;
     public override CardImg? Get(CardModel card)
     {
-        if (card.IsCanonical && ShowIfCanonical) return null;
+        if (card.IsCanonical && !ShowIfCanonical) return null;
         if (card is T typed) return Get(typed);
         return null;
     }
