@@ -14,9 +14,9 @@ Directory.Build.props
 mod-uploader.log
 
 # Sts2 dirs
-src/
-animations/
-images/
-scenes/
-shaders/
-themes/
+/src/
+/animations/
+/images/
+/scenes/
+/shaders/
+/themes/
