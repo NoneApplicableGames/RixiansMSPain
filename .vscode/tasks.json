@@ -13,7 +13,7 @@
     {
       "label": "Build Mod (Debug)",
       "type": "shell",
-      "command": "dotnet build -c Debug -p:WorkshopChannel=Canary",
+      "command": "dotnet build HideDetailsMod.csproj -c Debug -p:WorkshopChannel=Canary",
       "group": { "kind": "build", "isDefault": true },
       "problemMatcher": ["$msCompile"]
     },
@@ -21,13 +21,13 @@
     {
       "label": "Build Mod",
       "type": "shell",
-      "command": "dotnet build -p:WorkshopChannel=${input:channel}",
+      "command": "dotnet build HideDetailsMod.csproj -p:WorkshopChannel=${input:channel}",
       "problemMatcher": ["$msCompile"]
     },
     {
       "label": "Publish Mod",
       "type": "shell",
-      "command": "dotnet publish -c ExportRelease -p:WorkshopChannel=${input:channel}",
+      "command": "dotnet publish HideDetailsMod.csproj -c ExportRelease -p:WorkshopChannel=${input:channel}",
       "problemMatcher": ["$msCompile"],
       "dependsOn": ["Credits: Validate", "Godot: Sync Card Atlas (.tres)"]
     },

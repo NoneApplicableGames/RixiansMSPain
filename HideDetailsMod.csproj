@@ -25,6 +25,8 @@
         <!-- <DebugType>none</DebugType> -->
         <PathMap>$(AppOutputBase)=.\</PathMap>
     </PropertyGroup>
+    
+     <Import Project="build/mod.build.props"/>
 
     <PropertyGroup>
         <!-- Diasble architecture mismatch warning; mods are ideally built for all platforms (MSIL)
@@ -118,10 +120,19 @@
     </Target>
 
     <Target Name="GodotPublish" AfterTargets="Publish"
-        Condition="'$(GodotPath)' != '' and Exists('$(GodotPath)') and '$(IsInnerGodotExport)' != 'true'">
+        Condition="'$(SimplePublish)' != 'true' and '$(GodotPath)' != '' and Exists('$(GodotPath)') and '$(IsInnerGodotExport)' != 'true'">
         <Message Text="Exporting Godot .pck to mods folder" Importance="high" />
         <Exec
             Command="&quot;$(GodotPath)&quot; --headless --export-pack &quot;BasicExport&quot; &quot;$(ModsPath)$(MSBuildProjectName)/$(MSBuildProjectName).pck&quot;"
+            EnvironmentVariables="IsInnerGodotExport=true;MSBUILDDISABLENODEREUSE=1"
+            ContinueOnError="WarnAndContinue" />
+    </Target>
+
+    <Target Name="GodotPublish" AfterTargets="Publish"
+        Condition="'$(SimplePublish)' == 'true' and '$(GodotPath)' != '' and Exists('$(GodotPath)') and '$(IsInnerGodotExport)' != 'true'">
+        <Message Text="Exporting Godot .pck to mods folder" Importance="high" />
+        <Exec
+            Command="&quot;$(GodotPath)&quot; --headless -s build/pack_mod.gd -- &quot;$(ModsPath)$(MSBuildProjectName)/$(MSBuildProjectName).pck&quot; &quot;HideDetailsMod&quot;"
             EnvironmentVariables="IsInnerGodotExport=true;MSBUILDDISABLENODEREUSE=1"
             ContinueOnError="WarnAndContinue" />
     </Target>
