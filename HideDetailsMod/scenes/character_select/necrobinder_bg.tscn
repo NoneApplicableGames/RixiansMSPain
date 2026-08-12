@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://cfxvksbae4bdf"]
 
-[ext_resource type="Texture2D" uid="uid://byf1wuaybvw2n" path="res://HideDetailsMod/images/character_select/Nercobinder/FishStickMystic_NecrobinderSplash-BG_LAYER0.png" id="1_xsw5j"]
-[ext_resource type="Texture2D" uid="uid://2q4hunv6ky66" path="res://HideDetailsMod/images/character_select/Nercobinder/FishStickMystic_NecrobinderSplash-SIMPLE-1.png" id="2_u1lud"]
-[ext_resource type="Texture2D" uid="uid://d10hppiucyq4w" path="res://HideDetailsMod/images/character_select/Nercobinder/FishStickMystic_NecrobinderSplash-Signature.png" id="3_u1lud"]
+[ext_resource type="Texture2D" uid="uid://byf1wuaybvw2n" path="res://HideDetailsMod/images/character_select/nercobinder/FishStickMystic_NecrobinderSplash-BG_LAYER0.png" id="1_xsw5j"]
+[ext_resource type="Texture2D" uid="uid://2q4hunv6ky66" path="res://HideDetailsMod/images/character_select/nercobinder/FishStickMystic_NecrobinderSplash-SIMPLE-1.png" id="2_u1lud"]
+[ext_resource type="Texture2D" uid="uid://d10hppiucyq4w" path="res://HideDetailsMod/images/character_select/nercobinder/FishStickMystic_NecrobinderSplash-Signature.png" id="3_u1lud"]
 
 [node name="NercoBg" type="Control"]
 layout_mode = 3

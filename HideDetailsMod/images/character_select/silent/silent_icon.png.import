@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://yuq667v77g32"
-path="res://.godot/imported/silent_icon.png-64cdac298e0df5c08d1880d2347e0f5a.ctex"
+path="res://.godot/imported/silent_icon.png-d4c19a8bc59b9c51ea5c795a9b250569.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://HideDetailsMod/images/character_select/Silent/silent_icon.png"
-dest_files=["res://.godot/imported/silent_icon.png-64cdac298e0df5c08d1880d2347e0f5a.ctex"]
+source_file="res://HideDetailsMod/images/character_select/silent/silent_icon.png"
+dest_files=["res://.godot/imported/silent_icon.png-d4c19a8bc59b9c51ea5c795a9b250569.ctex"]
 
 [params]
 

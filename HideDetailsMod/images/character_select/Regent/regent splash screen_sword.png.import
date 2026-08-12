@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://uxy4x67bvwdb"
-path="res://.godot/imported/regent splash screen_sword.png-b141ddb3b4cf0ec918ce4584e8aaf051.ctex"
+path="res://.godot/imported/regent splash screen_sword.png-42b364d37388f73a186d211bba540fb3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://HideDetailsMod/images/character_select/Regent/regent splash screen_sword.png"
-dest_files=["res://.godot/imported/regent splash screen_sword.png-b141ddb3b4cf0ec918ce4584e8aaf051.ctex"]
+source_file="res://HideDetailsMod/images/character_select/regent/regent splash screen_sword.png"
+dest_files=["res://.godot/imported/regent splash screen_sword.png-42b364d37388f73a186d211bba540fb3.ctex"]
 
 [params]
 

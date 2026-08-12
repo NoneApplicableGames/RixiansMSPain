@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://2q4hunv6ky66"
-path="res://.godot/imported/FishStickMystic_NecrobinderSplash-SIMPLE-1.png-52e87f60bd0c00caa7c8a4eb26566920.ctex"
+path="res://.godot/imported/FishStickMystic_NecrobinderSplash-SIMPLE-1.png-9659fbcc2f32ac11e5cc5854b54a7796.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://HideDetailsMod/images/character_select/Nercobinder/FishStickMystic_NecrobinderSplash-SIMPLE-1.png"
-dest_files=["res://.godot/imported/FishStickMystic_NecrobinderSplash-SIMPLE-1.png-52e87f60bd0c00caa7c8a4eb26566920.ctex"]
+source_file="res://HideDetailsMod/images/character_select/nercobinder/FishStickMystic_NecrobinderSplash-SIMPLE-1.png"
+dest_files=["res://.godot/imported/FishStickMystic_NecrobinderSplash-SIMPLE-1.png-9659fbcc2f32ac11e5cc5854b54a7796.ctex"]
 
 [params]
 

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cgxhi6w1xtyrd"
-path="res://.godot/imported/silent_splash_art_smoke.png-8ea440ee5b07e0869b7a75dfee8fb253.ctex"
+path="res://.godot/imported/silent_splash_art_smoke.png-ea77a3bd38c40af6cdfdc68eb916153b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://HideDetailsMod/images/character_select/Silent/silent_splash_art_smoke.png"
-dest_files=["res://.godot/imported/silent_splash_art_smoke.png-8ea440ee5b07e0869b7a75dfee8fb253.ctex"]
+source_file="res://HideDetailsMod/images/character_select/silent/silent_splash_art_smoke.png"
+dest_files=["res://.godot/imported/silent_splash_art_smoke.png-ea77a3bd38c40af6cdfdc68eb916153b.ctex"]
 
 [params]
 

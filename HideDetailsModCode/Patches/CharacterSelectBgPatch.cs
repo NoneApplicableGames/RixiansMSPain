@@ -14,7 +14,7 @@ static class CharacterSelectPatch
         //    public string CharacterSelectBg => SceneHelper.GetScenePath("screens/char_select/char_select_bg_" + base.Id.Entry.ToLowerInvariant());
         static internal bool Prefix(CharacterModel __instance, ref string __result)
         {
-            if (!MyModConfig.UseCustomCharSelect) return true;
+            if (!MyModConfig.UseCustomCharacterSelect) return true;
             var customScene = "res://HideDetailsMod/scenes/character_select/" + __instance.Id.Entry.ToLowerInvariant() + "_bg.tscn"; ;
             if (!ResourceLoader.Exists(customScene)) return true;
             __result = customScene;
@@ -33,9 +33,10 @@ static class CharacterSelectPatch
     {
         static internal bool Prefix(CharacterModel __instance, ref CompressedTexture2D __result)
         {
+            if (!MyModConfig.UseCustomCharacterSelect) return true;
             try
             {
-                var CharacterSelectIconPath = "res://HideDetailsMod/images/character_select/" + __instance.Id.Entry.ToLowerInvariant() + "_icon.png"; ;
+                var CharacterSelectIconPath = "res://HideDetailsMod/images/character_select/" + __instance.Id.Entry.ToLowerInvariant() + "/icon.png"; ;
                 if (!ResourceLoader.Exists(CharacterSelectIconPath)) return true;
                 CompressedTexture2D CharacterSelectIcon = ResourceLoader.Load<CompressedTexture2D>(CharacterSelectIconPath);
                 __result = CharacterSelectIcon;
@@ -54,9 +55,10 @@ static class CharacterSelectPatch
     {
         static internal bool Prefix(CharacterModel __instance, ref CompressedTexture2D __result)
         {
+            if (!MyModConfig.UseCustomCharacterSelect) return true;
             try
             {
-                var CharacterSelectIconPath = "res://HideDetailsMod/images/character_select/" + __instance.Id.Entry.ToLowerInvariant() + "_locked_icon.png"; ;
+                var CharacterSelectIconPath = "res://HideDetailsMod/images/character_select/" + __instance.Id.Entry.ToLowerInvariant() + "/locked_icon.png"; ;
                 if (!ResourceLoader.Exists(CharacterSelectIconPath)) return true;
                 CompressedTexture2D CharacterSelectIcon = ResourceLoader.Load<CompressedTexture2D>(CharacterSelectIconPath);
                 __result = CharacterSelectIcon;
