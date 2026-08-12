@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c4837wnnwggbm"
-path="res://.godot/imported/silent_splash_art_silent.png-2b15cc501627c8c271c8ec0f0db87840.ctex"
+uid="uid://yuq667v77g32"
+path="res://.godot/imported/silent_icon.png-64cdac298e0df5c08d1880d2347e0f5a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://HideDetailsMod/images/character_select/Silent/silent_splash_art_silent.png"
-dest_files=["res://.godot/imported/silent_splash_art_silent.png-2b15cc501627c8c271c8ec0f0db87840.ctex"]
+source_file="res://HideDetailsMod/images/character_select/Silent/silent_icon.png"
+dest_files=["res://.godot/imported/silent_icon.png-64cdac298e0df5c08d1880d2347e0f5a.ctex"]
 
 [params]
 

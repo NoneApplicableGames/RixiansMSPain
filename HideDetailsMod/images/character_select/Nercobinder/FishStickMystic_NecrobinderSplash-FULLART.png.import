@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c4837wnnwggbm"
-path="res://.godot/imported/silent_splash_art_silent.png-2b15cc501627c8c271c8ec0f0db87840.ctex"
+uid="uid://cugny8hxhannc"
+path="res://.godot/imported/FishStickMystic_NecrobinderSplash-FULLART.png-45a8793bea06d657e85ccc467f911fb4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://HideDetailsMod/images/character_select/Silent/silent_splash_art_silent.png"
-dest_files=["res://.godot/imported/silent_splash_art_silent.png-2b15cc501627c8c271c8ec0f0db87840.ctex"]
+source_file="res://HideDetailsMod/images/character_select/Nercobinder/FishStickMystic_NecrobinderSplash-FULLART.png"
+dest_files=["res://.godot/imported/FishStickMystic_NecrobinderSplash-FULLART.png-45a8793bea06d657e85ccc467f911fb4.ctex"]
 
 [params]
 

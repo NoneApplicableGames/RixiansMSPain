@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c4837wnnwggbm"
-path="res://.godot/imported/silent_splash_art_silent.png-2b15cc501627c8c271c8ec0f0db87840.ctex"
+uid="uid://daln2o2ljj14o"
+path="res://.godot/imported/DEFECT - GLASS ORB.png-bd81e572cc5486afe92b0c3dd1a1e5d7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://HideDetailsMod/images/character_select/Silent/silent_splash_art_silent.png"
-dest_files=["res://.godot/imported/silent_splash_art_silent.png-2b15cc501627c8c271c8ec0f0db87840.ctex"]
+source_file="res://HideDetailsMod/images/character_select/Defect/DEFECT - GLASS ORB.png"
+dest_files=["res://.godot/imported/DEFECT - GLASS ORB.png-bd81e572cc5486afe92b0c3dd1a1e5d7.ctex"]
 
 [params]
 

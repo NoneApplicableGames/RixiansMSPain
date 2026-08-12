@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c4837wnnwggbm"
-path="res://.godot/imported/silent_splash_art_silent.png-2b15cc501627c8c271c8ec0f0db87840.ctex"
+uid="uid://cekmpcfrgnrlc"
+path="res://.godot/imported/regent_splashscreen_rigent_on_chair.png-0116fd5275034e9157408895cc1481ba.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://HideDetailsMod/images/character_select/Silent/silent_splash_art_silent.png"
-dest_files=["res://.godot/imported/silent_splash_art_silent.png-2b15cc501627c8c271c8ec0f0db87840.ctex"]
+source_file="res://HideDetailsMod/images/character_select/Regent/regent_splashscreen_rigent_on_chair.png"
+dest_files=["res://.godot/imported/regent_splashscreen_rigent_on_chair.png-0116fd5275034e9157408895cc1481ba.ctex"]
 
 [params]
 

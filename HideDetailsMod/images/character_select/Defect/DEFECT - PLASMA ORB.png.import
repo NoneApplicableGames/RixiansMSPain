@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c4837wnnwggbm"
-path="res://.godot/imported/silent_splash_art_silent.png-2b15cc501627c8c271c8ec0f0db87840.ctex"
+uid="uid://d0g118o6w583d"
+path="res://.godot/imported/DEFECT - PLASMA ORB.png-8e66b4cfab9582fbed293e1fbd1190a9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://HideDetailsMod/images/character_select/Silent/silent_splash_art_silent.png"
-dest_files=["res://.godot/imported/silent_splash_art_silent.png-2b15cc501627c8c271c8ec0f0db87840.ctex"]
+source_file="res://HideDetailsMod/images/character_select/Defect/DEFECT - PLASMA ORB.png"
+dest_files=["res://.godot/imported/DEFECT - PLASMA ORB.png-8e66b4cfab9582fbed293e1fbd1190a9.ctex"]
 
 [params]
 
