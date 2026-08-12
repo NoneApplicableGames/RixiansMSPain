@@ -1,16 +1,22 @@
+using BaseLib.Abstracts;
 using BaseLib.Utils;
 using Godot;
-using HarmonyLib;
 using MegaCrit.Sts2.Core.Combat;
+using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.DevConsole;
 using MegaCrit.Sts2.Core.DevConsole.ConsoleCommands;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
+using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Nodes.Cards;
+using MegaCrit.Sts2.Core.Nodes.Cards.Holders;
+using MegaCrit.Sts2.Core.Nodes.GodotExtensions;
 using MegaCrit.Sts2.Core.Runs;
+using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HideDetailsMod.HideDetailsModCode.AlternateArts;
 
@@ -191,14 +197,12 @@ public partial class NCustomVfxContainer : Control
 #nullable disable
     public NCard CardNode { get; private set; }
 #nullable restore
-
     public CardModel? CardModel => CardNode?.Model;
+    public NCardHolder? Holder => CardNode.GetAncestorOfType<NCardHolder>();
 
     private Tween? _activeTween;
     private CardModel? _lastBoundModel;
-
     static readonly NotNullSpireField<CardModel, CardEffectState> EffectState = new(() => new());
-
     NCustomVfxContainer Set(NCard nCard)
     {
         CardNode = nCard;
@@ -221,7 +225,7 @@ public partial class NCustomVfxContainer : Control
 
     private void EnsureParented()
     {
-        if (!GodotObject.IsInstanceValid(CardNode) || CardNode.GetParent() == this) return;
+        if (!GodotObject.IsInstanceValid(CardNode.Body) || CardNode.Body.GetParent() == this) return;
         CardNode.Body.SafelyInsertParent(this);
     }
 
@@ -358,25 +362,24 @@ public partial class NCustomVfxContainer : Control
         }
         base.Dispose(disposing);
     }
+}
 
-    [HarmonyPatch]
-    static class Patch
+// TODO: make it general so i can apply the transforms to anything
+// TODO: make work on main branch for multiplayer
+class CustomVfxListener() : CustomSingletonModel(HookType.Combat)
+{
+    public override async Task AfterDamageGiven(PlayerChoiceContext choiceContext, Creature? dealer, DamageResult result, ValueProp props, Creature target, CardModel? cardSource)
     {
-        [HarmonyPatch(typeof(CardModel), nameof(CardModel.OnEnqueuePlayVfx))]
-        [HarmonyPrefix]
-        static void Prefix(CardModel __instance)
+        if (cardSource is Flatten flatten)
         {
-            var (effect, duration, intensity, times) = __instance switch
-            {
-                Rattle => (CardVisualEffect.Rattle, 0.3f, 15.0f, 1),
-                Flatten => (CardVisualEffect.Flatten, 0.2f, 0.0f, 1),
-                _ => (CardVisualEffect.None, 0.0f, 0.0f, 1)
-            };
-
-            if (effect != CardVisualEffect.None)
-            {
-                __instance.TriggerEffect(effect, duration, intensity, times);
-            }
+            // TODO: flatten the enemy instead of the card
+            flatten.TriggerEffect(CardVisualEffect.Flatten, .5f, 30);
+            await Cmd.Wait(.5f);
+        }
+        if (cardSource is Rattle rattle)
+        {
+            rattle.TriggerEffect(CardVisualEffect.Rattle, .5f, 30);
+            await Cmd.Wait(.5f);
         }
     }
 }

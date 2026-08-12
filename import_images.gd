@@ -88,7 +88,7 @@ func _process_directory_recursive(current_dir_path: String, expected_tres_paths:
 							else:
 								print("❌ Serialization failed for ", item_name, " - Code: ", error)
 						else:
-							print("⚠️ File skipped: Cannot parse ", item_full_path, " into Texture2D.")
+							print("⚠️ File skipped: Cannot parse ", item_full_path, " into Texture2D. (", get_type_string(texture_resource), ")")
 					else:
 						stats["skipped"] += 1
 						
@@ -169,3 +169,78 @@ func _is_directory_empty(dir_path: String) -> bool:
 		
 	dir.list_dir_end()
 	return true
+
+# Stuff
+
+## Returns the string type name of any variable, including engine classes, 
+## custom `class_name` scripts, built-in types, and null.
+func get_type_string(any_var) -> String:
+	# 1. Handle Null / Nil explicitly first
+	if any_var == null:
+		return "null"
+
+	var type_id = typeof(any_var)
+	
+	# 2. Handle Objects (Engine nodes, resources, custom classes)
+	if type_id == TYPE_OBJECT:
+		# Check if the object is freed/invalidated (safety check)
+		if not is_instance_valid(any_var):
+			return "freed_object"
+			
+		var script = any_var.get_script()
+		if script is Script:
+			var global_name = script.get_global_name()
+			if global_name != &"":
+				return String(global_name) # Returns custom `class_name`
+			
+			# Fallback for anonymous scripts attached to a node (returns script path)
+			if script.resource_path != "":
+				return script.resource_path.get_file()
+				
+		return any_var.get_class() # Returns engine type (e.g., "Sprite2D", "RefCounted")
+
+	# 3. Handle Built-in Types (int, float, Vector2, Array, Dictionary, etc.)
+	return _get_builtin_type_name(type_id)
+
+
+## Helper function mapping Variant type integers to human-readable strings
+func _get_builtin_type_name(type_id: int) -> String:
+	match type_id:
+		TYPE_BOOL: return "bool"
+		TYPE_INT: return "int"
+		TYPE_FLOAT: return "float"
+		TYPE_STRING: return "String"
+		TYPE_VECTOR2: return "Vector2"
+		TYPE_VECTOR2I: return "Vector2i"
+		TYPE_RECT2: return "Rect2"
+		TYPE_RECT2I: return "Rect2i"
+		TYPE_VECTOR3: return "Vector3"
+		TYPE_VECTOR3I: return "Vector3i"
+		TYPE_TRANSFORM2D: return "Transform2D"
+		TYPE_VECTOR4: return "Vector4"
+		TYPE_VECTOR4I: return "Vector4i"
+		TYPE_PLANE: return "Plane"
+		TYPE_QUATERNION: return "Quaternion"
+		TYPE_AABB: return "AABB"
+		TYPE_BASIS: return "Basis"
+		TYPE_TRANSFORM3D: return "Transform3D"
+		TYPE_PROJECTION: return "Projection"
+		TYPE_COLOR: return "Color"
+		TYPE_STRING_NAME: return "StringName"
+		TYPE_NODE_PATH: return "NodePath"
+		TYPE_RID: return "RID"
+		TYPE_CALLABLE: return "Callable"
+		TYPE_SIGNAL: return "Signal"
+		TYPE_DICTIONARY: return "Dictionary"
+		TYPE_ARRAY: return "Array"
+		TYPE_PACKED_BYTE_ARRAY: return "PackedByteArray"
+		TYPE_PACKED_INT32_ARRAY: return "PackedInt32Array"
+		TYPE_PACKED_INT64_ARRAY: return "PackedInt64Array"
+		TYPE_PACKED_FLOAT32_ARRAY: return "PackedFloat32Array"
+		TYPE_PACKED_FLOAT64_ARRAY: return "PackedFloat64Array"
+		TYPE_PACKED_STRING_ARRAY: return "PackedStringArray"
+		TYPE_PACKED_VECTOR2_ARRAY: return "PackedVector2Array"
+		TYPE_PACKED_VECTOR3_ARRAY: return "PackedVector3Array"
+		TYPE_PACKED_COLOR_ARRAY: return "PackedColorArray"
+		TYPE_PACKED_VECTOR4_ARRAY: return "PackedVector4Array"
+		_: return "Unknown"

@@ -17,6 +17,8 @@ public partial class MainFile : Node
     public const string ModId = "HideDetailsMod"; //At the moment, this is used only for the Logger and harmony names.
     public static Logger Logger { get; } = new(ModId, LogType.Generic);
     public static AutoModAudio Audio { get; } = new("res://HideDetailsMod/audio");
+    public static bool DefectSetActive => false;
+    public static bool IroncladSetActive => false;
     public static void Initialize()
     {
         var assembly = Assembly.GetExecutingAssembly();

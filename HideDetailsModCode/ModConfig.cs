@@ -27,17 +27,20 @@ internal class MyModConfig : SimpleModConfig
     [ConfigSection("Art")]
     // TODO: Not done yet. doesn't reset full-art 
     [ConfigHideInUI] public static bool UseCustomArt { get; set; } = true;
-    public static bool UseCustomCharSelect { get; set; } = true;
 
 #if CANARY
     [ConfigSection("Canary only!")]
+    [ConfigHideInUI] public static bool UseCustomCharacterSelect { get; set; } = false;
     // See NetUtils
     public static bool EmulateCanaryMode { get; set; } = true;
 
     public static bool UseBetaShivArt { get; set; } = false;
-    
+
     public static bool UseBetaSoulArt { get; set; } = false;
 #else
+    // TODO: SET THIS TO TRUE WHEN READY FOR PROD
+    [ConfigIgnore] public static bool UseCustomCharacterSelect => false;
+
     [ConfigIgnore] public static bool EmulateCanaryMode => false;
     [ConfigIgnore] public static bool UseBetaShivArt => false;
     [ConfigIgnore] public static bool UseBetaSoulArt => false;

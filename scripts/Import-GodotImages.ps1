@@ -26,8 +26,13 @@ if ([string]::IsNullOrWhiteSpace($godotExe)) {
 }
 
 # Run Godot via CMD wrapper to bypass PowerShell stream interception
-cmd /c `"$godotExe`" --headless --import -s $GdScript -- $InputPath $OutputPath
-
+cmd /c `"$godotExe`" --headless -s $GdScript -- $InputPath $OutputPath
+if ($LastExitCode -ne 0) {
+    Write-Warning "First attempt failed with exit code $LastExitCode (Imports were missing). Retrying..."
+    
+    # Second attempt
+    cmd /c `"$godotExe`" --headless -s $GdScript -- $InputPath $OutputPath
+}
 # & "$godotExe" --headless --import -s $GdScript -- $InputPath $OutputPath
 
 # Catch real Godot crashes
