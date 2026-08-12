@@ -1,7 +1,9 @@
 using System.Reflection;
+using GodotPlugins.Game;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.Nodes.Cards;
 using MegaCrit.Sts2.Core.Nodes.GodotExtensions;
 using MegaCrit.Sts2.Core.Nodes.Screens;
@@ -56,6 +58,12 @@ public abstract class IAlternateCardArt(double priority) : IComparable<IAlternat
         ..GenericArts,
         new BaseArt(),
     ];
+    static bool IsRestricted(CardModel card) => card.Pool switch
+    {
+        DefectCardPool when !MainFile.DefectSetActive => true,
+        IroncladCardPool when !MainFile.IroncladSetActive => true,
+        _ => false,
+    };
     public static IEnumerable<CardImg> GetAllArtsFor(CardModel card)
     => Arts
         .SelectMany(art => art.GetAllAndUpgraded(card))
@@ -83,10 +91,12 @@ public abstract class IAlternateCardArt(double priority) : IComparable<IAlternat
     {
         internal static void AllPortraitPaths(CardModel card, ref IEnumerable<string> result)
         {
+            if (IsRestricted(card)) return;
             result = GetAllArtsFor(card).Select(img => img.PortraitPath);
         }
         internal static void PortraitPath(CardModel card, ref string result)
         {
+            if (IsRestricted(card)) return;
             var arts = GetArtsFor(card);
             if (arts.FirstOrDefault() is { } img)
             {
@@ -96,6 +106,7 @@ public abstract class IAlternateCardArt(double priority) : IComparable<IAlternat
         }
         internal static void PortraitPngPath(CardModel card, ref string result)
         {
+            if (IsRestricted(card)) return;
             var arts = GetArtsFor(card);
             if (arts.FirstOrDefault() is { } img)
             {
@@ -135,4 +146,9 @@ public abstract class IAlternateCardArt(double priority) : IComparable<IAlternat
     protected bool IsInCardRewardScreen => CardRewardScreen != null;
     protected bool IsInShop => Node.GetAncestorOfType<NMerchantCard>() != null;
     protected bool IsInCardLibrary => CardLibrary != null;
+}
+
+interface Thing
+{
+    static virtual void Method() { }
 }

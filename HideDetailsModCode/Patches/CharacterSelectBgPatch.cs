@@ -1,12 +1,9 @@
 using Godot;
 using HarmonyLib;
-using MegaCrit.Sts2.Core.Helpers;
-using MegaCrit.Sts2.Core.Modding;
 using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.Models.Characters;
 
 namespace HideDetailsMod.HideDetailsModCode.Patches;
-
+// TODO: rename file
 [HarmonyPatch]
 static class CharacterSelectPatch
 {
@@ -31,6 +28,48 @@ static class CharacterSelectPatch
     //     static internal void Postfix() { }
     // }
 
+    [HarmonyPatch(typeof(CharacterModel), nameof(CharacterModel.CharacterSelectIcon), MethodType.Getter)]
+    static class CharacterSelectIconPatch
+    {
+        static internal bool Prefix(CharacterModel __instance, ref CompressedTexture2D __result)
+        {
+            try
+            {
+                var CharacterSelectIconPath = "res://HideDetailsMod/images/character_select/" + __instance.Id.Entry.ToLowerInvariant() + "_icon.png"; ;
+                if (!ResourceLoader.Exists(CharacterSelectIconPath)) return true;
+                CompressedTexture2D CharacterSelectIcon = ResourceLoader.Load<CompressedTexture2D>(CharacterSelectIconPath);
+                __result = CharacterSelectIcon;
+
+            }
+            catch (Exception e)
+            {
+                MainFile.Logger.Error("Something wrong in CharacterSelectIconPatch: " + e.ToString());
+                return true;
+            }
+            return false;
+        }
+    }
+    [HarmonyPatch(typeof(CharacterModel), nameof(CharacterModel.CharacterSelectLockedIcon), MethodType.Getter)]
+    static class CharacterSelectLockedIconPatch
+    {
+        static internal bool Prefix(CharacterModel __instance, ref CompressedTexture2D __result)
+        {
+            try
+            {
+                var CharacterSelectIconPath = "res://HideDetailsMod/images/character_select/" + __instance.Id.Entry.ToLowerInvariant() + "_locked_icon.png"; ;
+                if (!ResourceLoader.Exists(CharacterSelectIconPath)) return true;
+                CompressedTexture2D CharacterSelectIcon = ResourceLoader.Load<CompressedTexture2D>(CharacterSelectIconPath);
+                __result = CharacterSelectIcon;
+
+            }
+            catch (Exception e)
+            {
+                MainFile.Logger.Error("Something wrong in CharacterSelectLockedIconPatch: " + e.ToString());
+                return true;
+            }
+            return false;
+        }
+    }
     // protected virtual string CharacterSelectIconPath => ImageHelper.GetImagePath("packed/character_select/char_select_" + base.Id.Entry.ToLowerInvariant() + ".png");
     // public CompressedTexture2D CharacterSelectIcon => ResourceLoader.Load<CompressedTexture2D>(CharacterSelectIconPath, null, ResourceLoader.CacheMode.Reuse);
 
