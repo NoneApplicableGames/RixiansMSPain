@@ -34,13 +34,14 @@ class VfxCmd : AbstractConsoleCmd
     {
         if (!RunManager.Instance.IsInProgress)
         {
-            return new CmdResult(success: false, "A run is currently not in progress!");
+            return new(success: false, "A run is currently not in progress!");
         }
 
         if (args.Length < 1 || !int.TryParse(args[0], out int handIndex))
         {
-            return new CmdResult(success: false, $"Arg 1 must be the hand index (int), got '{(args.Length > 0 ? args[0] : "")}'.");
+            return new(success: false, $"Arg 1 must be the hand index (int), got '{(args.Length > 0 ? args[0] : "")}'.");
         }
+        if (issuingPlayer == null) return new(false, "No player was found");
 
         var cards = PileType.Hand.GetPile(issuingPlayer).Cards;
         int count = cards.Count;
@@ -370,16 +371,27 @@ class CustomVfxListener() : CustomSingletonModel(HookType.Combat)
 {
     public override async Task AfterDamageGiven(PlayerChoiceContext choiceContext, Creature? dealer, DamageResult result, ValueProp props, Creature target, CardModel? cardSource)
     {
+        if (cardSource is Squeeze)
+        {
+            // TODO: squeeze enemy
+            // var visuals = target.GetCreatureNode()?.Visuals;
+            // visuals?.CreateTween();
+            // NDoomVfx;
+        }
         if (cardSource is Flatten flatten)
         {
-            // TODO: flatten the enemy instead of the card
-            flatten.TriggerEffect(CardVisualEffect.Flatten, .5f, 30);
+            // TODO: make flatten enemy
+            var nCard = NCard.FindOnTable(flatten);
+            if (nCard == null) return;
+            NCustomVfxContainer.Node[nCard].PlayFlatten(.5f);
             await Cmd.Wait(.5f);
         }
         if (cardSource is Rattle rattle)
         {
-            rattle.TriggerEffect(CardVisualEffect.Rattle, .5f, 30);
-            await Cmd.Wait(.5f);
+            var nCard = NCard.FindOnTable(rattle);
+            if (nCard == null) return;
+            NCustomVfxContainer.Node[nCard].PlayRattle(1f, 30);
+            await Cmd.Wait(1f);
         }
     }
 }
