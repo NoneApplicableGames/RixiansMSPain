@@ -1,13 +1,14 @@
 using System.Reflection;
 using System.Text;
 using HarmonyLib;
+using HideDetailsMod.HideDetailsModCode.Patches;
 using MegaCrit.Sts2.Core.Context;
 using MegaCrit.Sts2.Core.DevConsole;
 using MegaCrit.Sts2.Core.DevConsole.ConsoleCommands;
+using MegaCrit.Sts2.Core.Entities.Multiplayer;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Multiplayer;
-using MegaCrit.Sts2.Core.Multiplayer.Game;
-using MegaCrit.Sts2.Core.Multiplayer.Messages.Lobby;
+using MegaCrit.Sts2.Core.Multiplayer.Connection;
 using MegaCrit.Sts2.Core.Platform;
 using MegaCrit.Sts2.Core.Runs;
 
@@ -82,7 +83,7 @@ public readonly struct NetModSettings
     // 1. ADD NEW TOGGLES HERE
     public bool Canary => EnabledFlags.Contains("C");
     public bool BetaShiv => Canary && EnabledFlags.Contains("Shiv");
-    public bool BetaSoul => EnabledFlags.Contains("Soul");
+    public bool BetaSoul => Canary && EnabledFlags.Contains("Soul");
 
     // Constructor that builds automatically from the local config settings
     public NetModSettings()
@@ -94,6 +95,7 @@ public readonly struct NetModSettings
 
     public override string ToString()
     {
+        return string.Join(":", EnabledFlags);
         var sb = new StringBuilder();
         sb.AppendLine($"{nameof(NetModSettings)} {{");
 
@@ -142,7 +144,7 @@ public readonly struct NetModSettings
         if (NetId is not { } id) return null;
         if (!NetModSettingsPatch.GameInfos.TryGetValue(id, out var msg)) return null;
 
-        var modStr = msg.versionInfo.otherMods?.FirstOrDefault(m => m.StartsWith(MainFile.ModId + "-"));
+        var modStr = msg.otherMods?.FirstOrDefault(m => m.StartsWith(MainFile.ModId + "-"));
         if (string.IsNullOrEmpty(modStr)) return null;
         return modStr;
     }
@@ -176,15 +178,25 @@ static class NetModSettingsPatch
             mods[index] += packed;
         }
     }
-
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(RunManager), nameof(RunManager.NetService), MethodType.Setter)]
-    static void SetupNetService(INetGameService value)
+    static class NetPatch
     {
-        value.RegisterMessageHandler<InitialGameInfoMessage>((msg, id) => GameInfos[id] = msg);
-        value.Disconnected += _ => GameInfos.Clear();
+        // IHandshakeHandler
+        [HarmonyTargetMethods]
+        static IEnumerable<MethodBase> Targets()
+        {
+            MethodInfo baseMethod = AccessTools.Method(typeof(IHandshakeHandler), nameof(IHandshakeHandler.HandshakeSucceeded));
+            return HarmonyPatchHelpers.GetMethodImplementations(baseMethod);
+        }
+
+
+        [HarmonyPostfix]
+        static void HandshakeSuccess(ulong peerId, PeerVersionInfo versionInfo)
+        {
+            GameInfos.Add(peerId, versionInfo);
+            RunManager.Instance.NetService.Disconnected -= Clear;
+            RunManager.Instance.NetService.Disconnected += Clear;
+        }
+        static void Clear(NetErrorInfo _) => GameInfos.Clear();
     }
-
-    internal static readonly Dictionary<ulong, InitialGameInfoMessage> GameInfos = [];
+    public static readonly Dictionary<ulong, PeerVersionInfo> GameInfos = [];
 }
-
