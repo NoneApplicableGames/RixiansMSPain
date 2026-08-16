@@ -9,13 +9,13 @@ Set-Location $ProjectRoot
 # Parse AssetSourcePath from local.props
 $localProps = Join-Path $ProjectRoot "Directory.Build.props"
 if (-not (Test-Path $localProps)) {
-    Write-Host "ERROR: local.props not found. Copy local.props.example to local.props first." -ForegroundColor Red
+    Write-Host "ERROR: Directory.Build.props not found. Copy Directory.Build.props.example to Directory.Build.props first." -ForegroundColor Red
     exit 1
 }
 $xml = [xml](Get-Content $localProps)
 $assetSourcePath = $xml.Project.PropertyGroup.AssetSourcePath
 if (-not $assetSourcePath -or -not (Test-Path $assetSourcePath)) {
-    Write-Host "ERROR: AssetSourcePath '$assetSourcePath' not found or does not exist. Check local.props." -ForegroundColor Red
+    Write-Host "ERROR: AssetSourcePath '$assetSourcePath' not found or does not exist. Check Directory.Build.props.props." -ForegroundColor Red
     exit 1
 }
 Write-Host "Asset source: $assetSourcePath"
