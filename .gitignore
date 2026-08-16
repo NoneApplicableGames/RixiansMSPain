@@ -27,3 +27,5 @@ mod-uploader.log
 /shaders
 /themes
 /addons
+
+/.pkgs

@@ -11,13 +11,23 @@
   ],
   "tasks": [
     {
+      "label": "Prepare Offline Packages",
+      "type": "shell",
+      "command": "dotnet restore HideDetailsMod.csproj --packages ./.pkgs",
+      "problemMatcher": ["$msCompile"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "clear": true
+      }
+    },
+    {
       "label": "Build Mod (Debug)",
       "type": "shell",
       "command": "dotnet build HideDetailsMod.csproj -c Debug -p:WorkshopChannel=Canary",
       "group": { "kind": "build", "isDefault": true },
       "problemMatcher": ["$msCompile"]
     },
-    // Do i even need this? Building for debug is plenty, since its only publish that matters
     {
       "label": "Build Mod",
       "type": "shell",
