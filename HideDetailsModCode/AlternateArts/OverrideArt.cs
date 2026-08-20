@@ -14,29 +14,29 @@ public static class CardOverrideExtensions
 {
     // internal static SpireField<CardModel, (CardImg? Base, CardImg? Override)> Overrides { get; } = new SpireField<CardModel, (CardImg? Base, CardImg? Override)>(() => (null, null)).CopyOnClone();
 
-    // extension(CardModel card)
-    // {
-    //     // For C# 14 users: true read-write property
-    //     public CardImg? OverrideArtImage
-    //     {
-    //         get => Overrides.Get(card);
-    //         set => Overrides.Set(card, value);
-    //     }
-
-    // }   
+    extension(CardModel card)
+    {
+        // For C# 14 users: true read-write property
+        public (CardImg? Base, CardImg? Upgraded) OverrideArtImage
+        {
+            // get => Overrides.Get(card);
+            // set => Overrides.Set(card, value);
+            get => card.GetOverrideImage();
+            set => card.SetOverrideImage(value);
+        }
+    }
     // For C# 13 users: standard method fallback
     // public static (CardImg? Base, CardImg? Upgrade) GetOverrideArt(this CardModel card) => Overrides.Get(card);
     // public static void SetOverrideArt(this CardModel card, CardImg? Base = null, CardImg? Upgrade = null) => Overrides.Set(card, (Base, Upgrade));
     // public static void ClearOverrideArt(this CardModel card) => Overrides.Set(card, (null, null));
 }
 
-public class OverrideArt() : IAlternateCardArt(-1)
+public class OverrideArt : AlternateCardArt
 {
     // Fetches directly from the extension class field
     public override CardImg? Get(CardModel card)
     {
-        // var ImgOverride = card.GetOverrideArt();
-        var (Base, Upgraded) = card.GetOverrideImage();
+        var (Base, Upgraded) = card.OverrideArtImage;
         if (card.IsUpgraded) return Upgraded;
         return Base;
     }

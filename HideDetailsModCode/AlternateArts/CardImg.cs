@@ -51,7 +51,7 @@ public record CardImg(string Path)
     public string PortraitPath => $"res://HideDetailsMod/images/atlases/card_atlas.sprites/{Path}.tres";
     public string PortraitPngPath => $"res://HideDetailsMod/artist_assets/{Path}.png";
     // public string PortraitPngPath { get; } = ImageHelperExtensions.GetModImagePath($"{path}.png");
-    internal bool Exists() => ResourceLoader.Exists(PortraitPath);
+    internal bool Exists => ResourceLoader.Exists(PortraitPath);
     public bool IsUpgraded => Path.EndsWith("_plus");
     public CardImg Upgraded() => IsUpgraded ? this : new(Path + "_plus");
     public CardImg Downgraded() => IsUpgraded ? new(Path[..Path.LastIndexOf("_plus")]) : this;
@@ -59,4 +59,10 @@ public record CardImg(string Path)
     public CardImg Beta() => IsBeta ? this : new(Path.Replace("/", "/beta/"));
 
     public CardImg NonBeta() => !IsBeta ? this : new(Path.Replace("/beta/", "/"));
+
+    internal CardImg? UpgradedIfExists()
+    {
+        if (Upgraded() is { Exists: true } Upg) return Upg;
+        return null;
+    }
 }

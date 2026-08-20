@@ -1,5 +1,5 @@
 using MegaCrit.Sts2.Core.Models.Cards;
-namespace HideDetailsMod.HideDetailsModCode.AlternateArts.Cards;
+namespace HideDetailsMod.HideDetailsModCode.AlternateArts.Cards.Silent;
 
 public class NoxiousFumesArt : AlternateCardArt<NoxiousFumes>
 {

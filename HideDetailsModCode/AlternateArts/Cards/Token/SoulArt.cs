@@ -5,9 +5,15 @@ namespace HideDetailsMod.HideDetailsModCode.AlternateArts.Cards;
 public class SoulArt : AlternateCardArt<Soul>
 {
     static CardImg Freddy { get; } = new("token/beta/soul");
-    // static CardImg Wip { get; } = new("token/soul_wip");
+
+    public override IEnumerable<CardImg> GetAll(Soul card)
+    {
+        if (MainFile.IsCanary) yield return Freddy;
+    }
+
     public override CardImg? Get(Soul card)
     {
-        return ConfigFrom(card).BetaSoul ? Freddy : null;
+        NetModSettings netModSettings = ConfigFrom(card);
+        return netModSettings.BetaSoul ? Freddy : null;
     }
 }

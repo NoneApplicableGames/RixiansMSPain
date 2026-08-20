@@ -34,14 +34,14 @@ public static class HarmonyPatchHelpers
         assemblies ??= ModManager.Mods.SelectMany(mod => mod.assemblies).Prepend(typeof(ModManager).Assembly);
         foreach (var assembly in assemblies)
         {
-            Type[] types;
+            IEnumerable<Type> types;
             try
             {
                 types = assembly.GetTypes();
             }
             catch (ReflectionTypeLoadException e)
             {
-                types = e.Types.Where(t => t != null).ToArray();
+                types = e.Types.OfType<Type>();
             }
 
             foreach (var type in types)
@@ -82,7 +82,7 @@ public static class ArtPatch
             if (!MyModConfig.UseCustomArt) return;
             try
             {
-                IAlternateCardArt.Patch.AllPortraitPaths(__instance, ref __result);
+                AlternateCardArt.Patch.AllPortraitPaths(__instance, ref __result);
             }
             catch (Exception e)
             {
@@ -118,13 +118,13 @@ public static class ArtPatch
 
                 var (OverrideBase, OverrideUpgrade) = __instance.GetOverrideImage();
                 var Override = __instance.IsUpgraded ? OverrideUpgrade : OverrideBase;
-                if (Override != null && Override.Exists())
+                if (Override != null && Override.Exists)
                 {
                     __result = Override.PortraitPath;
                     return;
                 }
 
-                IAlternateCardArt.Patch.PortraitPath(__instance, ref __result);
+                AlternateCardArt.Patch.PortraitPath(__instance, ref __result);
             }
             catch (Exception e)
             { MainFile.Logger.Error($"Error in PortraitPath: {e}"); }
@@ -152,13 +152,13 @@ public static class ArtPatch
             {
                 var (OverrideBase, OverrideUpgrade) = __instance.GetOverrideImage();
                 var Override = __instance.IsUpgraded ? OverrideUpgrade : OverrideBase;
-                if (Override != null && Override.Exists())
+                if (Override != null && Override.Exists)
                 {
                     __result = Override.PortraitPngPath;
                     return;
                 }
 
-                IAlternateCardArt.Patch.PortraitPngPath(__instance, ref __result);
+                AlternateCardArt.Patch.PortraitPngPath(__instance, ref __result);
             }
             catch (Exception e)
             { MainFile.Logger.Error($"Error in PortraitPngPath: {e}"); }

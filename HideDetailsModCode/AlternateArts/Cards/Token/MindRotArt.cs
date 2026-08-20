@@ -1,6 +1,8 @@
+
 using MegaCrit.Sts2.Core.Models.Cards;
-using MegaCrit.Sts2.Core.Models.Characters;
-namespace HideDetailsMod.HideDetailsModCode.AlternateArts.Cards;
+using Characters = MegaCrit.Sts2.Core.Models.Characters;
+
+namespace HideDetailsMod.HideDetailsModCode.AlternateArts.Cards.Token;
 
 public class MindRotArt : AlternateCardArt<MindRot>
 {
@@ -13,11 +15,11 @@ public class MindRotArt : AlternateCardArt<MindRot>
     {
         return card.Owner?.Character switch
         {
-            Ironclad => RotIronclad, // TODO: ironclad mind rot
-            Silent => RotSilent, // TODO: silent mind rot
-            Regent => RotRegent,
-            Necrobinder => RotNecrobinder,
-            Defect => RotDefect,
+            Characters.Ironclad => RotIronclad, // TODO: ironclad mind rot
+            Characters.Silent => RotSilent, // TODO: silent mind rot
+            Characters.Regent => RotRegent,
+            Characters.Necrobinder => RotNecrobinder,
+            Characters.Defect => RotDefect,
             // returns "token/mind_rot" which is the defect version
             _ => null,
         };

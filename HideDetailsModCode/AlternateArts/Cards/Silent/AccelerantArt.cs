@@ -4,7 +4,7 @@ namespace HideDetailsMod.HideDetailsModCode.AlternateArts.Cards;
 
 public class AccelerantArt : AlternateCardArt<Accelerant>
 {
-    static CardImg Poisonless { get; } = new("silent/poisonless_accelerant");
+    static CardImg Poisonless { get; } = new("silent/accelerant_poisonless");
 
     public override CardImg? Get(Accelerant card)
     {
