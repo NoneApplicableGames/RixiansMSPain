@@ -1,11 +1,11 @@
 using System.Reflection;
 using System.Text;
+using Godot;
 using HarmonyLib;
 using HideDetailsMod.HideDetailsModCode.Patches;
 using MegaCrit.Sts2.Core.Context;
 using MegaCrit.Sts2.Core.DevConsole;
 using MegaCrit.Sts2.Core.DevConsole.ConsoleCommands;
-using MegaCrit.Sts2.Core.Entities.Multiplayer;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Multiplayer;
 using MegaCrit.Sts2.Core.Multiplayer.Connection;
@@ -44,50 +44,50 @@ internal class MSPainNetConfigCmd : AbstractConsoleCmd
 
     public override CmdResult Process(Player? issuingPlayer, string[] args)
     {
-        var players = GetPlayers();
-        if (players == null)
-        {
-            if (LocalContext.NetId is { } id) return new(true, Write(id, GetPlayerName(id), new()));
-            else return new(true, You());
-        }
-        List<string> contents = [];
-        foreach (var (NetId, Username) in players)
-        {
-            contents.Add(Write(NetId, Username));
-        }
-        return new(true, string.Join('\n', contents));
+        IEnumerable<(ulong? NetId, NetModSettings? NetSettings)> configs = [
+            (LocalContext.NetId, new NetModSettings()),
+            .. NetModSettingsPatch.GameInfos.Select(kv => (kv.Key, NetModSettingsPatch.Read(kv.Value)))
+         ];
+        IEnumerable<string> values = configs.Select(v => $"{GetPlayerName(v.NetId)} -- {v.NetSettings.ToString() ?? "Does not have the mod"}");
+        return new(true, string.Join('\n', values));
     }
 
-    private static string You()
+    public static string GetPlayerName(ulong? NetId)
     {
-        return "You:\n" + new NetModSettings().ToString().ToIndentedString(4);
+        if (NetId is not { } netId) return "YOU";
+        string? name = null;
+        try
+        {
+            PlatformType platformType = RunManager.Instance.NetService.Platform;
+            name = PlatformUtil.GetPlayerNameRaw(platformType, netId) + $" ({netId})";
+        }
+        catch (Exception)
+        {
+            MainFile.Logger.Error("Failed to get name for " + netId);
+        }
+        return name ?? netId.ToString();
     }
 
-    static string Write(ulong NetId, string Username, NetModSettings? config = null)
-    {
-        if (NetId == 1) return You();
-        var builder = new StringBuilder();
-        builder.AppendLine($"{NetId} ({Username})");
-        config ??= NetModSettings.GetPlayerConfig(NetId);
-        if (config is { } settings) builder.AppendLine(settings.ToString().ToIndentedString(4));
-        else builder.AppendLine("Does not have the mod".ToIndentedString(4));
-        return builder.ToString();
-    }
-    public static IEnumerable<(ulong NetId, string Username)>? GetPlayers() =>
-        RunManager.Instance.State?.Players.Select(p => (p.NetId, GetPlayerName(p.NetId)));
-    public static string GetPlayerName(ulong NetId) => PlatformUtil.GetPlayerNameRaw(RunManager.Instance.NetService.Platform, NetId);
 }
 
 public readonly struct NetModSettings
 {
     // 1. ADD NEW TOGGLES HERE
     public bool Canary => EnabledFlags.Contains("C");
-    public bool BetaShiv => Canary && EnabledFlags.Contains("Shiv");
-    public bool BetaSoul => Canary && EnabledFlags.Contains("Soul");
+    public bool BetaShiv => EnabledFlags.Contains("Shiv");
+    public bool BetaSoul => EnabledFlags.Contains("Soul");
 
     // Constructor that builds automatically from the local config settings
     public NetModSettings()
     {
+        var args = OS.GetCmdlineArgs();
+        var settings = args.FirstOrDefault(f => f.StartsWith("--settings="));
+        if (!string.IsNullOrWhiteSpace(settings))
+        {
+            var configs = settings["--settings=".Length..].Split(",");
+            EnabledFlags = [.. EnabledFlags.Union(configs)];
+        }
+        if (args.Contains("--skip-settings")) return;
         if (MainFile.IsCanary) EnabledFlags.Add("C");
         if (MyModConfig.UseBetaShivArt) EnabledFlags.Add("Shiv");
         if (MyModConfig.UseBetaSoulArt) EnabledFlags.Add("Soul");
@@ -95,29 +95,29 @@ public readonly struct NetModSettings
 
     public override string ToString()
     {
-        return string.Join(":", EnabledFlags);
-        var sb = new StringBuilder();
-        sb.AppendLine($"{nameof(NetModSettings)} {{");
+        return string.Join(":", EnabledFlags.RemoveWhere(string.IsNullOrWhiteSpace));
+        // var sb = new StringBuilder();
+        // sb.AppendLine($"{nameof(NetModSettings)} {{");
 
-        // Dynamically fetch all public instance properties
-        var properties = typeof(NetModSettings).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        // // Dynamically fetch all public instance properties
+        // var properties = typeof(NetModSettings).GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-        foreach (var prop in properties)
-        {
-            // Filter out the collection property
-            if (prop.Name == nameof(EnabledFlags))
-                continue;
+        // foreach (var prop in properties)
+        // {
+        //     // Filter out the collection property
+        //     if (prop.Name == nameof(EnabledFlags))
+        //         continue;
 
-            var value = prop.GetValue(this);
+        //     var value = prop.GetValue(this);
 
-            // Format lower-case boolean strings for clarity
-            string formattedValue = value is bool b ? b.ToString().ToLower() : value?.ToString() ?? "null";
+        //     // Format lower-case boolean strings for clarity
+        //     string formattedValue = value is bool b ? b.ToString().ToLower() : value?.ToString() ?? "null";
 
-            sb.AppendLine($"  {prop.Name} = {formattedValue},");
-        }
+        //     sb.AppendLine($"  {prop.Name} = {formattedValue},");
+        // }
 
-        sb.Append('}');
-        return sb.ToString();
+        // sb.Append('}');
+        // return sb.ToString();
     }
 
     // Container for holding the synchronized string flags
@@ -139,64 +139,86 @@ public readonly struct NetModSettings
             : "";
     }
 
-    public static string? GetPlayerModString(ulong? NetId)
-    {
-        if (NetId is not { } id) return null;
-        if (!NetModSettingsPatch.GameInfos.TryGetValue(id, out var msg)) return null;
 
-        var modStr = msg.otherMods?.FirstOrDefault(m => m.StartsWith(MainFile.ModId + "-"));
-        if (string.IsNullOrEmpty(modStr)) return null;
-        return modStr;
+    public static NetModSettings? GetPlayerConfig(Player? player)
+    {
+        if (LocalContext.IsMe(player)) return new();
+        return GetPlayerConfig(player?.NetId);
     }
-    public static NetModSettings? GetPlayerConfig(Player? player) => GetPlayerConfig(player?.NetId);
 
     public static NetModSettings? GetPlayerConfig(ulong? NetId)
     {
-        if (NetId == null) return null;
-        if (NetId is not { } id) return null;
-        var modStr = GetPlayerModString(id); // TODO: weird cast. check it.
-        if (string.IsNullOrEmpty(modStr)) return null;
-
-        // Automatically slices everything after the mod name into string tokens
-        var tokens = modStr.Split(':').Skip(1).ToHashSet();
-        return new NetModSettings(tokens);
+        if (LocalContext.NetId == NetId) return new();
+        return NetModSettingsPatch.Read(NetId);
     }
 }
 
-[HarmonyPatch(typeof(PeerVersionInfo), nameof(PeerVersionInfo.LocalDefault))]
+[HarmonyPatch]
 static class NetModSettingsPatch
 {
-    static void Postfix(List<string>? ___otherMods)
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(PeerVersionInfo), nameof(PeerVersionInfo.LocalDefault))]
+    static void PeerVersionInfo_LocalDefault(ref PeerVersionInfo __result)
     {
-        var mods = ___otherMods;
+        var mods = __result.otherMods;
         if (mods == null) return;
-
-        var index = mods.FindIndex(m => m.StartsWith(MainFile.ModId + "-"));
-        if (index != -1)
-        {
-            var packed = NetModSettings.BuildPackedString();
-            mods[index] += packed;
-        }
+        mods.Add(Prefix + NetModSettings.BuildPackedString() + ":" + LocalContext.NetId);
     }
+    [HarmonyPatch]
     static class NetPatch
     {
         // IHandshakeHandler
         [HarmonyTargetMethods]
         static IEnumerable<MethodBase> Targets()
         {
+            // HandshakeManager;
             MethodInfo baseMethod = AccessTools.Method(typeof(IHandshakeHandler), nameof(IHandshakeHandler.HandshakeSucceeded));
             return HarmonyPatchHelpers.GetMethodImplementations(baseMethod);
         }
 
-
         [HarmonyPostfix]
-        static void HandshakeSuccess(ulong peerId, PeerVersionInfo versionInfo)
+        // static void HandshakeSuccess(ulong peerId, PeerVersionInfo versionInfo)
+        static void HandshakeSuccess(object[] __args)
         {
-            GameInfos.Add(peerId, versionInfo);
-            RunManager.Instance.NetService.Disconnected -= Clear;
-            RunManager.Instance.NetService.Disconnected += Clear;
+            if (__args is not [IConvertible num, PeerVersionInfo versionInfo])
+            {
+                MainFile.Logger.Error($"Failed to get args: {string.Join(',', __args)}");
+                return;
+            }
+            ulong peerId = num.ToUInt64(null);
+            MainFile.Logger.Warn($"NETCONTENT FOR {peerId}: " + string.Join('\t', versionInfo.otherMods ?? []));
+            GameInfos[peerId] = versionInfo;
         }
-        static void Clear(NetErrorInfo _) => GameInfos.Clear();
     }
     public static readonly Dictionary<ulong, PeerVersionInfo> GameInfos = [];
+    static public IEnumerable<ulong> AllPlayers()
+    {
+        if (LocalContext.NetId is { } self) yield return self;
+        foreach (var item in GameInfos.Keys)
+        {
+            yield return item;
+        }
+    }
+
+    private const string Prefix = "__mspainsettings__:";
+
+    public static NetModSettings? Read(PeerVersionInfo info)
+    {
+        var item = info.otherMods?.FirstOrDefault(value => value.StartsWith(Prefix));
+        if (item == null) return null;
+        return Read(item);
+    }
+
+    private static NetModSettings Read(string item)
+    {
+        return new(item.Split(':').Skip(1).ToHashSet());
+    }
+
+
+    public static NetModSettings? Read(ulong? peer)
+    {
+        if (peer is not { } Peer) return null;
+        if (!GameInfos.TryGetValue(Peer, out var value)) return null;
+        return Read(value);
+    }
 }
