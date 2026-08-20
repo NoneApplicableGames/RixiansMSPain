@@ -120,12 +120,12 @@ class VfxCmd : AbstractConsoleCmd
         };
     }
 }
-
 public enum CardVisualEffect : byte
 {
     None,
     Rattle,
-    Flatten
+    Flatten,
+    Squeeze,
 }
 
 public record CardEffectState
@@ -279,9 +279,11 @@ public partial class NCustomVfxContainer : Control
             case CardVisualEffect.Rattle:
                 PlayRattle(duration, intensity, times);
                 break;
-
             case CardVisualEffect.Flatten:
-                PlayFlatten(duration, times);
+                PlayFlatten(duration, intensity, times);
+                break;
+            case CardVisualEffect.Squeeze:
+                PlaySqueeze(duration, intensity, times);
                 break;
         }
     }
@@ -301,7 +303,7 @@ public partial class NCustomVfxContainer : Control
         }, CardVisualEffect.Rattle, duration, intensity, times);
     }
 
-    public void PlayFlatten(float duration = 0.2f, int times = 1)
+    public void PlayFlatten(float duration = 0.2f, float intensity = 0, int times = 1)
     {
         PlayTween(target =>
         {
@@ -311,7 +313,20 @@ public partial class NCustomVfxContainer : Control
             tween.TweenProperty(target, "scale", Vector2.One, duration * 0.7f)
                 .SetTrans(Tween.TransitionType.Elastic).SetEase(Tween.EaseType.Out);
             return tween;
-        }, CardVisualEffect.Flatten, duration, times: times);
+        }, CardVisualEffect.Flatten, duration, intensity: intensity, times: times);
+    }
+
+    internal void PlaySqueeze(float duration = 0.2f, float intensity = 0, int times = 1)
+    {
+        PlayTween(target =>
+        {
+            var tween = CreateTween().SetLoops(times);
+            tween.TweenProperty(target, "scale", new Vector2(0.2f, 1.0f), duration * 0.3f)
+                .SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out);
+            tween.TweenProperty(target, "scale", Vector2.One, duration * 0.7f)
+                .SetTrans(Tween.TransitionType.Elastic).SetEase(Tween.EaseType.Out);
+            return tween;
+        }, CardVisualEffect.Squeeze, duration, intensity: intensity, times: times);
     }
 
     private void PlayTween(Func<CanvasItem, Tween> createTweenFunc, CardVisualEffect effect, float duration, float intensity = 0f, int times = 1)
@@ -343,6 +358,7 @@ public partial class NCustomVfxContainer : Control
 
     public void ResetAndKillActiveTween()
     {
+        _activeTween?.FastForwardToCompletion();
         _activeTween?.Kill();
         _activeTween = null;
 
@@ -371,12 +387,17 @@ class CustomVfxListener() : CustomSingletonModel(HookType.Combat)
 {
     public override async Task AfterDamageGiven(PlayerChoiceContext choiceContext, Creature? dealer, DamageResult result, ValueProp props, Creature target, CardModel? cardSource)
     {
-        if (cardSource is Squeeze)
+        if (cardSource is Squeeze squeeze)
         {
             // TODO: squeeze enemy
             // var visuals = target.GetCreatureNode()?.Visuals;
             // visuals?.CreateTween();
             // NDoomVfx;
+            // TODO: make flatten enemy
+            var nCard = NCard.FindOnTable(squeeze);
+            if (nCard == null) return;
+            NCustomVfxContainer.Node[nCard].PlaySqueeze(.5f);
+            await Cmd.Wait(.5f);
         }
         if (cardSource is Flatten flatten)
         {

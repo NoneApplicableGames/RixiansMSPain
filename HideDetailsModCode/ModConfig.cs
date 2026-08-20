@@ -29,11 +29,6 @@ internal class MyModConfig : SimpleModConfig
     [ConfigHideInUI] public static bool UseCustomArt { get; set; } = true;
 #if CANARY
     [ConfigSection("Canary only!")]
-#if DEBUG
-#else
-[ConfigHideInUI]
-#endif
-    public static bool UseCustomCharacterSelect { get; set; } = false;
     // See NetUtils
     public static bool EmulateCanaryMode { get; set; } = true;
 
@@ -41,13 +36,17 @@ internal class MyModConfig : SimpleModConfig
 
     public static bool UseBetaSoulArt { get; set; } = false;
 #else
-    // TODO: SET THIS TO TRUE WHEN READY FOR PROD
-    [ConfigIgnore] public static bool UseCustomCharacterSelect => false;
-
     [ConfigIgnore] public static bool EmulateCanaryMode => false;
     [ConfigIgnore] public static bool UseBetaShivArt => false;
     [ConfigIgnore] public static bool UseBetaSoulArt => false;
 #endif
+
+#if DEBUG
+    [ConfigIgnore] public static bool UseCustomCharacterSelect => true;
+#else
+    [ConfigIgnore] public static bool UseCustomCharacterSelect => false;
+#endif
+
 
     // Renamed to InfiniteBladesLength2 to reset configs
     [ConfigSlider(0, 5000, 10)] public static float InfiniteBladesLength2 { get; set; } = 3000;
