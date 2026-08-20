@@ -50,8 +50,6 @@ internal class MyModConfig : SimpleModConfig
 
     // Renamed to InfiniteBladesLength2 to reset configs
     [ConfigSlider(0, 5000, 10)] public static float InfiniteBladesLength2 { get; set; } = 3000;
-
-    [ConfigHideInUI] // TODO: Not yet useful
     public static bool EnableNeurosurgeYippe { get; set; } = true;
     public static bool ClashAsGrandFinale { get; set; } = true;
 

@@ -1,4 +1,3 @@
-using BaseLib.Patches.Content;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Extensions;
@@ -13,7 +12,7 @@ class NeurosurgeYippe
     // HideDetailsMod/audio/{filename}
     // .wav or .ogg only
     static string[] Assets => [
-        // "yipee.wav"
+        "Yippee.wav"
     ];
     static public void Prefix(CardPlay cardPlay)
     {
