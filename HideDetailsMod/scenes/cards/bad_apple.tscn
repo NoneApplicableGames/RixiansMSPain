@@ -1,7 +1,7 @@
-[gd_scene load_steps=23 format=3 uid="uid://dqcykwmq6wocr"]
+[gd_scene load_steps=23 format=3 ]
 
-[ext_resource type="Script" uid="uid://biyffy24g5sjp" path="res://HideDetailsModCode/Scenes/BadApple.cs" id="1_08hvh"]
-[ext_resource type="Texture2D" uid="uid://bcq4hnehvbr4a" path="res://HideDetailsMod/images/cards/bad_apple_animation.spritesheet.png" id="1_ycudd"]
+[ext_resource type="Script" path="res://HideDetailsModCode/Scenes/BadApple.cs" id="1_08hvh"]
+[ext_resource type="Texture2D" path="res://HideDetailsMod/images/cards/bad_apple_animation.spritesheet.png" id="1_ycudd"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_08hvh"]
 atlas = ExtResource("1_ycudd")

@@ -1,7 +1,7 @@
-[gd_scene load_steps=14 format=3 uid="uid://dr0s2wqpwcdbo"]
+[gd_scene load_steps=14 format=3 ]
 
-[ext_resource type="Script" uid="uid://27xy4clrrrno" path="res://HideDetailsModCode/Scenes/OstyDanceAnimated.cs" id="1_6yca1"]
-[ext_resource type="Texture2D" uid="uid://bgjaumwrmwk0b" path="res://HideDetailsMod/images/cards/otsy_dance.spritesheet.png" id="2_6yca1"]
+[ext_resource type="Script" path="res://HideDetailsModCode/Scenes/OstyDanceAnimated.cs" id="1_6yca1"]
+[ext_resource type="Texture2D" path="res://HideDetailsMod/images/cards/otsy_dance.spritesheet.png" id="2_6yca1"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_e6xro"]
 atlas = ExtResource("2_6yca1")
