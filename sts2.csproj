@@ -1,5 +1,6 @@
 <Project Sdk="Godot.NET.Sdk/4.5.1">
     <!-- Pull in SteamLibraryPath / AssetSourcePath / GodotPath -->
+    <Import Project="Sts2PathDiscovery.props" Condition="Exists('Sts2PathDiscovery.props')" />
     <Import Project="Directory.Build.props" Condition="Exists('Directory.Build.props')" />
 
     <PropertyGroup>
@@ -7,6 +8,8 @@
         <EnableDynamicLoading>True</EnableDynamicLoading>
         <Nullable>disable</Nullable>
         <TargetFramework>net9.0</TargetFramework>
+        <!-- Added ti orevebt attenots to use dotnet 10, since that breaks harmony -->
+        <RollForward>Disable</RollForward>
         <LangVersion>13.0</LangVersion>
         <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
         <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>

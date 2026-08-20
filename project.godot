@@ -26,6 +26,10 @@ boot_splash/show_image=false
 config/icon="res://images/icon_1024.png"
 config/windows_native_icon="res://images/icon.ico"
 
+[audio]
+
+driver="Dummy"
+
 [autoload]
 
 SentryBootstrap="*res://addons/sentry/SentryBootstrap.cs"
@@ -41,6 +45,7 @@ settings/gdscript/always_track_call_stacks=true
 window/size/viewport_width=1920
 window/size/viewport_height=1080
 window/size/initial_position_type=3
+window/size/initial_position=Vector2i(-500, 0)
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 mouse_cursor/custom_image="res://images/packed/common_ui/cursor_default.png"

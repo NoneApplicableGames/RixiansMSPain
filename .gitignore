@@ -29,3 +29,6 @@ mod-uploader.log
 /addons
 
 /.pkgs
+
+# Linked sts2 for launching
+/.game
