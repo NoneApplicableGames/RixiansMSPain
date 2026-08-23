@@ -408,12 +408,11 @@ class CustomVfxListener() : CustomSingletonModel(HookType.Combat)
             // Squeeze inward at the waist and stretch vertically
             NSqueezeVfx? vfx = NSqueezeVfx.Create(
                 creature.Visuals,
-                creature.Hitbox.GlobalPosition,
-                creature.Hitbox.Size,
                 mode: NCreatureModifierVfx.DurationMode.UntilRevert
             );
             if (vfx != null)
             {
+                CreaturesWithVfx.Add(creature);
                 SqueezeVfxs[creature] = vfx;
                 await vfx.ApplyTask;
             }
@@ -431,13 +430,12 @@ class CustomVfxListener() : CustomSingletonModel(HookType.Combat)
             // Squeeze inward at the waist and stretch vertically
             var vfx = NFlattenVfx.Create(
                 creature.Visuals,
-                creature.Hitbox.GlobalPosition,
-                creature.Hitbox.Size,
                 mode: NCreatureModifierVfx.DurationMode.UntilRevert
             );
 
             if (vfx != null)
             {
+                CreaturesWithVfx.Add(creature);
                 FlattenVfxs[creature] = vfx;
                 await vfx.ApplyTask;
             }
@@ -454,8 +452,6 @@ class CustomVfxListener() : CustomSingletonModel(HookType.Combat)
             // Squeeze inward at the waist and stretch vertically
             var vfx = NRattleVfx.Create(
                 creature.Visuals,
-                creature.Hitbox.GlobalPosition,
-                creature.Hitbox.Size,
                 mode: NCreatureModifierVfx.DurationMode.Timed
             );
             if (vfx != null)
@@ -466,17 +462,14 @@ class CustomVfxListener() : CustomSingletonModel(HookType.Combat)
     }
     Dictionary<NCreature, NCreatureModifierVfx> FlattenVfxs { get; } = [];
     Dictionary<NCreature, NCreatureModifierVfx> SqueezeVfxs { get; } = [];
+    HashSet<NCreature> CreaturesWithVfx { get; } = [];
     public override Task AfterSideTurnStart(CombatSide side, IReadOnlyList<Creature> participants, ICombatState combatState)
     {
-        foreach (var vfx in FlattenVfxs)
+        foreach (var creature in CreaturesWithVfx)
         {
-            vfx.Value.Revert();
+            NCreatureModifierVfx.ClearAll(creature.Visuals, animateRevert: true);
         }
         FlattenVfxs.Clear();
-        foreach (var vfx in SqueezeVfxs)
-        {
-            vfx.Value.Revert();
-        }
         SqueezeVfxs.Clear();
         return Task.CompletedTask;
     }
