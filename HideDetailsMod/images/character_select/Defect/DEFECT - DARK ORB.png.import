@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bvwihumg1w8jg"
-path="res://.godot/imported/DEFECT - DARK ORB.png-4da704326a1f35e0b9f9a1ed4d41f098.ctex"
+path="res://.godot/imported/DEFECT - DARK ORB.png-665260c828982bf92cc9b16e724509e9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://HideDetailsMod/images/character_select/defect/DEFECT - DARK ORB.png"
-dest_files=["res://.godot/imported/DEFECT - DARK ORB.png-4da704326a1f35e0b9f9a1ed4d41f098.ctex"]
+source_file="res://HideDetailsMod/images/character_select/Defect/DEFECT - DARK ORB.png"
+dest_files=["res://.godot/imported/DEFECT - DARK ORB.png-665260c828982bf92cc9b16e724509e9.ctex"]
 
 [params]
 
