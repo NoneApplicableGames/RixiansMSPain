@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://g013k28mpci"
-path="res://.godot/imported/the_bomb.png-f98d2e85810630ff7852b6641e1a67f4.ctex"
+uid="uid://d131f7swid1di"
+path="res://.godot/imported/squeeze_plus.png-f5f72ea4440652a0ba5a3a7e4ee88aee.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://HideDetailsMod/artist_assets/colorless/the_bomb.png"
-dest_files=["res://.godot/imported/the_bomb.png-f98d2e85810630ff7852b6641e1a67f4.ctex"]
+source_file="res://HideDetailsMod/artist_assets/necrobinder/squeeze_plus.png"
+dest_files=["res://.godot/imported/squeeze_plus.png-f5f72ea4440652a0ba5a3a7e4ee88aee.ctex"]
 
 [params]
 

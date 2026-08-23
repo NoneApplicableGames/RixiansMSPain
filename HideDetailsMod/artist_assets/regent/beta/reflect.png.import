@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://g013k28mpci"
-path="res://.godot/imported/the_bomb.png-f98d2e85810630ff7852b6641e1a67f4.ctex"
+uid="uid://vx6kqps0qipk"
+path="res://.godot/imported/reflect.png-af8d52592701d0efe9db8ae5af2e6755.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://HideDetailsMod/artist_assets/colorless/the_bomb.png"
-dest_files=["res://.godot/imported/the_bomb.png-f98d2e85810630ff7852b6641e1a67f4.ctex"]
+source_file="res://HideDetailsMod/artist_assets/regent/beta/reflect.png"
+dest_files=["res://.godot/imported/reflect.png-af8d52592701d0efe9db8ae5af2e6755.ctex"]
 
 [params]
 

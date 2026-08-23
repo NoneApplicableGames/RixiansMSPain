@@ -23,11 +23,13 @@ if ([string]::IsNullOrWhiteSpace($godotExe)) {
 }
 
 if ($DoImport) {
-  cmd /c `"$godotExe`" --headless --import
+    cmd /c `"$godotExe`" --headless --import
 }
 
 if ([string]::IsNullOrWhiteSpace($InputPath) -or [string]::IsNullOrWhiteSpace($OutputPath)) {
-    if ($DoImport) exit;
+    if ($DoImport) {
+        exit;
+    }
     throw "Both InputPath and OutputPath must be specified via arguments or environment variables (INPUT_PATH, OUTPUT_PATH)."
 }
 
@@ -35,7 +37,7 @@ if ([string]::IsNullOrWhiteSpace($InputPath) -or [string]::IsNullOrWhiteSpace($O
 cmd /c `"$godotExe`" --headless -s $GdScript -- $InputPath $OutputPath
 if ($LastExitCode -ne 0) {
     Write-Warning "First attempt failed with exit code $LastExitCode (Imports were missing). Retrying..."
-    
+
     # Second attempt
     cmd /c `"$godotExe`" --headless -s $GdScript -- $InputPath $OutputPath
 }
