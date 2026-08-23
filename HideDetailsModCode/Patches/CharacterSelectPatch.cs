@@ -36,7 +36,7 @@ static class CharacterSelectPatch
             if (!MyModConfig.UseCustomCharacterSelect) return true;
             try
             {
-                var CharacterSelectIconPath = "res://HideDetailsMod/images/character_select/" + __instance.Id.Entry.ToLowerInvariant() + "/icon.png"; ;
+                var CharacterSelectIconPath = "res://HideDetailsMod/images/character_select/" + __instance.Id.Entry.ToLowerInvariant() + "_icon.png"; ;
                 if (!ResourceLoader.Exists(CharacterSelectIconPath)) return true;
                 CompressedTexture2D CharacterSelectIcon = ResourceLoader.Load<CompressedTexture2D>(CharacterSelectIconPath);
                 __result = CharacterSelectIcon;
