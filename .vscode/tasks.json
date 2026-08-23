@@ -91,6 +91,19 @@
         "panel": "shared",
         "clear": true
       }
+    },
+    {
+      "label": "Godot: Import",
+      "type": "process",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}/scripts/Import-GodotImages.ps1",
+        "-DoImport"
+      ]
     }
   ]
 }
