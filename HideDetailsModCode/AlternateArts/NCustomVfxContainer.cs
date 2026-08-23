@@ -1,8 +1,8 @@
 using BaseLib.Abstracts;
 using BaseLib.Utils;
 using Godot;
+using HideDetailsMod.HideDetailsModCode.Vfx;
 using MegaCrit.Sts2.Core.Combat;
-using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.DevConsole;
 using MegaCrit.Sts2.Core.DevConsole.ConsoleCommands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -14,7 +14,9 @@ using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Nodes.Cards;
 using MegaCrit.Sts2.Core.Nodes.Cards.Holders;
+using MegaCrit.Sts2.Core.Nodes.Combat;
 using MegaCrit.Sts2.Core.Nodes.GodotExtensions;
+using MegaCrit.Sts2.Core.Nodes.Rooms;
 using MegaCrit.Sts2.Core.Runs;
 using MegaCrit.Sts2.Core.ValueProps;
 
@@ -182,7 +184,7 @@ public static class CardModelEffectExtensions
         {
             var nCard = NCard.FindOnTable(card);
             if (nCard == null) return;
-            NCustomVfxContainer.Node[nCard].PlayEffect(effect, duration, intensity, times);
+            NCardCustomVfxContainer.Node[nCard].PlayEffect(effect, duration, intensity, times);
         }
         catch (Exception e)
         {
@@ -191,9 +193,9 @@ public static class CardModelEffectExtensions
     }
 }
 
-public partial class NCustomVfxContainer : Control
+public partial class NCardCustomVfxContainer : Control
 {
-    static readonly internal AddedNode<NCard, NCustomVfxContainer> Node = new(nCard => new NCustomVfxContainer().Set(nCard));
+    static readonly internal AddedNode<NCard, NCardCustomVfxContainer> Node = new(nCard => new NCardCustomVfxContainer().Set(nCard));
 
 #nullable disable
     public NCard CardNode { get; private set; }
@@ -204,10 +206,11 @@ public partial class NCustomVfxContainer : Control
     private Tween? _activeTween;
     private CardModel? _lastBoundModel;
     static readonly NotNullSpireField<CardModel, CardEffectState> EffectState = new(() => new());
-    NCustomVfxContainer Set(NCard nCard)
+    NCardCustomVfxContainer Set(NCard nCard)
     {
         CardNode = nCard;
         CardNode.TreeEntered += OnCardNodeTreeEntered;
+        CardNode.TreeExited += OnCardNodeTreeExited;
         return this;
     }
 
@@ -222,6 +225,10 @@ public partial class NCustomVfxContainer : Control
     {
         // Defer evaluation when tree signals trigger
         Callable.From(EnsureParented).CallDeferred();
+    }
+    private void OnCardNodeTreeExited()
+    {
+        ResetAndKillActiveTween();
     }
 
     private void EnsureParented()
@@ -371,9 +378,10 @@ public partial class NCustomVfxContainer : Control
     {
         if (disposing)
         {
-            if (GodotObject.IsInstanceValid(CardNode))
+            if (IsInstanceValid(CardNode))
             {
                 CardNode.TreeEntered -= OnCardNodeTreeEntered;
+                CardNode.TreeExited -= OnCardNodeTreeExited;
             }
             ResetAndKillActiveTween();
         }
@@ -389,30 +397,88 @@ class CustomVfxListener() : CustomSingletonModel(HookType.Combat)
     {
         if (cardSource is Squeeze squeeze)
         {
-            // TODO: squeeze enemy
-            // var visuals = target.GetCreatureNode()?.Visuals;
-            // visuals?.CreateTween();
-            // NDoomVfx;
-            // TODO: make flatten enemy
             var nCard = NCard.FindOnTable(squeeze);
             if (nCard == null) return;
-            NCustomVfxContainer.Node[nCard].PlaySqueeze(.5f);
-            await Cmd.Wait(.5f);
+            NCardCustomVfxContainer.Node[nCard].PlaySqueeze(.5f);
+
+            NCreature? creature = NCombatRoom.Instance?.GetCreatureNode(target);
+            if (creature == null) return;
+            if (SqueezeVfxs.ContainsKey(creature)) return;
+
+            // Squeeze inward at the waist and stretch vertically
+            NSqueezeVfx? vfx = NSqueezeVfx.Create(
+                creature.Visuals,
+                creature.Hitbox.GlobalPosition,
+                creature.Hitbox.Size,
+                mode: NCreatureModifierVfx.DurationMode.UntilRevert
+            );
+            if (vfx != null)
+            {
+                SqueezeVfxs[creature] = vfx;
+                await vfx.ApplyTask;
+            }
         }
         if (cardSource is Flatten flatten)
         {
-            // TODO: make flatten enemy
             var nCard = NCard.FindOnTable(flatten);
             if (nCard == null) return;
-            NCustomVfxContainer.Node[nCard].PlayFlatten(.5f);
-            await Cmd.Wait(.5f);
+            NCardCustomVfxContainer.Node[nCard].PlayFlatten(.5f);
+
+            NCreature? creature = NCombatRoom.Instance?.GetCreatureNode(target);
+            if (creature == null) return;
+            if (FlattenVfxs.ContainsKey(creature)) return;
+
+            // Squeeze inward at the waist and stretch vertically
+            var vfx = NFlattenVfx.Create(
+                creature.Visuals,
+                creature.Hitbox.GlobalPosition,
+                creature.Hitbox.Size,
+                mode: NCreatureModifierVfx.DurationMode.UntilRevert
+            );
+
+            if (vfx != null)
+            {
+                FlattenVfxs[creature] = vfx;
+                await vfx.ApplyTask;
+            }
         }
         if (cardSource is Rattle rattle)
         {
             var nCard = NCard.FindOnTable(rattle);
             if (nCard == null) return;
-            NCustomVfxContainer.Node[nCard].PlayRattle(1f, 30);
-            await Cmd.Wait(1f);
+            NCardCustomVfxContainer.Node[nCard].PlayRattle(1f, 100);
+
+            NCreature? creature = NCombatRoom.Instance?.GetCreatureNode(target);
+            if (creature == null) return;
+
+            // Squeeze inward at the waist and stretch vertically
+            var vfx = NRattleVfx.Create(
+                creature.Visuals,
+                creature.Hitbox.GlobalPosition,
+                creature.Hitbox.Size,
+                mode: NCreatureModifierVfx.DurationMode.Timed
+            );
+            if (vfx != null)
+            {
+                await (vfx.VfxTask ?? vfx.ApplyTask);
+            }
         }
     }
+    Dictionary<NCreature, NCreatureModifierVfx> FlattenVfxs { get; } = [];
+    Dictionary<NCreature, NCreatureModifierVfx> SqueezeVfxs { get; } = [];
+    public override Task AfterSideTurnStart(CombatSide side, IReadOnlyList<Creature> participants, ICombatState combatState)
+    {
+        foreach (var vfx in FlattenVfxs)
+        {
+            vfx.Value.Revert();
+        }
+        FlattenVfxs.Clear();
+        foreach (var vfx in SqueezeVfxs)
+        {
+            vfx.Value.Revert();
+        }
+        SqueezeVfxs.Clear();
+        return Task.CompletedTask;
+    }
+
 }
