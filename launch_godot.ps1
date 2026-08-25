@@ -23,9 +23,12 @@ if ([string]::IsNullOrEmpty($GodotPath)) {
 # 5. Enforce targeted framework translation constraints
 $env:DOTNET_ROOT = "C:\Program Files\dotnet"
 
-# "Major" permits MegaDot (built for 8) to advance into your 9.0.19 runtime framework pool,
-# but it builds a hard ceiling that prevents it from touching the 10.0.9 runtime layer.
-$env:DOTNET_ROLL_FORWARD = "Major"
+# Tells .NET to roll forward to the highest minor release, but NEVER change the major release.
+# This builds a hard ceiling that traps it within .NET 9.x and completely hides .NET 10.
+$env:DOTNET_ROLL_FORWARD = "Minor"
+
+# Prevents the host from falling back to higher major versions if a perfect match isn't found.
+$env:DOTNET_ROLL_FORWARD_ON_NO_CANDIDATE_FX = "0"
 
 Write-Host "Configuring hybrid environment (.NET 8 Editor -> .NET 9 Target)..." -ForegroundColor Cyan
 Write-Host "Launching MegaDot: $GodotPath" -ForegroundColor Green

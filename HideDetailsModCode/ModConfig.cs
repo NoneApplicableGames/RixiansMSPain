@@ -44,7 +44,7 @@ internal class MyModConfig : SimpleModConfig
 #if DEBUG
     [ConfigIgnore] public static bool UseCustomCharacterSelect => true;
 #else
-    [ConfigIgnore] public static bool UseCustomCharacterSelect => false;
+    [ConfigIgnore] public static bool UseCustomCharacterSelect => true;
 #endif
 
 
