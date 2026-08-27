@@ -98,18 +98,18 @@ public abstract class AlternateCardArt
         IroncladCardPool when !MainFile.IroncladSetActive => true,
         _ => false,
     };
-    protected static IEnumerable<CardImg> GetAllArtsFor(CardModel card)
+    static IEnumerable<CardImg> GetAllArtsFor(CardModel card)
     => Arts
         .SelectMany(art => art.GetAllAndUpgraded(card))
         .Distinct()
         .Where(art => art.Exists);
-    protected static IEnumerable<(CardImg? Base, CardImg? Upgraded)> GetArtsFor(CardModel card)
+    static IEnumerable<(CardImg? Base, CardImg? Upgraded)> GetArtsFor(CardModel card)
     => Arts
         .Select(art => art.GetSplit(card))
         .Distinct()
         .OfType<(CardImg? Base, CardImg? Upgraded)>();
 
-    protected IEnumerable<CardImg> GetAllAndUpgraded(CardModel card)
+    IEnumerable<CardImg> GetAllAndUpgraded(CardModel card)
     {
         foreach (var item in GetAll(card))
         {
@@ -142,13 +142,13 @@ public abstract class AlternateCardArt
             {
                 if (card.IsUpgraded)
                 {
-                    if (Upgraded == null) continue;
+                    if (Upgraded == null || !Upgraded.Exists) continue;
                     result = Upgraded.PortraitPath;
                     return;
                 }
                 else
                 {
-                    if (Base == null) continue;
+                    if (Base == null || !Base.Exists) continue;
                     result = Base.PortraitPath;
                     return;
                 }
@@ -162,12 +162,12 @@ public abstract class AlternateCardArt
             {
                 if (card.IsUpgraded)
                 {
-                    if (Upgraded == null) continue;
+                    if (Upgraded == null || !Upgraded.Exists) continue;
                     result = Upgraded.PortraitPngPath;
                 }
                 else
                 {
-                    if (Base == null) continue;
+                    if (Base == null || !Base.Exists) continue;
                     result = Base.PortraitPngPath;
                 }
             }
