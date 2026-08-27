@@ -1,12 +1,15 @@
 using Godot;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Characters;
+using MegaCrit.Sts2.Core.Nodes.Screens.CharacterSelect;
 
 namespace HideDetailsMod.HideDetailsModCode.Patches;
 // TODO: rename file
 [HarmonyPatch]
 static class CharacterSelectPatch
 {
+    public static bool Enabled => !MainFile.IsCanary;
     [HarmonyPatch(typeof(CharacterModel), nameof(CharacterModel.CharacterSelectBg), MethodType.Getter)]
     static class CharacterSelectBgPatch
     {
@@ -14,64 +17,59 @@ static class CharacterSelectPatch
         //    public string CharacterSelectBg => SceneHelper.GetScenePath("screens/char_select/char_select_bg_" + base.Id.Entry.ToLowerInvariant());
         static internal bool Prefix(CharacterModel __instance, ref string __result)
         {
-            if (!MyModConfig.UseCustomCharacterSelect) return true;
+            if (!Enabled) return true;
+            if (!MainFile.DefectSetActive && __instance is Defect) return true;
+            if (!MainFile.IroncladSetActive && __instance is Ironclad) return true;
             var customScene = "res://HideDetailsMod/scenes/character_select/" + __instance.Id.Entry.ToLowerInvariant() + "_bg.tscn"; ;
             if (!ResourceLoader.Exists(customScene)) return true;
             __result = customScene;
             return false;
         }
     }
-    // [HarmonyPatch(typeof(CharacterModel), nameof(CharacterModel.AssetPathsCharacterSelect), MethodType.Getter)]
-    // static class AssetPathsCharacterSelectPatch
-    // {
-    //     static internal void Prefix(CharacterModel __instance, ref string __result) { }
-    //     static internal void Postfix() { }
-    // }
 
-    [HarmonyPatch(typeof(CharacterModel), nameof(CharacterModel.CharacterSelectIcon), MethodType.Getter)]
+    [HarmonyPatch(typeof(CharacterModel), "CharacterSelectIconPath", MethodType.Getter)]
     static class CharacterSelectIconPatch
     {
-        static internal bool Prefix(CharacterModel __instance, ref CompressedTexture2D __result)
+        static internal bool Prefix(CharacterModel __instance, ref string __result)
         {
-            if (!MyModConfig.UseCustomCharacterSelect) return true;
-            try
-            {
-                var CharacterSelectIconPath = "res://HideDetailsMod/images/character_select/" + __instance.Id.Entry.ToLowerInvariant() + "_icon.png"; ;
-                if (!ResourceLoader.Exists(CharacterSelectIconPath)) return true;
-                CompressedTexture2D CharacterSelectIcon = ResourceLoader.Load<CompressedTexture2D>(CharacterSelectIconPath);
-                __result = CharacterSelectIcon;
-
-            }
-            catch (Exception e)
-            {
-                MainFile.Logger.Error("Something wrong in CharacterSelectIconPatch: " + e.ToString());
-                return true;
-            }
+            if (!Enabled) return true;
+            if (!MainFile.DefectSetActive && __instance is Defect) return true;
+            if (!MainFile.IroncladSetActive && __instance is Ironclad) return true;
+            var filename = __instance.Id.Entry.ToLowerInvariant() + "_icon.png";
+            var CharacterSelectIconPath = "res://HideDetailsMod/images/character_select/" + filename;
+            if (!ResourceLoader.Exists(CharacterSelectIconPath)) return true;
+            __result = CharacterSelectIconPath;
             return false;
         }
     }
-    [HarmonyPatch(typeof(CharacterModel), nameof(CharacterModel.CharacterSelectLockedIcon), MethodType.Getter)]
-    static class CharacterSelectLockedIconPatch
-    {
-        static internal bool Prefix(CharacterModel __instance, ref CompressedTexture2D __result)
-        {
-            if (!MyModConfig.UseCustomCharacterSelect) return true;
-            try
-            {
-                var CharacterSelectIconPath = "res://HideDetailsMod/images/character_select/" + __instance.Id.Entry.ToLowerInvariant() + "/locked_icon.png"; ;
-                if (!ResourceLoader.Exists(CharacterSelectIconPath)) return true;
-                CompressedTexture2D CharacterSelectIcon = ResourceLoader.Load<CompressedTexture2D>(CharacterSelectIconPath);
-                __result = CharacterSelectIcon;
 
-            }
-            catch (Exception e)
-            {
-                MainFile.Logger.Error("Something wrong in CharacterSelectLockedIconPatch: " + e.ToString());
-                return true;
-            }
-            return false;
-        }
-    }
+    // [HarmonyPatch(typeof(CharacterModel), nameof(CharacterModel.CharacterSelectIcon), MethodType.Getter)]
+    // static class CharacterSelectIconPatch
+    // {
+    //     static internal bool Prefix(CharacterModel __instance, ref CompressedTexture2D __result)
+    //     {
+    //         if (!MyModConfig.UseCustomCharacterSelect) return true;
+    //         var filename = __instance.Id.Entry.ToLowerInvariant() + "_icon.png";
+    //         var CharacterSelectIconPath = "res://HideDetailsMod/images/character_select/" + filename;
+    //         if (!ResourceLoader.Exists(CharacterSelectIconPath)) return true;
+    //         CompressedTexture2D CharacterSelectIcon = ResourceLoader.Load<CompressedTexture2D>(CharacterSelectIconPath);
+    //         __result = CharacterSelectIcon;
+    //         return false;
+    //     }
+    // }
+    // [HarmonyPatch(typeof(CharacterModel), nameof(CharacterModel.CharacterSelectLockedIcon), MethodType.Getter)]
+    // static class CharacterSelectLockedIconPatch
+    // {
+    //     static internal bool Prefix(CharacterModel __instance, ref CompressedTexture2D __result)
+    //     {
+    //         if (!MyModConfig.UseCustomCharacterSelect) return true;
+    //         var CharacterSelectIconPath = "res://HideDetailsMod/images/character_select/" + __instance.Id.Entry.ToLowerInvariant() + "/locked_icon.png"; ;
+    //         if (!ResourceLoader.Exists(CharacterSelectIconPath)) return true;
+    //         CompressedTexture2D CharacterSelectIcon = ResourceLoader.Load<CompressedTexture2D>(CharacterSelectIconPath);
+    //         __result = CharacterSelectIcon;
+    //         return false;
+    //     }
+    // }
     // protected virtual string CharacterSelectIconPath => ImageHelper.GetImagePath("packed/character_select/char_select_" + base.Id.Entry.ToLowerInvariant() + ".png");
     // public CompressedTexture2D CharacterSelectIcon => ResourceLoader.Load<CompressedTexture2D>(CharacterSelectIconPath, null, ResourceLoader.CacheMode.Reuse);
 
@@ -85,6 +83,6 @@ static class CharacterSelectPatch
 
     // public NCreatureVisuals CreateVisuals()
     // {
-    //     return PreloadManager.Cache.GetScene(VisualsPath).Instantiate<NCreatureVisuals>(PackedScene.GenEditState.Disabled);
+    //     return PreloadManager.Cache.GetScene(VisualsPath).Instantiate<NCreatureVisuals>();
     // }
 }

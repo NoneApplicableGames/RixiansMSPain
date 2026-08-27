@@ -20,7 +20,7 @@ internal class MyModConfig : SimpleModConfig
     static public MyModConfig Instance => ModConfigRegistry.Get<MyModConfig>();
 #nullable restore
 
-    public static bool ShouldPatchCardExporter { get; set; }
+    // public static bool ShouldPatchCardExporter { get; set; }
 
     [ConfigSection("Credits")] public static bool ShowCreditsTooltip { get; set; } = true;
 
@@ -41,17 +41,11 @@ internal class MyModConfig : SimpleModConfig
     [ConfigIgnore] public static bool UseBetaSoulArt => false;
 #endif
 
-#if DEBUG
-    [ConfigIgnore] public static bool UseCustomCharacterSelect => true;
-#else
-    [ConfigIgnore] public static bool UseCustomCharacterSelect => false;
-#endif
-
-
     // Renamed to InfiniteBladesLength2 to reset configs
     [ConfigSlider(0, 5000, 10)] public static float InfiniteBladesLength2 { get; set; } = 3000;
+    public static bool EnableClashAsGrandFinale { get; set; } = true;
     public static bool EnableNeurosurgeYippe { get; set; } = true;
-    public static bool ClashAsGrandFinale { get; set; } = true;
+    // public static bool EnableEnemyVisualEffects { get; set; } = true;
 
     [ConfigSection("Card UI (Cheating)")]
     public static bool HideTitle { get; set; } = true;

@@ -1,10 +1,10 @@
-[gd_scene load_steps=6 format=3 ]
+[gd_scene load_steps=6 format=3 uid="uid://cyaeb86kqhe2g"]
 
-[ext_resource type="Texture2D" path="res://HideDetailsMod/images/character_select/regent/regent splash screen_bg.png" id="1_p00qi"]
-[ext_resource type="Texture2D" path="res://HideDetailsMod/images/character_select/regent/regent_splashscreen_rigent_on_chair.png" id="2_yr4te"]
-[ext_resource type="Texture2D" path="res://HideDetailsMod/images/character_select/regent/regent splash screen_minion.png" id="3_hqmus"]
-[ext_resource type="Texture2D" path="res://HideDetailsMod/images/character_select/regent/regent splash screen signature.png" id="4_luwcc"]
-[ext_resource type="Texture2D" path="res://HideDetailsMod/images/character_select/regent/regent splash screen_sword.png" id="5_yr4te"]
+[ext_resource type="Texture2D" uid="uid://cww4m8l0nqyvd" path="res://HideDetailsMod/images/character_select/regent/regent splash screen_bg.png" id="1_p00qi"]
+[ext_resource type="Texture2D" uid="uid://cekmpcfrgnrlc" path="res://HideDetailsMod/images/character_select/regent/regent_splashscreen_rigent_on_chair.png" id="2_yr4te"]
+[ext_resource type="Texture2D" uid="uid://dfkmiw0cwclff" path="res://HideDetailsMod/images/character_select/regent/regent splash screen_minion.png" id="3_hqmus"]
+[ext_resource type="Texture2D" uid="uid://c2gvkmmtu78im" path="res://HideDetailsMod/images/character_select/regent/regent splash screen signature.png" id="4_luwcc"]
+[ext_resource type="Texture2D" uid="uid://uxy4x67bvwdb" path="res://HideDetailsMod/images/character_select/regent/regent splash screen_sword.png" id="5_yr4te"]
 
 [node name="RegentBg" type="Control"]
 layout_mode = 3
@@ -21,16 +21,7 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(1280, 600)
 
-[node name="LinkButton" type="LinkButton" parent="."]
-process_mode = 4
-layout_mode = 0
-offset_left = 144.0
-offset_top = 93.0
-offset_right = 680.0
-offset_bottom = 181.0
-uri = "https://vgen.co/seapixxel"
-
-[node name="BG" type="TextureRect" parent="."]
+[node name="Background" type="TextureRect" parent="."]
 layout_mode = 0
 offset_left = 48.0
 offset_top = 5.0
@@ -39,12 +30,21 @@ offset_bottom = 1093.0
 texture = ExtResource("1_p00qi")
 expand_mode = 1
 
+[node name="Blade" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 257.0
+offset_top = 56.0
+offset_right = 1750.3335
+offset_bottom = 896.0
+texture = ExtResource("5_yr4te")
+expand_mode = 3
+
 [node name="Regent" type="TextureRect" parent="."]
 layout_mode = 0
-offset_left = 112.0
-offset_top = 37.0
-offset_right = 1975.1111
-offset_bottom = 1085.0
+offset_left = 78.0
+offset_top = 13.0
+offset_right = 1941.1111
+offset_bottom = 1061.0
 texture = ExtResource("2_yr4te")
 expand_mode = 3
 
@@ -53,29 +53,31 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -64.0
-offset_top = 37.0
-offset_right = -490.66675
-offset_bottom = -115.0
+offset_left = -13.0
+offset_top = 48.0
+offset_right = -543.4835
+offset_bottom = -155.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("3_hqmus")
 expand_mode = 3
 
-[node name="RegentSplashScreenSignature" type="TextureRect" parent="."]
+[node name="Signature" type="TextureRect" parent="."]
 layout_mode = 0
-offset_left = 112.0
-offset_top = 61.0
-offset_right = 2864.0
-offset_bottom = 1469.0
+offset_left = 254.99998
+offset_top = 43.0
+offset_right = 2921.0
+offset_bottom = 1407.0
+scale = Vector2(0.7560741, 0.7560741)
 texture = ExtResource("4_luwcc")
 expand_mode = 1
 
-[node name="Blade" type="TextureRect" parent="."]
+[node name="LinkButton" type="LinkButton" parent="Signature"]
+process_mode = 4
+visible = false
 layout_mode = 0
-offset_left = 8.0
-offset_top = 85.0
-offset_right = 1501.3335
-offset_bottom = 925.0
-texture = ExtResource("5_yr4te")
-expand_mode = 3
+offset_left = 46.0
+offset_top = 25.0
+offset_right = 543.0
+offset_bottom = 125.0
+uri = "https://vgen.co/seapixxel"

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://yuq667v77g32"
-path="res://.godot/imported/silent_icon.png-d4c19a8bc59b9c51ea5c795a9b250569.ctex"
+uid="uid://2qs2jjxqs0ng"
+path="res://.godot/imported/bg.png-bf81f795084dda1136272df830039b56.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://HideDetailsMod/images/character_select/silent/silent_icon.png"
-dest_files=["res://.godot/imported/silent_icon.png-d4c19a8bc59b9c51ea5c795a9b250569.ctex"]
+source_file="res://HideDetailsMod/images/character_select/silent/bg.png"
+dest_files=["res://.godot/imported/bg.png-bf81f795084dda1136272df830039b56.ctex"]
 
 [params]
 

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cekmpcfrgnrlc"
-path="res://.godot/imported/regent_splashscreen_rigent_on_chair.png-0116fd5275034e9157408895cc1481ba.ctex"
+path="res://.godot/imported/regent_splashscreen_rigent_on_chair.png-ecaca4174770a089e12eb3b66ff70bd5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://HideDetailsMod/images/character_select/Regent/regent_splashscreen_rigent_on_chair.png"
-dest_files=["res://.godot/imported/regent_splashscreen_rigent_on_chair.png-0116fd5275034e9157408895cc1481ba.ctex"]
+source_file="res://HideDetailsMod/images/character_select/regent/regent_splashscreen_rigent_on_chair.png"
+dest_files=["res://.godot/imported/regent_splashscreen_rigent_on_chair.png-ecaca4174770a089e12eb3b66ff70bd5.ctex"]
 
 [params]
 

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c0k06rflut0up"
-path="res://.godot/imported/FishStickMystic_NecrobinderSplash-NecroScythe_LAYER1.png-7c33aa8c41fccc4e418e807efdf49b5a.ctex"
+path="res://.godot/imported/FishStickMystic_NecrobinderSplash-NecroScythe_LAYER1.png-fada071a0afac5579f00f8643de2c908.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://HideDetailsMod/images/character_select/Nercobinder/FishStickMystic_NecrobinderSplash-NecroScythe_LAYER1.png"
-dest_files=["res://.godot/imported/FishStickMystic_NecrobinderSplash-NecroScythe_LAYER1.png-7c33aa8c41fccc4e418e807efdf49b5a.ctex"]
+source_file="res://HideDetailsMod/images/character_select/nercobinder/FishStickMystic_NecrobinderSplash-NecroScythe_LAYER1.png"
+dest_files=["res://.godot/imported/FishStickMystic_NecrobinderSplash-NecroScythe_LAYER1.png-fada071a0afac5579f00f8643de2c908.ctex"]
 
 [params]
 

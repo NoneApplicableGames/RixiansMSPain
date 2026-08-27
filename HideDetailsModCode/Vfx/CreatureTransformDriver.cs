@@ -11,11 +11,15 @@ public partial class CreatureTransformDriver : Node
     private Vector2 _baseScale;
     private float _baseRotation;
 
-    private readonly List<NCreatureModifierVfx> _activeModifiers = new();
+    private readonly List<NCreatureModifierVfx> _activeModifiers = [];
 
-    public static CreatureTransformDriver GetOrCreate(NCreatureVisuals visuals)
+    public static CreatureTransformDriver? GetOrCreate(NCreatureVisuals visuals)
     {
+        if (!GodotObject.IsInstanceValid(visuals)) return null;
+
         Node2D body = visuals.GetCurrentBody();
+        if (!GodotObject.IsInstanceValid(body)) return null;
+
         CreatureTransformDriver? driver = body.GetNodeOrNull<CreatureTransformDriver>("TransformDriver");
         if (driver != null) return driver;
 
@@ -34,6 +38,8 @@ public partial class CreatureTransformDriver : Node
 
     public void Register(NCreatureModifierVfx modifier)
     {
+        if (!GodotObject.IsInstanceValid(_body)) return;
+
         if (!_activeModifiers.Contains(modifier))
         {
             _activeModifiers.Add(modifier);
@@ -43,6 +49,9 @@ public partial class CreatureTransformDriver : Node
     public void Unregister(NCreatureModifierVfx modifier)
     {
         _activeModifiers.Remove(modifier);
+
+        if (!GodotObject.IsInstanceValid(_body)) return;
+
         if (_activeModifiers.Count == 0)
         {
             ResetToBase();
@@ -93,6 +102,10 @@ public partial class CreatureTransformDriver : Node
         var snapshot = new List<NCreatureModifierVfx>(_activeModifiers);
         foreach (NCreatureModifierVfx mod in snapshot)
         {
+            // If the driver node itself or the creature body is being freed, break out safely
+            if (!GodotObject.IsInstanceValid(this) || !GodotObject.IsInstanceValid(_body)) break;
+            if (!GodotObject.IsInstanceValid(mod)) continue;
+
             if (filter == null || filter(mod))
             {
                 if (animateRevert)

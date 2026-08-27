@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dnumsoom488lu"
-path="res://.godot/imported/DEFECT-DEFECT.png-6a87bf3abd2619404676ca2258cfcd58.ctex"
+path="res://.godot/imported/DEFECT-DEFECT.png-17c70b04aebcda1b04598bd25c7227de.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://HideDetailsMod/images/character_select/Defect/DEFECT-DEFECT.png"
-dest_files=["res://.godot/imported/DEFECT-DEFECT.png-6a87bf3abd2619404676ca2258cfcd58.ctex"]
+source_file="res://HideDetailsMod/images/character_select/defect/DEFECT-DEFECT.png"
+dest_files=["res://.godot/imported/DEFECT-DEFECT.png-17c70b04aebcda1b04598bd25c7227de.ctex"]
 
 [params]
 

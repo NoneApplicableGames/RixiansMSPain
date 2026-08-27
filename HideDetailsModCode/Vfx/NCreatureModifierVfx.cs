@@ -168,7 +168,7 @@ public abstract partial class NCreatureModifierVfx : Node
     /// </summary>
     public static void ClearAll(NCreatureVisuals visuals, Func<NCreatureModifierVfx, bool>? filter = null, bool animateRevert = true)
     {
-        CreatureTransformDriver driver = CreatureTransformDriver.GetOrCreate(visuals);
-        driver.ClearModifiers(filter, animateRevert);
+        CreatureTransformDriver? driver = CreatureTransformDriver.GetOrCreate(visuals);
+        driver?.ClearModifiers(filter, animateRevert);
     }
 }

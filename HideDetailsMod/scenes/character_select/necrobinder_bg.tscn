@@ -1,9 +1,9 @@
-[gd_scene load_steps=5 format=3 ]
+[gd_scene load_steps=5 format=3 uid="uid://wngivsq7ywvs"]
 
-[ext_resource type="Texture2D" path="res://HideDetailsMod/images/character_select/nercobinder/FishStickMystic_NecrobinderSplash-BG_LAYER0.png" id="1_xsw5j"]
-[ext_resource type="Texture2D" path="res://HideDetailsMod/images/character_select/nercobinder/FishStickMystic_NecrobinderSplash-SIMPLE-1.png" id="2_u1lud"]
-[ext_resource type="Texture2D" path="res://HideDetailsMod/images/character_select/nercobinder/FishStickMystic_NecrobinderSplash-OstyOVERBox_LAYER4.png" id="3_tnu10"]
-[ext_resource type="Texture2D" path="res://HideDetailsMod/images/character_select/nercobinder/FishStickMystic_NecrobinderSplash-Signature.png" id="3_u1lud"]
+[ext_resource type="Texture2D" uid="uid://byf1wuaybvw2n" path="res://HideDetailsMod/images/character_select/nercobinder/FishStickMystic_NecrobinderSplash-BG_LAYER0.png" id="1_xsw5j"]
+[ext_resource type="Texture2D" uid="uid://2q4hunv6ky66" path="res://HideDetailsMod/images/character_select/nercobinder/FishStickMystic_NecrobinderSplash-SIMPLE-1.png" id="2_u1lud"]
+[ext_resource type="Texture2D" uid="uid://c27kto6ehm42f" path="res://HideDetailsMod/images/character_select/nercobinder/FishStickMystic_NecrobinderSplash-OstyOVERBox_LAYER4.png" id="3_tnu10"]
+[ext_resource type="Texture2D" uid="uid://d10hppiucyq4w" path="res://HideDetailsMod/images/character_select/nercobinder/FishStickMystic_NecrobinderSplash-Signature.png" id="3_u1lud"]
 
 [node name="NercoBg" type="Control"]
 layout_mode = 3
@@ -12,53 +12,69 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -960.0
-offset_top = -521.0
-offset_right = 1600.0
-offset_bottom = 679.0
 grow_horizontal = 2
 grow_vertical = 2
-pivot_offset = Vector2(1280, 600)
 
 [node name="Background" type="TextureRect" parent="."]
-layout_mode = 0
-offset_left = 144.0
-offset_top = -3.0
-offset_right = 2035.5557
-offset_bottom = 1061.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -945.77783
+offset_top = -532.0
+offset_right = 945.77783
+offset_bottom = 532.0
+grow_horizontal = 2
+grow_vertical = 2
 texture = ExtResource("1_xsw5j")
 expand_mode = 1
 
 [node name="Necrobinder" type="TextureRect" parent="."]
-layout_mode = 0
-offset_left = 144.0
-offset_top = -3.0
-offset_right = 2035.5557
-offset_bottom = 1061.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -842.1111
+offset_top = -476.0
+offset_right = 946.3335
+offset_bottom = 530.0
+grow_horizontal = 2
+grow_vertical = 2
 texture = ExtResource("2_u1lud")
 expand_mode = 1
 
-[node name="OstyFingers" type="TextureRect" parent="."]
-layout_mode = 0
-offset_left = 144.0
-offset_top = -3.0
-offset_right = 2035.5557
-offset_bottom = 1061.0
-texture = ExtResource("3_tnu10")
-expand_mode = 1
-
-[node name="Signature" type="TextureRect" parent="."]
+[node name="Signature" type="TextureRect" parent="Necrobinder"]
 layout_mode = 1
 anchors_preset = -1
-offset_left = 160.0
-offset_right = 2051.5557
-offset_bottom = 1004.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = -20.0
+offset_right = 40.0
+offset_bottom = -20.0
 grow_vertical = 0
 texture = ExtResource("3_u1lud")
+expand_mode = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="OstyFingers" type="TextureRect" parent="Necrobinder"]
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_tnu10")
 expand_mode = 1
 
 [node name="Insta" type="LinkButton" parent="."]
 process_mode = 4
+visible = false
 layout_mode = 0
 offset_left = 480.0
 offset_top = 973.0
@@ -67,6 +83,7 @@ offset_bottom = 1021.0
 
 [node name="YT" type="LinkButton" parent="."]
 process_mode = 4
+visible = false
 layout_mode = 0
 offset_left = 536.0
 offset_top = 973.0
@@ -75,6 +92,7 @@ offset_bottom = 1013.0
 
 [node name="TikTok" type="LinkButton" parent="."]
 process_mode = 4
+visible = false
 layout_mode = 0
 offset_left = 600.0
 offset_top = 973.0

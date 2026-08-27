@@ -23,7 +23,7 @@ public class ClashArt : AlternateCardArt<Clash>
         [HarmonyPatch(typeof(Clash), "OnPlay")]
         static internal bool Prefix(Clash __instance, PlayerChoiceContext choiceContext, CardPlay cardPlay, ref Task __result)
         {
-            if (MyModConfig.ClashAsGrandFinale)
+            if (MyModConfig.EnableClashAsGrandFinale)
             {
                 __result = OnPlay2(__instance, choiceContext, cardPlay);
                 return false;
