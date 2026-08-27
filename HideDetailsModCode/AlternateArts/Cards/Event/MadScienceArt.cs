@@ -7,11 +7,13 @@ namespace HideDetailsMod.HideDetailsModCode.AlternateArts.Cards;
 
 public class MadScienceArt : AlternateCardArt<MadScience>
 {
+    static CardImg Attack { get; } = new("event/mad_science_attack");
+    static CardImg Skill { get; } = new("event/mad_science_skill");
     static CardImg Curious { get; } = new("event/mad_science_power_curious");
     static CardImg Expertise { get; } = new("event/mad_science_power_expertise");
     static CardImg Improvement { get; } = new("event/mad_science_power_improvement");
 
-    static readonly SpireField<MadScience, TinkerTime.RiderEffect?> VisualRider = new(() => null);
+    static public readonly SpireField<MadScience, TinkerTime.RiderEffect?> VisualRider = new(() => null);
 
     public override CardImg? Get(MadScience card)
     {
@@ -27,7 +29,13 @@ public class MadScienceArt : AlternateCardArt<MadScience>
             TinkerTime.RiderEffect.Expertise => Expertise,
             TinkerTime.RiderEffect.Curious => Curious,
             TinkerTime.RiderEffect.Improvement => Improvement,
-            _ => null
+            _ => card.Type switch
+            {
+                CardType.Attack => Attack,
+                CardType.Skill => Skill,
+                CardType.Power => Expertise, // placeholder
+                _ => Attack,
+            },
         };
     }
 }

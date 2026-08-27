@@ -7,13 +7,14 @@ using MegaCrit.Sts2.Core.Models.Cards;
 using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Localization;
+using HideDetailsMod.HideDetailsModCode.AlternateArts.Cards;
 
 namespace HideDetailsMod.HideDetailsModCode.Patches;
 
 [HarmonyPatch]
 public static class TinkerTimePatch
 {
-    static readonly SpireField<MadScience, TinkerTime.RiderEffect?> VisualRider = new(() => null);
+    static SpireField<MadScience, TinkerTime.RiderEffect?> VisualRider => MadScienceArt.VisualRider;
     [HarmonyPatch]
     static class EventOptionsLocPatch
     {
