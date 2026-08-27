@@ -136,7 +136,6 @@ public readonly struct NetModSettings
             : "";
     }
 
-
     public static NetModSettings? GetPlayerConfig(Player? player)
     {
         if (LocalContext.IsMe(player)) return new();
@@ -184,7 +183,7 @@ static class NetModSettingsPatch
         {
             // HandshakeManager;
             MethodInfo baseMethod = AccessTools.Method("MegaCrit.Sts2.Core.Multiplayer.Connection.IHandshakeHandler:HandshakeSucceeded");
-            return HarmonyPatchHelpers.GetMethodImplementations(baseMethod);
+            return HarmonyPatchHelpers.GetMethodImplementations(baseMethod).Where(i => i != null);
         }
 
         [HarmonyPostfix]

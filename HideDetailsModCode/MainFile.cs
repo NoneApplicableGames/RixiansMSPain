@@ -9,6 +9,9 @@ using System.Reflection;
 using BaseLib.Audio;
 using MegaCrit.Sts2.Core.Debug;
 using System.Runtime.Loader;
+using MegaCrit.Sts2.Core.Localization;
+using MegaCrit.Sts2.Core.Helpers;
+using MegaCrit.Sts2.Core.Commands;
 
 namespace HideDetailsMod.HideDetailsModCode;
 
@@ -39,7 +42,6 @@ public partial class MainFile : Node
                 // ModManager.AssociateAssemblyWithMod(ModId, asm);
             }
         }
-
         MyModConfig.Init();
         CustomLocTableManager.Register("usernames");
         CustomLocTableManager.Register("artists");
@@ -50,6 +52,43 @@ public partial class MainFile : Node
         Harmony harmony = new(ModId);
 
         harmony.TryPatchAll(assembly);
+
+        InitModCredits();
+    }
+
+    static void InitModCredits()
+    {
+        ModCredits.Register(ModId,
+            new ModCredits.Section("TEAM", ModCredits.Layout.Roles),
+            new ModCredits.Section("ARTISTS", ModCredits.Layout.Columns3)
+        );
+        TaskHelper.RunSafely(Prep());
+        static async Task Prep()
+        {
+            await Task.Delay(1);
+            var artistsTable = LocManager.Instance.GetTable("artists");
+            var artistKeys = artistsTable.Keys.Where(k => !k.StartsWith('.') && k.Count(".") == 1);
+            var artistUsernames = artistKeys.Select(artistsTable.GetRawText).ToHashSet().Select(usrname => LocString.GetIfExists("usernames", usrname)?.GetRawText() ?? usrname);
+
+            var creditsDict = new Dictionary<string, string>
+            {
+                ["HIDEDETAILSMOD-HIDEDETAILSMOD.title"] = "Rixian's MSPain",
+
+                ["HIDEDETAILSMOD-TEAM.header"] = "Team",
+                ["HIDEDETAILSMOD-TEAM.names"] = string.Join('\n', [
+                    "Certified Cat Boi||Rixian",
+                    "Lead Developer||TekExplorer",
+                    "Unpaid Intern||Fiddlah",
+                    "Artist Wrangler||Helios",
+                    "Art Collector||an_gun"
+                ]),
+
+                ["HIDEDETAILSMOD-ARTISTS.header"] = "Art",
+                ["HIDEDETAILSMOD-ARTISTS.names"] = string.Join('\n', artistUsernames)
+            };
+
+            LocManager.Instance.GetTable("credits").MergeWith(creditsDict);
+        }
     }
 
 #if CANARY
