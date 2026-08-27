@@ -158,15 +158,20 @@ public abstract class AlternateCardArt
         }
     }
 
-    [HarmonyPatch(typeof(NCard), nameof(NCard.UpdatePortrait))]
+    // [HarmonyPatch(typeof(NCard), nameof(NCard.UpdatePortrait))]
     static internal class PortraitContext
     {
+        [HarmonyTargetMethods]
+        static internal IEnumerable<MethodInfo> Methods()
+        {
+            yield return typeof(NCard).Method("UpdatePortrait") ?? typeof(NCard).Method("Reload");
+        }
         static public NCard? UpdatingNCard;
-        static void Prefix(NCard __instance)
+        static internal void Prefix(NCard __instance)
         {
             UpdatingNCard = __instance;
         }
-        static void Postfix()
+        static internal void Postfix()
         {
             UpdatingNCard = null;
         }

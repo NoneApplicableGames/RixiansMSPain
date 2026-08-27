@@ -9,6 +9,12 @@ namespace HideDetailsMod.HideDetailsModCode.AlternateArts;
 static class Extensions
 {
     [Obsolete("Switch off using this when possible")]
+    static public bool HasPowerIdCompat(this Player player, string powerId)
+    {
+        return player.Creature.Powers.Any(power => power.Id.Entry == powerId);
+
+    }
+    [Obsolete("Switch off using this when possible")]
     static public bool HasPowerCompat(this Player player, string powerName)
     {
         return player.Creature.Powers.Any(power => power.IsComapt(powerName));

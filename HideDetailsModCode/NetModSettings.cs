@@ -1,5 +1,4 @@
 using System.Reflection;
-using System.Text;
 using Godot;
 using HarmonyLib;
 using HideDetailsMod.HideDetailsModCode.Patches;
@@ -7,8 +6,6 @@ using MegaCrit.Sts2.Core.Context;
 using MegaCrit.Sts2.Core.DevConsole;
 using MegaCrit.Sts2.Core.DevConsole.ConsoleCommands;
 using MegaCrit.Sts2.Core.Entities.Players;
-using MegaCrit.Sts2.Core.Multiplayer;
-using MegaCrit.Sts2.Core.Multiplayer.Connection;
 using MegaCrit.Sts2.Core.Platform;
 using MegaCrit.Sts2.Core.Runs;
 
@@ -46,7 +43,7 @@ internal class MSPainNetConfigCmd : AbstractConsoleCmd
     {
         IEnumerable<(ulong? NetId, NetModSettings? NetSettings)> configs = [
             (LocalContext.NetId, new NetModSettings()),
-            .. NetModSettingsPatch.GameInfos.Select(kv => (kv.Key, NetModSettingsPatch.Read(kv.Value)))
+            .. NetModSettingsPatch.Configs.Select(kv => (kv.Key, kv.Value))
          ];
         IEnumerable<string> values = configs.Select(v => $"{GetPlayerName(v.NetId)} -- {v.NetSettings.ToString() ?? "Does not have the mod"}");
         return new(true, string.Join('\n', values));
@@ -156,69 +153,101 @@ public readonly struct NetModSettings
 [HarmonyPatch]
 static class NetModSettingsPatch
 {
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(PeerVersionInfo), nameof(PeerVersionInfo.LocalDefault))]
-    static void PeerVersionInfo_LocalDefault(ref PeerVersionInfo __result)
+    [HarmonyTargetMethods]
+    static internal IEnumerable<MethodInfo> Methods()
     {
-        var mods = __result.otherMods;
-        if (mods == null) return;
-        mods.Add(Prefix + NetModSettings.BuildPackedString() + ":" + LocalContext.NetId);
+        var method = AccessTools.Method("MegaCrit.Sts2.Core.Multiplayer.PeerVersionInfo:LocalDefault");
+        if (method is { } real) yield return real;
     }
+    [HarmonyPostfix]
+    // [HarmonyPatch(typeof(PeerVersionInfo), nameof(PeerVersionInfo.LocalDefault))]
+    // beta main compat
+    // TODO: update when main
+    static internal void PeerVersionInfo_LocalDefault(object __result)
+    {
+        var mods = Traverse.Create(__result).Property("otherMods").GetValue<List<string>?>();
+        if (mods == null) return;
+        mods.Add(Prefix + NetModSettings.BuildPackedString());
+    }
+    // static internal void PeerVersionInfo_LocalDefault(PeerVersionInfo __result)
+    // {
+    //     var mods = __result.otherMods;
+    //     if (mods == null) return;
+    //     mods.Add(Prefix + NetModSettings.BuildPackedString() + ":" + LocalContext.NetId);
+    // }
     [HarmonyPatch]
     static class NetPatch
     {
         // IHandshakeHandler
         [HarmonyTargetMethods]
-        static IEnumerable<MethodBase> Targets()
+        static internal IEnumerable<MethodBase> Targets()
         {
             // HandshakeManager;
-            MethodInfo baseMethod = AccessTools.Method(typeof(IHandshakeHandler), nameof(IHandshakeHandler.HandshakeSucceeded));
+            MethodInfo baseMethod = AccessTools.Method("MegaCrit.Sts2.Core.Multiplayer.Connection.IHandshakeHandler:HandshakeSucceeded");
             return HarmonyPatchHelpers.GetMethodImplementations(baseMethod);
         }
 
         [HarmonyPostfix]
         // static void HandshakeSuccess(ulong peerId, PeerVersionInfo versionInfo)
-        static void HandshakeSuccess(object[] __args)
+        // static internal void HandshakeSuccess(object[] __args)
+        // {
+        //     if (__args is not [IConvertible num, PeerVersionInfo versionInfo])
+        //     {
+        //         MainFile.Logger.Error($"Failed to get args: {string.Join(',', __args)}");
+        //         return;
+        //     }
+        //     ulong peerId = num.ToUInt64(null);
+        //     MainFile.Logger.Warn($"NETCONTENT FOR {peerId}: " + string.Join('\t', versionInfo.otherMods ?? []));
+
+        //     Configs[peerId] = Read(versionInfo) ?? new([]);
+        // }
+        static internal void HandshakeSuccess(object[] __args)
         {
-            if (__args is not [IConvertible num, PeerVersionInfo versionInfo])
+            if (__args is not [IConvertible num, object versionInfo])
             {
                 MainFile.Logger.Error($"Failed to get args: {string.Join(',', __args)}");
                 return;
             }
             ulong peerId = num.ToUInt64(null);
-            MainFile.Logger.Warn($"NETCONTENT FOR {peerId}: " + string.Join('\t', versionInfo.otherMods ?? []));
-            GameInfos[peerId] = versionInfo;
+            // MainFile.Logger.Warn($"NETCONTENT FOR {peerId}: " + string.Join('\t', versionInfo.otherMods ?? []));
+            Configs[peerId] = Read(Traverse.Create(versionInfo)) ?? new([]);
         }
     }
-    public static readonly Dictionary<ulong, PeerVersionInfo> GameInfos = [];
+    // public static readonly Dictionary<ulong, PeerVersionInfo> GameInfos = [];
+    static public readonly Dictionary<ulong, NetModSettings> Configs = [];
     static public IEnumerable<ulong> AllPlayers()
     {
         if (LocalContext.NetId is { } self) yield return self;
-        foreach (var item in GameInfos.Keys)
+        foreach (var item in Configs.Keys)
         {
             yield return item;
         }
     }
 
     private const string Prefix = "__mspainsettings__:";
-
-    public static NetModSettings? Read(PeerVersionInfo info)
+    // TODO: beta main compat
+    // static NetModSettings? Read(PeerVersionInfo info)
+    // {
+    //     var item = info.otherMods?.FirstOrDefault(value => value.StartsWith(Prefix));
+    //     if (item == null) return null;
+    //     return Read(item);
+    // }
+    static NetModSettings? Read(Traverse info)
     {
-        var item = info.otherMods?.FirstOrDefault(value => value.StartsWith(Prefix));
+        var item = info.Property("otherMods").GetValue<List<string>?>()?.FirstOrDefault(value => value.StartsWith(Prefix));
         if (item == null) return null;
         return Read(item);
     }
 
-    private static NetModSettings Read(string item)
+    static NetModSettings Read(string item)
     {
         return new(item.Split(':').Skip(1).ToHashSet());
     }
 
-
     public static NetModSettings? Read(ulong? peer)
     {
         if (peer is not { } Peer) return null;
-        if (!GameInfos.TryGetValue(Peer, out var value)) return null;
-        return Read(value);
+        if (!Configs.TryGetValue(Peer, out var value)) return null;
+        return value;
     }
 }

@@ -31,7 +31,17 @@ public static class HarmonyPatchHelpers
 
         // assemblies ??= AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic);
         // No need for searching unneeded places
-        assemblies ??= ModManager.Mods.SelectMany(mod => mod.assemblies).Prepend(typeof(ModManager).Assembly);
+        assemblies ??= ModManager.Mods.SelectMany(mod =>
+        {
+            // Beta Main Compatibility
+            // TODO: remove later
+            List<Assembly> Assemblies = [];
+            var Old = typeof(Mod).Property("assembly");
+            var New = typeof(Mod).Property("assemblies");
+            if (New is not null && New.GetValue(mod) is IEnumerable<Assembly> assemblies) Assemblies.AddRange(assemblies);
+            if (Old is not null && Old.GetValue(mod) is Assembly asm) Assemblies.Add(asm);
+            return Assemblies;
+        }).Prepend(typeof(ModManager).Assembly);
         foreach (var assembly in assemblies)
         {
             IEnumerable<Type> types;
