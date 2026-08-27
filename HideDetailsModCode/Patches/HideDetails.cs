@@ -48,7 +48,6 @@ internal class HideDetailsPatch
         // [HarmonyPatch(typeof(CardModel), "ExtraHoverTips", MethodType.Getter)]
         internal static void RemoveHoverTooltips(CardModel? __instance, ref IEnumerable<IHoverTip> __result)
         {
-            if (!MyModConfig.HideTooltips) return;
             if (__instance == null) return;
             try
             {

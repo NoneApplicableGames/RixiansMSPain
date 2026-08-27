@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dfr41olvdwgq5"
-path="res://.godot/imported/soul_plus.png-e5e3badaeb087f1505b3a951115d777b.ctex"
+uid="uid://ds615inhst414"
+path="res://.godot/imported/soul_freddy.png-edb2fc935d27b20afeabc309da7a647a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://HideDetailsMod/artist_assets/token/beta/soul_plus.png"
-dest_files=["res://.godot/imported/soul_plus.png-e5e3badaeb087f1505b3a951115d777b.ctex"]
+source_file="res://HideDetailsMod/artist_assets/token/soul_freddy.png"
+dest_files=["res://.godot/imported/soul_freddy.png-edb2fc935d27b20afeabc309da7a647a.ctex"]
 
 [params]
 

@@ -87,14 +87,14 @@ static class Credits
         var name = card.PortraitPath.GetBaseName().GetFile();
         // .beta??
         var dir = card.PortraitPath.GetBaseDir();
-        if (dir == "beta") return $"{pool}.beta.{name}";
+        if (dir == "beta") return $"{pool}.{name}.beta";
         return $"{pool}.{name}"; // "silent.predator"
     }
     internal static string DefaultCreditsKeyFor(CardModel card)
     {
         var pool = PoolOf(card);
         var name = card.Id.Entry.ToLowerInvariant();
-        if (card.PortraitPath.Contains("/beta/")) return $"{pool}.beta.{name}";
+        if (card.PortraitPath.Contains("/beta/")) return $"{pool}.{name}.beta";
         return $"{pool}.{name}"; // "silent.predator"
     }
 

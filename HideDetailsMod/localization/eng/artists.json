@@ -499,8 +499,11 @@
   "token.shiv_fanned_plus": "ignis451",
   "token.sloth": "tosiek1213",
   "token.soul": "fierce_rea.",
+  "token.soul_freddy": "fierce_rea.",
+  "token.soul_freddy_plus": "fierce_rea.",
+  "token.soul_freddy_plus.epitaph": "{Freddy}",
+  "token.soul_freddy.epitaph": "{Freddy}",
   "token.soul_plus": "fierce_rea.",
-  "token.soul.epitaph": "{Freddy}",
   "token.sovereign_blade": "seapixxel",
   "token.sweeping_gaze": "herobrineghoul",
   "token.waste_away": "fishstickmystic"

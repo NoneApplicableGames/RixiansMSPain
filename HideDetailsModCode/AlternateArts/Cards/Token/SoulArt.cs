@@ -4,7 +4,7 @@ namespace HideDetailsMod.HideDetailsModCode.AlternateArts.Cards;
 
 public class SoulArt : AlternateCardArt<Soul>
 {
-    static CardImg Freddy { get; } = new("token/beta/soul");
+    static CardImg Freddy { get; } = new("token/soul_freddy");
 
     public override IEnumerable<CardImg> GetAll(Soul card)
     {
