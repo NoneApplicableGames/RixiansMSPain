@@ -44,13 +44,6 @@ if ($missingFiles) {
     throw "Missing required workshop content files: $($missingFiles -join ', '). Build and publish before uploading."
 }
 
-# Require an explicit typed confirmation before uploading.
-$confirmation = Read-Host "Type UPLOAD to continue"
-if ($confirmation -ne 'UPLOAD') {
-    Write-Host 'Upload cancelled.'
-    exit 0
-}
-
 # If the uploader is missing, offer to download it first.
 if (-not (Test-Path $uploaderPath)) {
     $downloadUploader = Read-Host 'Uploader is missing. Download it now? (Y/N)'
@@ -65,6 +58,13 @@ if (-not (Test-Path $uploaderPath)) {
     if (-not (Test-Path $uploaderPath)) {
         throw 'Uploader was not downloaded.'
     }
+}
+
+# Require an explicit typed confirmation before uploading.
+$confirmation = Read-Host "Type UPLOAD to continue"
+if ($confirmation -ne 'UPLOAD') {
+    Write-Host 'Upload cancelled.'
+    exit 0
 }
 
 # Run the uploader against the workshop root.
