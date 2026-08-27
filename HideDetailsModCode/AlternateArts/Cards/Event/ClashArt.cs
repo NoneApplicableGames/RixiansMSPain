@@ -1,3 +1,4 @@
+using BaseLib.Utils;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -39,7 +40,7 @@ public class ClashArt : AlternateCardArt<Clash>
                 await Cmd.Wait(NGrandFinaleVfx.totalAnticipationDuration);
             }
             ArgumentNullException.ThrowIfNull(cardPlay.Target, "cardPlay.Target");
-            await DamageCmd.Attack(card.DynamicVars.Damage.BaseValue).FromCard(card, cardPlay).Targeting(cardPlay.Target)
+            await DamageCmd.Attack(card.DynamicVars.Damage.BaseValue).FromCardCompatibility(card, cardPlay).Targeting(cardPlay.Target)
                 .WithHitFx("vfx/vfx_attack_slash", tmpSfx: "blunt_attack.mp3").WithHitVfxNode(NGrandFinaleImpactVfx.Create)
                 .Execute(choiceContext);
         }
