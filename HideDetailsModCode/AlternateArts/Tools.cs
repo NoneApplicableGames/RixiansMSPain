@@ -39,7 +39,7 @@ public static class Tools
             ____sparkles.Visible = false;
             ____sparkles.Modulate = NCardSparklesColor[__instance].color;
         }
-        if (!MyModConfig.UseCustomArt)
+        if (!MyModConfig.UseCustomArt || MyModConfig.UseSimpleMode)
         {
             // TODO: track if anything changed, and reset it if custom art was changed
             if (____sparkles.Modulate != NCardSparklesColor[__instance].color)
@@ -48,7 +48,7 @@ public static class Tools
 
         var card = __instance;
 
-        Color LuminesceColor = new Color(0.314f, 0.784f, 0.471f);
+        Color LuminesceColor = new(0.314f, 0.784f, 0.471f);
         bool IsLuminesce = card.Model is Luminesce { IsUpgraded: true };
         bool IsGlow = card.Model is Glow;
 

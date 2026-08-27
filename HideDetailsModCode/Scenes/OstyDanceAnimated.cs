@@ -36,7 +36,7 @@ public partial class OstyDanceAnimated : Control
 	{
 		if (animation is null) return;
 
-		if (cardModel is PullAggro && MyModConfig.UseCustomArt)
+		if (cardModel is PullAggro && MyModConfig.UseCustomArt && !MyModConfig.UseSimpleMode)
 		{
 			Visible = true;
 			if (!animation.IsPlaying()) animation.Play();

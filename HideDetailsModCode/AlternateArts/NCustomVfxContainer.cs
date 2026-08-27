@@ -395,6 +395,8 @@ class CustomVfxListener() : CustomSingletonModel(HookType.Combat)
 {
     public override async Task AfterDamageGiven(PlayerChoiceContext choiceContext, Creature? dealer, DamageResult result, ValueProp props, Creature target, CardModel? cardSource)
     {
+        if (MyModConfig.UseSimpleMode) return;
+
         if (cardSource is Squeeze squeeze)
         {
             var nCard = NCard.FindOnTable(squeeze);

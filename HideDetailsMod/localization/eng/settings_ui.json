@@ -27,8 +27,13 @@
 
   "HIDEDETAILSMOD-USE_CUSTOM_ART.title": "Use Custom Art (Experimental)",
   "HIDEDETAILSMOD-INFINITE_BLADES_LENGTH2.title": "Infinite Blades Length",
-  "HIDEDETAILSMOD-CLASH_AS_GRAND_FINALE.title": "Clash uses Grand Finale effect",
-  "HIDEDETAILSMOD-CLASH_AS_GRAND_FINALE.desc": "This may be useful if playing Clash breaks multiplayer",
+  "HIDEDETAILSMOD-ENABLE_CLASH_AS_GRAND_FINALE.title": "Clash uses Grand Finale effect",
+  "HIDEDETAILSMOD-ENABLE_CLASH_AS_GRAND_FINALE.desc": "This may be useful if playing Clash breaks multiplayer",
   "HIDEDETAILSMOD-HIDE_TITLE_BANNER.title": "Hide Title Banner",
-  "HIDEDETAILSMOD-MAKE_EVERYTHING_ANCIENT.title": "Make Everything Ancient"
+
+  "HIDEDETAILSMOD-MAKE_EVERYTHING_ANCIENT.title": "Make Everything Ancient",
+  "HIDEDETAILSMOD-ENABLE_NEUROSURGE_YIPPEE.title": "Enable Neurosurge Yippee SFX",
+
+  "HIDEDETAILSMOD-USE_SIMPLE_MODE.title": "Safe mode - no special effects",
+  "HIDEDETAILSMOD-USE_SIMPLE_MODE.desc": "This disables most custom or special effects."
 }

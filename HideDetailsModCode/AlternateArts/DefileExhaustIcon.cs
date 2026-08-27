@@ -51,6 +51,12 @@ public partial class DefileExhaustIcon : Control
 
     public override void _Process(double delta)
     {
+        if (MyModConfig.UseSimpleMode)
+        {
+            Visible = false;
+            return;
+        }
+
         if (!MyModConfig.UseCustomArt && Visible) Visible = false;
         if (Button == null) return;
         // every frame

@@ -86,6 +86,8 @@ public static class TiltAlignment
     [HarmonyPatch(typeof(NCard), nameof(NCard.SubscribeToModel))]
     internal static void Subscribe(NCard __instance, CardModel? model)
     {
+        if (MyModConfig.UseSimpleMode) return;
+
         if (!GodotObject.IsInstanceValid(__instance)) return;
         if (model != null && __instance.IsInsideTree() && model is Alignment)
             __instance.RotateBy(AlignmentRotationDegrees);
@@ -95,6 +97,8 @@ public static class TiltAlignment
     [HarmonyPatch(typeof(NCard), nameof(NCard.UnsubscribeFromModel))]
     public static void Unsubscribe(NCard __instance, CardModel? model)
     {
+        if (MyModConfig.UseSimpleMode) return;
+
         if (!GodotObject.IsInstanceValid(__instance)) return;
         if (model != null && model is Alignment)
             __instance.ResetRotation();

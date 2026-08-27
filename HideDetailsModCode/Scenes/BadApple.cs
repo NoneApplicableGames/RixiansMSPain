@@ -40,7 +40,7 @@ partial class BadApple : Control
 
 	void UpdateModel(CardModel? cardModel)
 	{
-		if (!MyModConfig.UseCustomArt && Visible) { Visible = false; Reset(); return; }
+		if ((!MyModConfig.UseCustomArt || MyModConfig.UseSimpleMode) && Visible) { Visible = false; Reset(); return; }
 
 		model = cardModel;
 		if (animation is null) return;

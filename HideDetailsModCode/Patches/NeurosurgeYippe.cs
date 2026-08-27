@@ -16,7 +16,8 @@ class NeurosurgeYippe
     ];
     static public void Prefix(CardPlay cardPlay)
     {
-        if (!MyModConfig.EnableNeurosurgeYippe) return;
+        if (MyModConfig.UseSimpleMode) return;
+        if (!MyModConfig.EnableNeurosurgeYippee) return;
         if (Assets.Length == 0) return;
         var chosen = Assets.TakeRandom(1, new Rng(cardPlay.Card.Owner.PlayerRng.Seed));
         // TODO: mess with pitchVariation

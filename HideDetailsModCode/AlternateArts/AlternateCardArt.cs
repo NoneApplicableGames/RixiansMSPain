@@ -1,6 +1,7 @@
 using System.Reflection;
 using BaseLib.Utils;
 using HarmonyLib;
+using HideDetailsMod.HideDetailsModCode.AlternateArts.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.CardPools;
@@ -71,11 +72,12 @@ public abstract class AlternateCardArt
         }
     }).OfType<AlternateCardArt>().ToList();
 
-    static List<AlternateCardArt> Arts { get; } = [
+    static List<AlternateCardArt> _Arts { get; } = [
         // new OverrideArt(),
         ..GenericArts,
         new BaseArt(),
     ];
+    static List<AlternateCardArt> Arts => MyModConfig.UseSimpleMode ? [new MadScienceArt(), new BaseArt()] : _Arts;
     static bool IsRestricted(CardModel card) => card.Pool switch
     {
         DefectCardPool when !MainFile.DefectSetActive => true,

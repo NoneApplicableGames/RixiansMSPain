@@ -27,13 +27,17 @@ internal class MyModConfig : SimpleModConfig
     [ConfigSection("Art")]
     // TODO: Not done yet. doesn't reset full-art 
     [ConfigHideInUI] public static bool UseCustomArt { get; set; } = true;
+    public static bool UseSimpleMode { get; set; } = false;
+
 #if CANARY
     [ConfigSection("Canary only!")]
     // See NetUtils
     public static bool EmulateCanaryMode { get; set; } = true;
-
+    
+    [ConfigVisibleIf(nameof(UseSimpleMode), false)]
     public static bool UseBetaShivArt { get; set; } = false;
-
+    
+    [ConfigVisibleIf(nameof(UseSimpleMode), false)]
     public static bool UseBetaSoulArt { get; set; } = false;
 #else
     [ConfigIgnore] public static bool EmulateCanaryMode => false;
@@ -43,8 +47,12 @@ internal class MyModConfig : SimpleModConfig
 
     // Renamed to InfiniteBladesLength2 to reset configs
     [ConfigSlider(0, 5000, 10)] public static float InfiniteBladesLength2 { get; set; } = 3000;
+
+    [ConfigVisibleIf(nameof(UseSimpleMode), false)]
     public static bool EnableClashAsGrandFinale { get; set; } = true;
-    public static bool EnableNeurosurgeYippe { get; set; } = true;
+
+    [ConfigVisibleIf(nameof(UseSimpleMode), false)]
+    public static bool EnableNeurosurgeYippee { get; set; } = true;
     // public static bool EnableEnemyVisualEffects { get; set; } = true;
 
     [ConfigSection("Card UI (Cheating)")]

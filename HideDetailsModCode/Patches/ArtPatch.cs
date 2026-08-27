@@ -20,7 +20,7 @@ public static class HarmonyPatchHelpers
         MethodInfo baseMethod,
         IEnumerable<Assembly>? assemblies = null)
     {
-        if (baseMethod == null) throw new ArgumentNullException(nameof(baseMethod));
+        ArgumentNullException.ThrowIfNull(baseMethod);
 
         Type declaringType = baseMethod.DeclaringType
             ?? throw new ArgumentException("Base method must have a valid DeclaringType.", nameof(baseMethod));
