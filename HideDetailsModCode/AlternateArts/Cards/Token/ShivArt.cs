@@ -15,6 +15,7 @@ public class ShivArt : AlternateCardArt<Shiv>
         yield return FannedInky;
     }
 
+    protected override bool ShowIfCanonical => true;
 
     public override CardImg? Get(Shiv card)
     {
@@ -22,7 +23,9 @@ public class ShivArt : AlternateCardArt<Shiv>
         {
             return card.Enchantment is Inky ? FannedInky : Fanned;
         }
-        NetModSettings netModSettings = ConfigFrom(card);
+
+        NetModSettings netModSettings = card.IsCanonical ? new() : ConfigFrom(card);
+
         if (netModSettings.BetaShiv) return Beta;
         return null;
     }

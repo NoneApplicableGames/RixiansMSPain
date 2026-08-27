@@ -11,9 +11,11 @@ public class SoulArt : AlternateCardArt<Soul>
         if (MainFile.IsCanary) yield return Freddy;
     }
 
+    protected override bool ShowIfCanonical => true;
+
     public override CardImg? Get(Soul card)
     {
-        NetModSettings netModSettings = ConfigFrom(card);
+        NetModSettings netModSettings = card.IsCanonical ? new() : ConfigFrom(card);
         return netModSettings.BetaSoul ? Freddy : null;
     }
 }
