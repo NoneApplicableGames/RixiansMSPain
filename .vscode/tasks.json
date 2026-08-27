@@ -35,6 +35,12 @@
       "problemMatcher": ["$msCompile"]
     },
     {
+      "label": "Build Beta DLL",
+      "type": "shell",
+      "command": "dotnet build ./HideDetailsMod.Beta/HideDetailsMod.Beta.csproj -p:WorkshopChannel=${input:channel}",
+      "problemMatcher": ["$msCompile"]
+    },
+    {
       "label": "Publish Mod",
       "type": "shell",
       "command": "dotnet publish HideDetailsMod.csproj -c ExportRelease -p:WorkshopChannel=${input:channel}",

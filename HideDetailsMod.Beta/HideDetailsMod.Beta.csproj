@@ -48,12 +48,28 @@
         <Publicize Include="sts2" IncludeVirtualMembers="false" IncludeCompilerGeneratedMembers="false" />
     </ItemGroup>
 
+
+    <!-- Workshop -->
+    <PropertyGroup>
+        <WorkshopChannel Condition="'$(WorkshopChannel)' == ''">Production</WorkshopChannel>
+    </PropertyGroup>
+
     <!-- AUTOMATED PIPELINE -->
     <Target Name="PackageBetaMod" AfterTargets="Build">
         <Message Text="Packaging HideDetailsMod.Beta into a hidden .betapack container..." Importance="high" />
+        
+        <!-- Define explicit relative structures matching your main project folder layout -->
+        <PropertyGroup>
+            <MainModProjectDir>$(MSBuildProjectDirectory)\..</MainModProjectDir>
+            <BetaWorkshopContentRoot>$(MainModProjectDir)\workshop\$(WorkshopChannel)\content</BetaWorkshopContentRoot>
+        </PropertyGroup>
+
+        <!-- 1. Copy & Rename into the local Game Mods folder -->
         <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(ModsPath)HideDetailsMod/HideDetailsMod.Beta.betapack" />
         <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFiles="$(ModsPath)HideDetailsMod/HideDetailsMod.Beta.pdb" Condition="Exists('$(TargetDir)$(TargetName).pdb')" />
-        <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(SolutionDir)workshop\$(WorkshopChannel)\content\HideDetailsMod.Beta.betapack" Condition="Exists('$(SolutionDir)workshop\$(WorkshopChannel)\content')" />
-        <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFiles="$(SolutionDir)workshop\$(WorkshopChannel)\content\HideDetailsMod.Beta.pdb" Condition="Exists('$(TargetDir)$(TargetName).pdb') And Exists('$(SolutionDir)workshop\$(WorkshopChannel)\content')" />
+
+        <!-- 2. Copy & Rename into your explicit Steam Workshop Content Deployment folder -->
+        <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(BetaWorkshopContentRoot)\HideDetailsMod.Beta.betapack" />
+        <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFiles="$(BetaWorkshopContentRoot)\HideDetailsMod.Beta.pdb" Condition="Exists('$(TargetDir)$(TargetName).pdb')" />
     </Target>
 </Project>

@@ -3,5 +3,6 @@ mod-uploader.log
 **/content/*.json
 **/content/*.pck
 **/content/*.pdb
+**/content/*.betapack
 uploader/
 !bin/
