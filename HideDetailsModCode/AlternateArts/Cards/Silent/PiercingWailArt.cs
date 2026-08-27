@@ -1,5 +1,6 @@
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Modding;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.Potions;
@@ -26,7 +27,7 @@ public class PiercingWailArt : AlternateCardArt<PiercingWail>
             // InfiniteBlades => true, // doesn't trigger this turn
             BladeDance or CloakAndDagger or StormOfSteel or UpMySleeve or
             HiddenDaggers or FanOfKnives or BladeOfInk or LeadingStrike or
-            BladeSymphony => true,
+            { Id.Entry: "BLADE_SYMPHONY" } => true,
             // TODO: check with art author
             KnifeTrap kt when kt.DynamicVars.TryGetValue("CalculatedShivs", out var v) && v is CalculatedVar cv => cv.Calculate(null) > 0,
             _ => false

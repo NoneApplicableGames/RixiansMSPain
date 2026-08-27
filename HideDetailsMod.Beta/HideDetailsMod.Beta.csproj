@@ -1,0 +1,59 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="..\Sts2PathDiscovery.props" />
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <LangVersion>14.0</LangVersion>
+        <ImplicitUsings>true</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        
+        <!-- Stop duplicate attributes -->
+        <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+        <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+        <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+
+        <!-- Disable Godot source generation features -->
+        <DisableGodotSourceGenerators>true</DisableGodotSourceGenerators>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+        <Optimize>false</Optimize>
+        <DebugType>portable</DebugType>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <Optimize>true</Optimize>
+    </PropertyGroup>
+
+    <Import Project="..\Directory.References.props" />
+
+    <PropertyGroup>
+        <!-- 
+          Mute the warnings:
+          MSB3270: Architecture mismatch
+          STS002: Localization files missing
+          CS0436: Conflicting generated 'Main' type
+          CS8785: Generator 'ScriptPathAttributeGenerator' failed 
+        -->
+        <NoWarn>$(NoWarn);MSB3270;STS002;CS0436;CS8785</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\HideDetailsMod.csproj" />
+    </ItemGroup>
+
+    <!-- Publicize game dependencies -->
+    <ItemGroup Condition="True">
+        <Publicize Include="sts2" IncludeVirtualMembers="false" IncludeCompilerGeneratedMembers="false" />
+    </ItemGroup>
+
+    <!-- AUTOMATED PIPELINE -->
+    <Target Name="PackageBetaMod" AfterTargets="Build">
+        <Message Text="Packaging HideDetailsMod.Beta into a hidden .betapack container..." Importance="high" />
+        <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(ModsPath)HideDetailsMod/HideDetailsMod.Beta.betapack" />
+        <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFiles="$(ModsPath)HideDetailsMod/HideDetailsMod.Beta.pdb" Condition="Exists('$(TargetDir)$(TargetName).pdb')" />
+        <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(SolutionDir)workshop\$(WorkshopChannel)\content\HideDetailsMod.Beta.betapack" Condition="Exists('$(SolutionDir)workshop\$(WorkshopChannel)\content')" />
+        <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFiles="$(SolutionDir)workshop\$(WorkshopChannel)\content\HideDetailsMod.Beta.pdb" Condition="Exists('$(TargetDir)$(TargetName).pdb') And Exists('$(SolutionDir)workshop\$(WorkshopChannel)\content')" />
+    </Target>
+</Project>

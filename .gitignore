@@ -32,3 +32,4 @@ mod-uploader.log
 
 # Linked sts2 for launching
 /.game
+/HideDetailsMod.Beta/obj

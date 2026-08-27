@@ -3,6 +3,8 @@ using BaseLib.Utils;
 using HarmonyLib;
 using HideDetailsMod.HideDetailsModCode.AlternateArts.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
+using MegaCrit.Sts2.Core.Helpers;
+using MegaCrit.Sts2.Core.Modding;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.Nodes.Cards;
@@ -49,7 +51,19 @@ public abstract class AlternateCardArt
 {
     public static List<Type> GetDirectGenericSubtypes(Type openGenericBase)
     {
-        return AccessTools.GetTypesFromAssembly(Assembly.GetExecutingAssembly())
+        var mod = ModManager.GetLoadedMods().FirstOrDefault(mod => mod.manifest.id == MainFile.ModId);
+        var assemblies = Traverse.Create(mod).Property<List<Assembly>>("assemblies").Value;
+
+        IEnumerable<Type> types;
+        if (ModManager.State == ModManagerState.None)
+        {
+            types = ReflectionHelper.GetSubtypesFromAssembly(Assembly.GetExecutingAssembly(), typeof(AlternateCardArt));
+        }
+        else
+        {
+            types = ReflectionHelper.GetSubtypesInMods<AlternateCardArt>();
+        }
+        return types
             .Where(t => t.IsClass && !t.IsAbstract &&
                         t.BaseType is { IsGenericType: true } &&
                         t.BaseType.GetGenericTypeDefinition() == openGenericBase)

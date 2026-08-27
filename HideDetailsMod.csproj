@@ -62,6 +62,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Compile Remove="HideDetailsMod.Beta/**" />
+    </ItemGroup>
+
+    <ItemGroup>
         <None Include="Directory.References.props" />
         <None Condition="Exists('Directory.Build.props')" Include="Directory.Build.props" />
         <None Include=".gitignore" />

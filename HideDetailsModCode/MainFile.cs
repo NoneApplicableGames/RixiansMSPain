@@ -7,6 +7,8 @@ using HarmonyLib;
 using BaseLib.Extensions;
 using System.Reflection;
 using BaseLib.Audio;
+using MegaCrit.Sts2.Core.Debug;
+using System.Runtime.Loader;
 
 namespace HideDetailsMod.HideDetailsModCode;
 
@@ -22,6 +24,21 @@ public partial class MainFile : Node
     public static void Initialize()
     {
         var assembly = Assembly.GetExecutingAssembly();
+
+        var version = ReleaseInfoManager.Instance.ReleaseInfo?.Version ?? "";
+        var is107 = version.Contains(".107.");
+        if (!is107)
+        {
+            string modFolder = Path.GetDirectoryName(assembly.Location);
+            string betaPackPath = Path.Combine(modFolder, "HideDetailsMod.Beta.betapack");
+
+            if (File.Exists(betaPackPath))
+            {
+                var asm = AssemblyLoadContext.GetLoadContext(typeof(ModManager).Assembly).LoadFromAssemblyPath(betaPackPath);
+                AccessTools.Method(typeof(ModManager), "AssociateAssemblyWithMod").Invoke(null, [ModId, asm]);
+                // ModManager.AssociateAssemblyWithMod(ModId, asm);
+            }
+        }
 
         MyModConfig.Init();
         CustomLocTableManager.Register("usernames");
