@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://daln2o2ljj14o"
-path="res://.godot/imported/DEFECT - GLASS ORB.png-ff6db9f0a6f133f24e3b4561cbb7a0dd.ctex"
+path="res://.godot/imported/DEFECT - GLASS ORB.png-bd81e572cc5486afe92b0c3dd1a1e5d7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://HideDetailsMod/images/character_select/defect/DEFECT - GLASS ORB.png"
-dest_files=["res://.godot/imported/DEFECT - GLASS ORB.png-ff6db9f0a6f133f24e3b4561cbb7a0dd.ctex"]
+source_file="res://HideDetailsMod/images/character_select/Defect/DEFECT - GLASS ORB.png"
+dest_files=["res://.godot/imported/DEFECT - GLASS ORB.png-bd81e572cc5486afe92b0c3dd1a1e5d7.ctex"]
 
 [params]
 

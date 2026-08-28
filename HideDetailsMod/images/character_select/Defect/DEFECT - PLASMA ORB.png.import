@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d0g118o6w583d"
-path="res://.godot/imported/DEFECT - PLASMA ORB.png-6a7a6182006cc6662f2c02dcb1292997.ctex"
+path="res://.godot/imported/DEFECT - PLASMA ORB.png-8e66b4cfab9582fbed293e1fbd1190a9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://HideDetailsMod/images/character_select/defect/DEFECT - PLASMA ORB.png"
-dest_files=["res://.godot/imported/DEFECT - PLASMA ORB.png-6a7a6182006cc6662f2c02dcb1292997.ctex"]
+source_file="res://HideDetailsMod/images/character_select/Defect/DEFECT - PLASMA ORB.png"
+dest_files=["res://.godot/imported/DEFECT - PLASMA ORB.png-8e66b4cfab9582fbed293e1fbd1190a9.ctex"]
 
 [params]
 

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bfwwgksc1nf8w"
-path="res://.godot/imported/DEFECT - LIGHTNING ORB.png-0389206be5cfb6924b876fddbec0104b.ctex"
+path="res://.godot/imported/DEFECT - LIGHTNING ORB.png-8ddba9c98cfaf6116b036471da5807f9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://HideDetailsMod/images/character_select/defect/DEFECT - LIGHTNING ORB.png"
-dest_files=["res://.godot/imported/DEFECT - LIGHTNING ORB.png-0389206be5cfb6924b876fddbec0104b.ctex"]
+source_file="res://HideDetailsMod/images/character_select/Defect/DEFECT - LIGHTNING ORB.png"
+dest_files=["res://.godot/imported/DEFECT - LIGHTNING ORB.png-8ddba9c98cfaf6116b036471da5807f9.ctex"]
 
 [params]
 
